@@ -23,6 +23,8 @@ sandbox.*
 
 *.html
 !d3scribe/static/template.html
+!docs/quickstart.html
 
 *.svg
 *.json
+!docs/plot_data.json

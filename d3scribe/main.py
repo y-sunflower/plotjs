@@ -3,6 +3,7 @@ from jinja2 import Environment, FileSystemLoader
 
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+from matplotlib.axes import Axes
 from matplotlib.collections import PathCollection
 
 import os
@@ -19,7 +20,11 @@ env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 
 
 class interactivePlot:
-    def __init__(self, fig: Figure | None = None, tooltip="auto"):
+    def __init__(
+        self,
+        tooltip: list | None = None,
+        fig: Figure | None = None,
+    ):
         svg_path: Literal["user_plot.svg"] = "user_plot.svg"
 
         if fig is None:
@@ -30,7 +35,7 @@ class interactivePlot:
         self.svg_content = Path(svg_path).read_text()
         self.template = env.get_template("template.html")
 
-        axes = self.fig.get_axes()
+        axes: Axes = self.fig.get_axes()
         if len(axes) > 1:
             raise ValueError("Support only figure with 1 axes.")
 
@@ -107,6 +112,13 @@ class interactivePlot:
         with open("plot_data.json", "w") as f:
             json.dump(json_file, f)
 
+    def add_css(self, css_dict: dict, selector: str) -> str:
+        css: str = f"{selector}{{"
+        for key, val in css_dict.items():
+            css += f"{key}:{val};"
+
+        return css + "};"
+
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
@@ -114,6 +126,15 @@ if __name__ == "__main__":
 
     path = "https://github.com/y-sunflower/fleur/blob/main/fleur/data/iris.csv?raw=true"
     df = pd.read_csv(path)
+    df["tooltip"] = (
+        "Sepal length = "
+        + df["sepal_length"].astype(str)
+        + "<br>"
+        + "Sepal width = "
+        + df["sepal_width"].astype(str)
+        + "<br>"
+        + df["species"].str.upper()
+    )
 
     fig, ax = plt.subplots()
     ax.scatter(
@@ -127,15 +148,4 @@ if __name__ == "__main__":
     ax.set_xlabel("sepal_length")
     ax.set_ylabel("sepal_width")
 
-    custom_tooltip = df["species"].to_list()
-    custom_tooltip = (
-        "Sepal length = "
-        + df["sepal_length"].astype(str)
-        + "<br>"
-        + "Sepal width = "
-        + df["sepal_width"].astype(str)
-        + "<br>"
-        + df["species"].str.upper()
-    ).to_list()
-
-    interactivePlot(fig=fig, tooltip=custom_tooltip).save("index.html")
+    interactivePlot(fig=fig, tooltip=df["tooltip"].to_list()).save("index.html")
