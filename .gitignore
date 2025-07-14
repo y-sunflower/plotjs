@@ -25,3 +25,4 @@ sandbox.*
 !d3scribe/static/template.html
 
 *.svg
+*.json

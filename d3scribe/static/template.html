@@ -1,4 +1,3 @@
-<!-- svgplot/templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,7 +6,7 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
       svg {
-        width: 70%;
+        width: 60%;
         height: auto;
       }
       .tooltip {
@@ -28,17 +27,22 @@
       const svg = d3.select("svg");
       const points = svg.selectAll("#PathCollection_1 use");
 
-      points.attr("class", "scatter-point");
+      d3.json("plot_data.json").then(function (plot_data) {
+        const scatter_data = plot_data["scatter_data"];
+        const x_label = plot_data["x_label"];
+        const y_label = plot_data["y_label"];
+        points.data(scatter_data).attr("class", "scatter-point");
 
-      points
-        .on("mouseover", function (event, d) {
-          tooltip
-            .style("display", "block")
-            .style("left", event.pageX + 10 + "px")
-            .style("top", event.pageY + 10 + "px")
-            .text("Hovered a circle!");
-        })
-        .on("mouseout", () => tooltip.style("display", "none"));
+        points
+          .on("mouseover", function (event, d) {
+            tooltip
+              .style("display", "block")
+              .style("left", event.pageX + 10 + "px")
+              .style("top", event.pageY + 10 + "px")
+              .text(`${x_label} = ${d.x}, ${y_label} = ${d.y}`);
+          })
+          .on("mouseout", () => tooltip.style("display", "none"));
+      });
     </script>
   </body>
 </html>
