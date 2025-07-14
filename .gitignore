@@ -20,3 +20,8 @@ env/
 
 *.zip
 sandbox.*
+
+*.html
+!d3scribe/static/template.html
+
+*.svg
