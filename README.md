@@ -13,7 +13,7 @@ A python package template that contains everything you need to:
 <br>
 
     root/
-    ├── package_name/             - Main package directory
+    ├── d3scribe/             - Main package directory
     │   ├── __init__.py
     │   └── main.py/
     ├── tests/                    - Unit tests
@@ -51,15 +51,15 @@ A python package template that contains everything you need to:
 - Clone your repo
 
 ```bash
-git clone https://github.com/your_name/package_name.git
+git clone https://github.com/y-sunflower/d3scribe.git
 ```
 
 <br>
 
 ### Replace with your package info
 
-- Replace **all** `your_name` with your GitHub username or organization
-- Replace **all** `package_name` with your actual package
+- Replace **all** `y-sunflower` with your GitHub username or organization
+- Replace **all** `d3scribe` with your actual package
 - Replace info in `pyproject.toml`
 - Change the `LICENSE` file to your actual license (optional)
 
@@ -160,7 +160,7 @@ This is optional (you can use a plain `README.md` and delete
 - you can include code (for example, dynamic content)
 
 ```python
-from package_name import add_digit
+from d3scribe import add_digit
 
 # The output here is not hardcoded
 print(add_digit(2, 5))
