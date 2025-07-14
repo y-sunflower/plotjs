@@ -27,19 +27,37 @@
       const svg = d3.select("svg");
       const points = svg.selectAll("#PathCollection_1 use");
 
+      const fills = new Set();
+      points.each(function () {
+        const styleStr = d3.select(this).attr("style");
+        const fillMatch = styleStr && styleStr.match(/fill:\s*([^;]+);/);
+        const fillColor = fillMatch ? fillMatch[1].trim() : null;
+        fills.add(fillColor);
+      });
+      if (fills.size > 1) {
+        console.log("Points have different fill colors:", [...fills]);
+      } else if (fills.size === 1) {
+        console.log("All points have the same fill color:", [...fills][0]);
+      } else {
+        console.log("No fill colors found in style attributes");
+      }
+
       d3.json("plot_data.json").then(function (plot_data) {
         const scatter_data = plot_data["scatter_data"];
         const x_label = plot_data["x_label"];
         const y_label = plot_data["y_label"];
+        const tooltip_label = plot_data["tooltip"];
         points.data(scatter_data).attr("class", "scatter-point");
 
         points
           .on("mouseover", function (event, d) {
+            const nodes = points.nodes();
+            const i = nodes.indexOf(this);
             tooltip
               .style("display", "block")
               .style("left", event.pageX + 10 + "px")
               .style("top", event.pageY + 10 + "px")
-              .text(`${x_label} = ${d.x}, ${y_label} = ${d.y}`);
+              .html(tooltip_label[i]);
           })
           .on("mouseout", () => tooltip.style("display", "none"));
       });

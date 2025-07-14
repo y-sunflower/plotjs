@@ -20,7 +20,7 @@ env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 
 
 class interactivePlot:
-    def __init__(self, fig: Figure | None = None):
+    def __init__(self, fig: Figure | None = None, tooltip="auto"):
         svg_path: Literal["user_plot.svg"] = "user_plot.svg"
 
         if fig is None:
@@ -32,6 +32,8 @@ class interactivePlot:
         self.template = env.get_template("template.html")
         self.ax = self.fig.get_axes()[0]
         self.children = self.ax.get_children()
+
+        self.tooltip = tooltip
 
         # store all plot info not in SVG
         self._set_scatter_data()
@@ -82,6 +84,7 @@ class interactivePlot:
             "y_label": self.y_label,
             "x_label": self.x_label,
             "scatter_data": self.scatter_data_json,
+            "tooltip": self.tooltip,
         }
         with open("plot_data.json", "w") as f:
             json.dump(json_file, f)
@@ -98,7 +101,7 @@ if __name__ == "__main__":
     ax.scatter(
         df["sepal_length"],
         df["sepal_width"],
-        color="darkred",
+        c=df["species"].astype("category").cat.codes,
         s=300,
         alpha=0.5,
         ec="black",
@@ -106,4 +109,15 @@ if __name__ == "__main__":
     ax.set_xlabel("sepal_length")
     ax.set_ylabel("sepal_width")
 
-    interactivePlot(fig=fig).save("index.html")
+    custom_tooltip = df["species"].to_list()
+    custom_tooltip = (
+        "Sepal length = "
+        + df["sepal_length"].astype(str)
+        + "<br>"
+        + "Sepal width = "
+        + df["sepal_width"].astype(str)
+        + "<br>"
+        + df["species"].str.upper()
+    ).to_list()
+
+    interactivePlot(fig=fig, tooltip=custom_tooltip).save("index.html")
