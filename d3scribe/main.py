@@ -10,12 +10,11 @@ import json
 from typing import Literal, Text
 
 # TEMPLATE_DIR: str = Path(__file__).parent / "static"
-# D3_DIR: str = os.path.join(
-#     os.path.dirname(os.path.abspath(__file__)),
-#     "static",
-#     "d3.min.js",
-# )
 TEMPLATE_DIR = "/Users/josephbarbier/Desktop/d3scribe/d3scribe/static"
+CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
+D3_PATH: str = os.path.join(TEMPLATE_DIR, "d3.min.js")
+JS_PATH: str = os.path.join(TEMPLATE_DIR, "main.js")
+
 env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 
 
@@ -30,7 +29,12 @@ class interactivePlot:
 
         self.svg_content = Path(svg_path).read_text()
         self.template = env.get_template("template.html")
-        self.ax = self.fig.get_axes()[0]
+
+        axes = self.fig.get_axes()
+        if len(axes) > 1:
+            raise ValueError("Support only figure with 1 axes.")
+
+        self.ax = axes[0]
         self.children = self.ax.get_children()
 
         self.tooltip = tooltip
@@ -43,7 +47,21 @@ class interactivePlot:
         self._save_json_info()
 
     def save(self, file_path):
-        html: Text = self.template.render(svg=self.svg_content)
+        with open(CSS_PATH) as f:
+            css = f.read()
+
+        with open(D3_PATH) as f:
+            d3js = f.read()
+
+        with open(JS_PATH) as f:
+            js = f.read()
+
+        html: Text = self.template.render(
+            svg=self.svg_content,
+            css=css,
+            d3js=d3js,
+            js=js,
+        )
         with open(file_path, "w") as f:
             f.write(html)
 
