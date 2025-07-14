@@ -1,0 +1,44 @@
+<!-- svgplot/templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Interactive SVG Plot</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      svg {
+        width: 70%;
+        height: auto;
+      }
+      .tooltip {
+        position: absolute;
+        background: #f8e0e0;
+        padding: 4px 8px;
+        border: 1px solid #ccc;
+        pointer-events: none;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="plot-container">{{ svg | safe }}</div>
+    <div class="tooltip" id="tooltip"></div>
+    <script>
+      const tooltip = d3.select("#tooltip");
+      const svg = d3.select("svg");
+      const points = svg.selectAll("#PathCollection_1 use");
+
+      points.attr("class", "scatter-point");
+
+      points
+        .on("mouseover", function (event, d) {
+          tooltip
+            .style("display", "block")
+            .style("left", event.pageX + 10 + "px")
+            .style("top", event.pageY + 10 + "px")
+            .text("Hovered a circle!");
+        })
+        .on("mouseout", () => tooltip.style("display", "none"));
+    </script>
+  </body>
+</html>
