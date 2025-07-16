@@ -27,7 +27,7 @@ InteractivePlot(
     tooltip_group=df["species"],
 ).add_css(
     {"opacity": "0.8", "fill": "red"},
-    selector=".scatter-point.not-hovered",
+    selector=".scatter-point.hovered",
 ).save("docs/quickstart3.html")
 
 custom_tooltip = df.apply(

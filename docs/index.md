@@ -48,7 +48,7 @@ InteractivePlot(tooltip=df["species"])
 
 By default, `plotjs` will highlight the hovered point and fade other points.
 
-What if we want to highlight all point from a specie for example?
+What if we want to highlight all points from a specie for example?
 
 ```python
 InteractivePlot(
@@ -63,19 +63,22 @@ Now, let's say we want to a _finer control_ over the hover effects.
 
 That's easily possible with some basic CSS:
 
+- we select `.scatter-point.hovered` to control CSS for the hovered points
+- we select `.scatter-point.not-hovered` to control CSS for the un-hovered points
+
 ```python
 InteractivePlot(
     tooltip=df["species"],
     tooltip_group=df["species"],
 ).add_css(
     {"opacity": "0.8", "fill": "red"},
-    selector=".scatter-point.not-hovered",
+    selector=".scatter-point.hovered",
 )
 ```
 
 <iframe width="800" height="600" src="quickstart3.html" style="border:none;"></iframe>
 
-Now let's setup a better label than the current one.
+Now let's setup a **better label** than the current one.
 
 The `tooltip` argument just requires an iterable, and will use this for the labels. That means we can do pretty much whatever we want. For instance, with pandas, we can do:
 
@@ -106,3 +109,7 @@ InteractivePlot(
 ```
 
 <iframe width="800" height="600" src="quickstart4.html" style="border:none;"></iframe>
+
+<br>
+
+This is just a basic overview of things you can do with `plotjs`. There is a lot more coming.
