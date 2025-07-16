@@ -1,5 +1,5 @@
 svg {
-  width: 70%;
+  width: 100%;
   height: auto;
 }
 
@@ -47,5 +47,22 @@ svg {
 }
 
 .line.hovered {
+  opacity: 1;
+}
+
+.bar {
+  opacity: 1;
+  transition: opacity 0.1s ease;
+}
+
+.bar:hover {
+  opacity: 1;
+}
+
+.bar.not-hovered {
+  opacity: 0.2;
+}
+
+.bar.hovered {
   opacity: 1;
 }

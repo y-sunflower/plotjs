@@ -190,9 +190,11 @@ if __name__ == "__main__":
     ax.barh(
         ["Fries", "Cake", "Apple", "Cheese"],
         [10, 30, 40, 50],
+        height=0.6,
+        color=["#ef476f", "#ffd166", "#06d6a0", "#118ab2"],
     )
 
     InteractivePlot(
         fig=fig,
-        tooltip=["S&P500", "CAC40", "Bitcoin"],
+        tooltip=["Fries", "Cake", "Apple", "Cheese"],
     ).save("index.html")

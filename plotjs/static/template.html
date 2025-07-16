@@ -32,25 +32,31 @@
           !this.closest('g[id^="matplotlib.axis"]')
         );
       });
+      const bars = svg.selectAll('g[id^="patch"]').filter(function () {
+        const path = d3.select(this).select("path");
+        const clip = path.attr("clip-path");
+        return clip && clip.startsWith("url(");
+      });
 
       // set attributes to core plot elements to facilitate
       points.attr("class", "scatter-point").each(function (_, i) {
         d3.select(this).attr("data-group", tooltip_group[i]);
       });
       lines.attr("class", "line");
+      bars.attr("class", "bar");
 
       const isGrouped =
         Array.from(new Set(tooltip_group)).length < tooltip_group.length;
 
-      function applyHoverEffect(lines) {
-        lines
+      function applyHoverEffect(plot_element) {
+        plot_element
           .on("mouseover", function (event, d) {
-            const nodes = lines.nodes();
+            const nodes = plot_element.nodes();
             const i = nodes.indexOf(this);
             const hovered_group = tooltip_group[i];
 
-            lines.classed("not-hovered", true);
-            lines
+            plot_element.classed("not-hovered", true);
+            plot_element
               .filter((_, j) => tooltip_group[j] === hovered_group)
               .classed("not-hovered", false)
               .classed("hovered", true);
@@ -62,13 +68,16 @@
               .html(tooltip_label[i]);
           })
           .on("mouseout", function () {
-            lines.classed("not-hovered", false).classed("hovered", false);
+            plot_element
+              .classed("not-hovered", false)
+              .classed("hovered", false);
             tooltip.style("display", "none");
           });
       }
 
       applyHoverEffect(lines);
       applyHoverEffect(points);
+      applyHoverEffect(bars);
     </script>
   </body>
 </html>

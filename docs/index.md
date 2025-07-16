@@ -133,4 +133,29 @@ InteractivePlot(
 
 <iframe width="800" height="600" src="quickstart5.html" style="border:none;"></iframe>
 
+How about a barplot?
+
+```python
+fig, ax = plt.subplots()
+ax.barh(
+    ["Fries", "Cake", "Apple", "Cheese"],
+    [10, 30, 40, 50],
+    height=0.6,
+    color=["#ef476f", "#ffd166", "#06d6a0", "#118ab2"],
+)
+
+InteractivePlot(
+    tooltip=["Fries", "Cake", "Apple", "Cheese"],
+).add_css(
+    {
+        "width": "100px",
+        "text-align": "center",
+        "font-size": "1.1em",
+    },
+    selector=".tooltip",
+)
+```
+
+<iframe width="800" height="600" src="quickstart6.html" style="border:none;"></iframe>
+
 This is just a basic overview of things you can do with `plotjs`. There is a lot more coming.
