@@ -80,6 +80,17 @@ Now let's setup a better label than the current one.
 The `tooltip` argument just requires an iterable, and will use this for the labels. That means we can do pretty much whatever we want. For instance, with pandas, we can do:
 
 ```python
+custom_tooltip = df.apply(
+    lambda row: f"Sepal length = {row['sepal_length']}<br>"
+    f"Sepal width = {row['sepal_width']}<br>"
+    f"{row['species'].upper()}",
+    axis=1,
+)
+```
+
+Then we use this as the new tooltip:
+
+```python
 InteractivePlot(
     tooltip=custom_tooltip,
     tooltip_group=df["species"],
