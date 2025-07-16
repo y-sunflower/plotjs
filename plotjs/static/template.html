@@ -19,44 +19,56 @@
     <script>
       const tooltip = d3.select("#tooltip");
       const svg = d3.select("svg");
-      const points = svg.selectAll("#PathCollection_1 use");
 
       const plot_data = JSON.parse(`{{ plot_data_json | tojson | safe }}`);
       const tooltip_label = plot_data["tooltip"];
       const tooltip_group = plot_data["tooltip_group"];
 
+      // get all core plot elements
+      const points = svg.selectAll("#PathCollection_1 use");
+      const lines = svg.selectAll('g[id^="line2d"]').filter(function () {
+        return (
+          this.querySelector("path") &&
+          !this.closest('g[id^="matplotlib.axis"]')
+        );
+      });
+
+      // set attributes to core plot elements to facilitate
       points.attr("class", "scatter-point").each(function (_, i) {
         d3.select(this).attr("data-group", tooltip_group[i]);
       });
+      lines.attr("class", "line");
 
       const isGrouped =
         Array.from(new Set(tooltip_group)).length < tooltip_group.length;
 
-      points
-        .on("mouseover", function (event, d) {
-          const nodes = points.nodes();
-          const i = nodes.indexOf(this);
-          const hovered_group = tooltip_group[i];
+      function applyHoverEffect(lines) {
+        lines
+          .on("mouseover", function (event, d) {
+            const nodes = lines.nodes();
+            const i = nodes.indexOf(this);
+            const hovered_group = tooltip_group[i];
 
-          // Remove previous state
-          points.classed("not-hovered", true);
-          points
-            .filter(function (_, j) {
-              return tooltip_group[j] === hovered_group;
-            })
-            .classed("not-hovered", false)
-            .classed("hovered", true);
+            lines.classed("not-hovered", true);
+            lines
+              .filter((_, j) => tooltip_group[j] === hovered_group)
+              .classed("not-hovered", false)
+              .classed("hovered", true);
 
-          tooltip
-            .style("display", "block")
-            .style("left", event.pageX + 10 + "px")
-            .style("top", event.pageY + 10 + "px")
-            .html(tooltip_label[i]);
-        })
-        .on("mouseout", function () {
-          points.classed("not-hovered", false).classed("hovered", false);
-          tooltip.style("display", "none");
-        });
+            tooltip
+              .style("display", "block")
+              .style("left", event.pageX + 10 + "px")
+              .style("top", event.pageY + 10 + "px")
+              .html(tooltip_label[i]);
+          })
+          .on("mouseout", function () {
+            lines.classed("not-hovered", false).classed("hovered", false);
+            tooltip.style("display", "none");
+          });
+      }
+
+      applyHoverEffect(lines);
+      applyHoverEffect(points);
     </script>
   </body>
 </html>

@@ -28,6 +28,7 @@ nav:
   - Guides:
       - CSS: guides/css/index.md
   - Reference:
+      - reference/interactive-plot.md
       - reference/datasets.md
 
 extra_css:

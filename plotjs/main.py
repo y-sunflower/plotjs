@@ -1,7 +1,10 @@
+import numpy as np
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
+
 import narwhals as nw
 from narwhals.dependencies import is_numpy_array, is_into_series
+from narwhals.typing import SeriesT
 
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
@@ -35,10 +38,19 @@ class InteractivePlot:
     def __init__(
         self,
         *,
-        tooltip: list,
-        tooltip_group: list | None = None,
+        tooltip: list | tuple | SeriesT | np.ndarray,
+        tooltip_group: list | tuple | SeriesT | np.ndarray | None = None,
         fig: Figure | None = None,
     ):
+        """
+        Initiate an `InteractivePlot` instance to convert matplotlib
+        figures to interactive charts.
+
+        Args:
+            tooltip: An iterable containing the labels for the tooltip.
+            tooltip_group: An iterable containing the group for tooltip.
+            fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
+        """
         self.additional_css = ""
         svg_path: Literal["user_plot.svg"] = "user_plot.svg"
 
@@ -129,6 +141,43 @@ class InteractivePlot:
         )
 
     def add_css(self, css_content: str | dict, selector: str | None = None):
+        """
+        Add CSS to the final HTML output. This function allows you to override
+        default styles or add custom CSS rules.
+
+        Args:
+            css_content: CSS rules to apply. This can be:
+
+                - A dictionary of CSS property-value pairs (e.g., {"color": "red"}).
+                When using a dict, a `selector` must be provided.
+                - A string representing either the path to a CSS file or raw CSS code.
+            selector: A CSS selector (e.g., ".my-class" or "#id") to wrap around the
+                dictionary styles. Required if `css_content` is a dict, ignored otherwise.
+
+        Returns:
+            self: Returns the instance to allow method chaining.
+
+        Examples:
+            ```python
+            InteractivePlot(...).add_css({"color": "red"}, selector=".tooltip")
+            ```
+
+            ```python
+            InteractivePlot(...).add_css("path/to/style.css")
+            ```
+
+            ```python
+            InteractivePlot(...).add_css('.tooltip {"color": "red";}')
+            ```
+
+            ```python
+            InteractivePlot(...).add_css(
+                '.tooltip {"color": "red";}'
+            ).add_css(
+                '.tooltip {"background": "blue";}'
+            )
+            ```
+        """
         if isinstance(css_content, dict):
             css: str = f"{selector}{{"
             for key, val in css_content.items():
@@ -147,45 +196,48 @@ class InteractivePlot:
 
         return self
 
-    def save(self, file_path):
+    def save(self, file_path: str):
+        """
+        Save the interactive matplotlib plots to an HTML file.
+
+        Args:
+            file_path: Where to save the HTML file. If the ".html"
+                extension is missing, it's added.
+
+        Examples:
+            ```python
+            InteractivePlot(...).save("index.html")
+            ```
+
+            ```python
+            InteractivePlot(...).save("path/to/my_chart.html")
+            ```
+        """
         self._set_html()
+        if not file_path.endswith(".html"):
+            file_path += ".html"
         with open(file_path, "w") as f:
             f.write(self.html)
 
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
-    import pandas as pd
 
-    path = "https://github.com/y-sunflower/fleur/blob/main/fleur/data/iris.csv?raw=true"
-    df = pd.read_csv(path)
-    df["tooltip"] = (
-        "Sepal length = "
-        + df["sepal_length"].astype(str)
-        + "<br>"
-        + "Sepal width = <i><b>"
-        + df["sepal_width"].astype(str)
-        + "</b></i><br>"
-        + df["species"].str.upper()
-    )
+    import numpy as np
+
+    np.random.seed(0)
+
+    length = 500
+    walk1 = np.cumsum(np.random.choice([-1, 1], size=length))
+    walk2 = np.cumsum(np.random.choice([-1, 1], size=length))
+    walk3 = np.cumsum(np.random.choice([-1, 1], size=length))
 
     fig, ax = plt.subplots()
-    ax.scatter(
-        df["sepal_length"],
-        df["sepal_width"],
-        c=df["species"].astype("category").cat.codes,
-        s=300,
-        alpha=0.5,
-        ec="black",
-    )
-    ax.set_xlabel("sepal_length")
-    ax.set_ylabel("sepal_width")
+    ax.plot(walk1, linewidth=3)
+    ax.plot(walk2, linewidth=3)
+    ax.plot(walk3, linewidth=3)
 
     InteractivePlot(
         fig=fig,
-        tooltip=df["tooltip"],
-        tooltip_group=df["species"],
-    ).add_css(
-        {"opacity": "0.1", "fill": "red"},
-        selector=".not-hovered",
+        tooltip=["print", "hello", "world"],
     ).save("index.html")

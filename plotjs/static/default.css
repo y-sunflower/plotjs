@@ -1,5 +1,5 @@
 svg {
-  width: 100%;
+  width: 60%;
   height: auto;
 }
 
@@ -30,5 +30,22 @@ svg {
 }
 
 .scatter-point.hovered {
+  opacity: 1;
+}
+
+.line {
+  opacity: 1;
+  transition: opacity 0.1s ease;
+}
+
+.line:hover {
+  opacity: 1;
+}
+
+.line.not-hovered {
+  opacity: 0.2;
+}
+
+.line.hovered {
   opacity: 1;
 }
