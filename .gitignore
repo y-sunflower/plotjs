@@ -20,6 +20,7 @@ env/
 
 *.zip
 sandbox.*
+sandbox/
 
 *.html
 !plotjs/static/template.html

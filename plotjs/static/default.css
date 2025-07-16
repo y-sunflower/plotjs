@@ -1,5 +1,5 @@
 svg {
-  width: 60%;
+  width: 100%;
   height: auto;
 }
 
@@ -25,10 +25,10 @@ svg {
   opacity: 1;
 }
 
-.not-hovered {
+.scatter-point.not-hovered {
   opacity: 0.2;
 }
 
-.hovered {
+.scatter-point.hovered {
   opacity: 1;
 }

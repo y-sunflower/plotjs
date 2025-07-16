@@ -44,6 +44,7 @@ dev = [
     "coverage>=7.9.1",
     "genbadge>=1.1.2",
     "pandas>=2.3.1",
+    "mkdocs-matplotlib>=0.10.1",
 ]
 
 [project.urls]

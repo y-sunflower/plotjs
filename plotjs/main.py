@@ -31,7 +31,7 @@ def _vector_to_list(vector, name="tooltip and tooltip_group") -> list:
         )
 
 
-class interactivePlot:
+class InteractivePlot:
     def __init__(
         self,
         *,
@@ -133,7 +133,7 @@ class interactivePlot:
             css: str = f"{selector}{{"
             for key, val in css_content.items():
                 css += f"{key}:{val} !important;"
-            css += "};"
+            css += "}"
 
             self.additional_css += css
 
@@ -181,7 +181,7 @@ if __name__ == "__main__":
     ax.set_xlabel("sepal_length")
     ax.set_ylabel("sepal_width")
 
-    interactivePlot(
+    InteractivePlot(
         fig=fig,
         tooltip=df["tooltip"],
         tooltip_group=df["species"],

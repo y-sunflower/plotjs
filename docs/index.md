@@ -8,16 +8,18 @@ The goal is also to give users a large customization power.
 
 ## What it does?
 
-What if matplotlib was interactive (with cool hover animated effects?).
+Matplotlib is **great**: you can draw anything with it.
 
-But matplotlib charts are static:
+But Matplotlib's graphics are **static**, unlike those of plotly or altair, for example.
+
+For instance, a chart made with matplotlib looks like this:
 
 ```python
+# mkdocs: render
 import matplotlib.pyplot as plt
-import pandas as pd
+from plotjs import data
 
-path = "https://github.com/y-sunflower/fleur/blob/main/fleur/data/iris.csv?raw=true"
-df = pd.read_csv(path)
+df = data.load_iris()
 
 fig, ax = plt.subplots()
 ax.scatter(
@@ -28,42 +30,68 @@ ax.scatter(
     alpha=0.5,
     ec="black",
 )
-ax.set_xlabel("sepal_length")
-ax.set_ylabel("sepal_width")
 ```
 
-![](quick.png)
+This is just a png file, nothing crazy.
 
-What if we make it interactive? In 1 line with `plotjs`, it becomes:
+Wouldn't it be cool if we could, for example, have hover effects? Like, if I put my mouse on a point, it displays something?
+
+<i><center>Introducting ✨plotjs✨</center></i>
 
 ```python
-from plotjs import interactivePlot
+from plotjs import InteractivePlot
 
-interactivePlot(tooltip=df["species"].to_list())
+InteractivePlot(tooltip=df["species"])
 ```
 
 <iframe width="800" height="600" src="quickstart.html" style="border:none;"></iframe>
 
-But you can make things even more advanced:
+By default, `plotjs` will highlight the hovered point and fade other points.
+
+What if we want to highlight all point from a specie for example?
 
 ```python
-df["tooltip"] = (
-    "Sepal length = "
-    + df["sepal_length"].astype(str)
-    + "<br>"
-    + "Sepal width = "
-    + df["sepal_width"].astype(str)
-    + "<br>"
-    + df["species"].str.upper()
-)
-
-interactivePlot(
-    tooltip=df["tooltip"].to_list(),
-    tooltip_group=df["species"].to_list(),
-).add_css(
-    {"background": "red", "font-size": "30px"},
-    selector=".tooltip",
+InteractivePlot(
+    tooltip=df["species"],
+    tooltip_group=df["species"],
 )
 ```
 
 <iframe width="800" height="600" src="quickstart2.html" style="border:none;"></iframe>
+
+Now, let's say we want to a _finer control_ over the hover effects.
+
+That's easily possible with some basic CSS:
+
+```python
+InteractivePlot(
+    tooltip=df["species"],
+    tooltip_group=df["species"],
+).add_css(
+    {"opacity": "0.8", "fill": "red"},
+    selector=".scatter-point.not-hovered",
+)
+```
+
+<iframe width="800" height="600" src="quickstart3.html" style="border:none;"></iframe>
+
+Now let's setup a better label than the current one.
+
+The `tooltip` argument just requires an iterable, and will use this for the labels. That means we can do pretty much whatever we want. For instance, with pandas, we can do:
+
+```python
+InteractivePlot(
+    tooltip=custom_tooltip,
+    tooltip_group=df["species"],
+).add_css(
+    {
+        "width": "200px",
+        "text-align": "center",
+        "opacity": "0.7",
+        "font-size": "1.1em",
+    },
+    selector=".tooltip",
+)
+```
+
+<iframe width="800" height="600" src="quickstart4.html" style="border:none;"></iframe>

@@ -21,7 +21,7 @@ Here we basically say _"To all objects of the class `tooltip`, set the `backgrou
 Now let's add this CSS to our plot to change the tooltip:
 
 ```python
-interactivePlot(
+InteractivePlot(
    tooltip=df["tooltip"],
 ).add_css(".tooltip {background: red; color: blue;}")
 ```
@@ -37,7 +37,7 @@ Being able to pass CSS inside a string is convenient, but not very readable when
 One option that you can use is to define your CSS via dictionnary:
 
 ```python
-interactivePlot(
+InteractivePlot(
    tooltip=df["tooltip"],
 ).add_css(
    {"background": "red", "color": "blue"},
@@ -48,7 +48,7 @@ interactivePlot(
 With this, you can just call `add_css()` many times:
 
 ```python
-interactivePlot(
+InteractivePlot(
     tooltip=df["tooltip"],
 ).add_css(
     {"background": "red"},
@@ -73,7 +73,7 @@ Finally, you can just pass the path to a CSS file directly to `add_css()`. Assum
 We now do:
 
 ```python
-interactivePlot(
+InteractivePlot(
     tooltip=df["tooltip"],
 ).add_css("style.css")
 ```
