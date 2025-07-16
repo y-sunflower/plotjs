@@ -233,11 +233,11 @@ if __name__ == "__main__":
     walk3 = np.cumsum(np.random.choice([-1, 1], size=length))
 
     fig, ax = plt.subplots()
-    ax.plot(walk1, linewidth=3)
-    ax.plot(walk2, linewidth=3)
-    ax.plot(walk3, linewidth=3)
+    ax.plot(walk1, linewidth=2, color="#264653")
+    ax.plot(walk2, linewidth=2, color="#2a9d8f")
+    ax.plot(walk3, linewidth=2, color="#e9c46a")
 
     InteractivePlot(
         fig=fig,
-        tooltip=["print", "hello", "world"],
+        tooltip=["S&P500", "CAC40", "Bitcoin"],
     ).save("index.html")

@@ -1,6 +1,10 @@
 import matplotlib.pyplot as plt
+import numpy as np
+
 from plotjs import data
 from plotjs import InteractivePlot
+
+np.random.seed(0)
 
 df = data.load_iris()
 
@@ -49,3 +53,17 @@ InteractivePlot(
     },
     selector=".tooltip",
 ).save("docs/quickstart4.html")
+
+length = 500
+walk1 = np.cumsum(np.random.choice([-1, 1], size=length))
+walk2 = np.cumsum(np.random.choice([-1, 1], size=length))
+walk3 = np.cumsum(np.random.choice([-1, 1], size=length))
+
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.plot(walk1, linewidth=8, color="#264653")
+ax.plot(walk2, linewidth=8, color="#2a9d8f")
+ax.plot(walk3, linewidth=8, color="#e9c46a")
+
+InteractivePlot(
+    tooltip=["S&P500", "CAC40", "Bitcoin"],
+).save("docs/quickstart5.html")

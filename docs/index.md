@@ -110,6 +110,27 @@ InteractivePlot(
 
 <iframe width="800" height="600" src="quickstart4.html" style="border:none;"></iframe>
 
-<br>
+Now that you understand the core components of `plotjs`, let's see how it looks with a line chart.
+
+It turns out that it's always the same thing:
+
+```python
+import numpy as np
+
+walk1 = np.cumsum(np.random.choice([-1, 1], size=500))
+walk2 = np.cumsum(np.random.choice([-1, 1], size=500))
+walk3 = np.cumsum(np.random.choice([-1, 1], size=500))
+
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.plot(walk1, linewidth=8, color="#264653")
+ax.plot(walk2, linewidth=8, color="#2a9d8f")
+ax.plot(walk3, linewidth=8, color="#e9c46a")
+
+InteractivePlot(
+    tooltip=["S&P500", "CAC40", "Bitcoin"]
+)
+```
+
+<iframe width="800" height="600" src="quickstart5.html" style="border:none;"></iframe>
 
 This is just a basic overview of things you can do with `plotjs`. There is a lot more coming.
