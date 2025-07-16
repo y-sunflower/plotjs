@@ -78,7 +78,7 @@ InteractivePlot(
 
 <iframe width="800" height="600" src="quickstart3.html" style="border:none;"></iframe>
 
-Now let's setup a **better label** than the current one.
+Now let's setup **better labels** than the current ones.
 
 The `tooltip` argument just requires an iterable, and will use this for the labels. That means we can do pretty much whatever we want. For instance, with pandas, we can do:
 
@@ -131,7 +131,7 @@ InteractivePlot(
 )
 ```
 
-<iframe width="800" height="600" src="quickstart5.html" style="border:none;"></iframe>
+<iframe width="800" height="400" src="quickstart5.html" style="border:none;"></iframe>
 
 How about a barplot?
 
