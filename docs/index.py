@@ -83,12 +83,13 @@ ax.barh(
     ["Fries", "Cake", "Apple", "Cheese"],
     [10, 30, 40, 50],
     height=0.6,
-    color=["#ef476f", "#ffd166", "#06d6a0", "#118ab2"],
+    color=["#06d6a0", "#06d6a0", "#ef476f", "#06d6a0"],
 )
 
 InteractivePlot(
     fig=fig,
-    tooltip=["Fries", "Cake", "Apple", "Cheese"],
+    tooltip=["Fries (good)", "Cake (good)", "Apple (bad)", "Cheese (good)"],
+    tooltip_group=["Good", "Good", "Bad", "Good"],
 ).add_css(
     {
         "width": "100px",

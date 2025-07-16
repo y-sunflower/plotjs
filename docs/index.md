@@ -146,6 +146,7 @@ ax.barh(
 
 InteractivePlot(
     tooltip=["Fries", "Cake", "Apple", "Cheese"],
+    tooltip_group=["Good", "Good", "Bad", "Good"],
 ).add_css(
     {
         "width": "100px",
