@@ -1,5 +1,5 @@
 [project]
-name = "d3scribe"
+name = "plotjs"
 description = "Description"
 version = "0.1.0"
 license = "MIT"
@@ -18,6 +18,7 @@ classifiers = [
 dependencies = [
     "jinja2>=3.1.6",
     "matplotlib>=3.9.4",
+    "narwhals>=1.47.0",
 ]
 
 [build-system]
@@ -28,10 +29,10 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["d3scribe"]
+packages = ["plotjs"]
 
 [tool.uv.sources]
-d3scribe = { workspace = true }
+plotjs = { workspace = true }
 
 [dependency-groups]
 dev = [
@@ -46,7 +47,7 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://y-sunflower.github.io/d3scribe/"
-Issues = "https://github.com/y-sunflower/d3scribe/issues"
-Documentation = "https://y-sunflower.github.io/d3scribe/"
-Repository = "https://github.com/y-sunflower/d3scribe"
+Homepage = "https://y-sunflower.github.io/plotjs/"
+Issues = "https://github.com/y-sunflower/plotjs/issues"
+Documentation = "https://y-sunflower.github.io/plotjs/"
+Repository = "https://github.com/y-sunflower/plotjs"

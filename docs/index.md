@@ -1,4 +1,4 @@
-# d3scribe
+# plotjs
 
 What if matplotlib was interactive (with cool hover animated effects?).
 
@@ -7,7 +7,7 @@ But matplotlib charts are static:
 ```python
 import matplotlib.pyplot as plt
 import pandas as pd
-from d3scribe import interactivePlot
+from plotjs import interactivePlot
 
 path = "https://github.com/y-sunflower/fleur/blob/main/fleur/data/iris.csv?raw=true"
 df = pd.read_csv(path)
@@ -27,7 +27,7 @@ ax.set_ylabel("sepal_width")
 
 ![](quick.png)
 
-What if we make it interactive? In 1 line with `d3scribe`, it becomes:
+What if we make it interactive? In 1 line with `plotjs`, it becomes:
 
 ```python
 interactivePlot(tooltip=df["species"].to_list())

@@ -13,7 +13,7 @@ A python package template that contains everything you need to:
 <br>
 
     root/
-    ├── d3scribe/             - Main package directory
+    ├── plotjs/             - Main package directory
     │   ├── __init__.py
     │   └── main.py/
     ├── tests/                    - Unit tests
@@ -51,7 +51,7 @@ A python package template that contains everything you need to:
 - Clone your repo
 
 ```bash
-git clone https://github.com/y-sunflower/d3scribe.git
+git clone https://github.com/y-sunflower/plotjs.git
 ```
 
 <br>
@@ -59,7 +59,7 @@ git clone https://github.com/y-sunflower/d3scribe.git
 ### Replace with your package info
 
 - Replace **all** `y-sunflower` with your GitHub username or organization
-- Replace **all** `d3scribe` with your actual package
+- Replace **all** `plotjs` with your actual package
 - Replace info in `pyproject.toml`
 - Change the `LICENSE` file to your actual license (optional)
 
@@ -160,7 +160,7 @@ This is optional (you can use a plain `README.md` and delete
 - you can include code (for example, dynamic content)
 
 ```python
-from d3scribe import add_digit
+from plotjs import add_digit
 
 # The output here is not hardcoded
 print(add_digit(2, 5))

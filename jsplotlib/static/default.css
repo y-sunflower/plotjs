@@ -1,0 +1,17 @@
+svg {
+  width: 60%;
+  height: auto;
+}
+
+.tooltip {
+  position: absolute;
+  background: #001d3d;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  display: none;
+  font-family: "Helvetica Neue", "Arial", sans-serif;
+}

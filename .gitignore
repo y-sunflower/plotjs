@@ -22,7 +22,7 @@ env/
 sandbox.*
 
 *.html
-!d3scribe/static/template.html
+!plotjs/static/template.html
 !docs/quickstart.html
 
 *.svg

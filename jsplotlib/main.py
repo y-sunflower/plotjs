@@ -1,5 +1,4 @@
 from pathlib import Path
-from IPython.display import display, HTML
 from jinja2 import Environment, FileSystemLoader
 
 import matplotlib.pyplot as plt
@@ -8,11 +7,10 @@ from matplotlib.axes import Axes
 from matplotlib.collections import PathCollection
 
 import os
-import json
 from typing import Literal, Text
 
 # TEMPLATE_DIR: str = Path(__file__).parent / "static"
-TEMPLATE_DIR = "/Users/josephbarbier/Desktop/d3scribe/d3scribe/static"
+TEMPLATE_DIR = "/Users/josephbarbier/Desktop/plotjs/plotjs/static"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
 D3_PATH: str = os.path.join(TEMPLATE_DIR, "d3.min.js")
 JS_PATH: str = os.path.join(TEMPLATE_DIR, "main.js")
@@ -23,6 +21,7 @@ env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 class interactivePlot:
     def __init__(
         self,
+        *,
         tooltip: list,
         tooltip_group: list | None = None,
         fig: Figure | None = None,
@@ -84,7 +83,6 @@ class interactivePlot:
             self.scatter_data_json = [
                 {"x": x, "y": y} for x, y in self.scatter_data.tolist()
             ]
-
         else:
             self.scatter_data_json = None
 
@@ -99,7 +97,7 @@ class interactivePlot:
 
     def _set_html(self):
         with open(CSS_PATH) as f:
-            css = f.read()
+            default_css = f.read()
 
         with open(D3_PATH) as f:
             d3js = f.read()
@@ -108,10 +106,10 @@ class interactivePlot:
             js = f.read()
 
         self.html: Text = self.template.render(
-            svg=self.svg_content,
-            css=css,
             d3js=d3js,
             js=js,
+            svg=self.svg_content,
+            default_css=default_css,
             additional_css=self.additional_css,
             plot_data_json=self.plot_data_json,
         )
@@ -129,10 +127,6 @@ class interactivePlot:
         self._set_html()
         with open(file_path, "w") as f:
             f.write(self.html)
-
-    def show(self):
-        self._set_html()
-        display(HTML(self.html))
 
 
 if __name__ == "__main__":
@@ -168,17 +162,6 @@ if __name__ == "__main__":
         tooltip=df["tooltip"].to_list(),
         tooltip_group=df["species"].to_list(),
     ).add_css(
-        {
-            "stroke": "blue",
-            "stroke-width": "3px",
-            "stroke-dasharray": "0 4 0",
-            "transition": "stroke 0.5s",
-        },
-        selector=".scatter-point",
-    ).add_css(
-        {
-            "stroke": "red",
-            "stroke-dasharray": "4 2 4",
-        },
-        selector=".scatter-point:hover",
+        {"background": "blue", "font-size": "5em"},
+        selector=".tooltip",
     ).save("index.html")

@@ -1,6 +1,6 @@
-site_name: d3scribe
-site_url: https://y-sunflower.github.io/d3scribe/
-repo_url: https://github.com/y-sunflower/d3scribe
+site_name: plotjs
+site_url: https://y-sunflower.github.io/plotjs/
+repo_url: https://github.com/y-sunflower/plotjs
 
 theme:
   name: material
