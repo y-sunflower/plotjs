@@ -1,5 +1,5 @@
 svg {
-  width: 100%;
+  width: 60%;
   height: auto;
 }
 
@@ -14,4 +14,21 @@ svg {
   pointer-events: none;
   display: none;
   font-family: "Helvetica Neue", "Arial", sans-serif;
+}
+
+.scatter-point {
+  opacity: 1;
+  transition: opacity 0.1s ease;
+}
+
+.scatter-point:hover {
+  opacity: 1;
+}
+
+.not-hovered {
+  opacity: 0.2;
+}
+
+.hovered {
+  opacity: 1;
 }

@@ -183,9 +183,9 @@ if __name__ == "__main__":
 
     interactivePlot(
         fig=fig,
-        tooltip=df["tooltip"],  # label for the tooltip
-        tooltip_group=df["species"],  # tooltip selection
+        tooltip=df["tooltip"],
+        tooltip_group=df["species"],
     ).add_css(
-        {"background": "red", "font-size": "2em"},
-        selector=".tooltip",
+        {"opacity": "0.1", "fill": "red"},
+        selector=".not-hovered",
     ).save("index.html")
