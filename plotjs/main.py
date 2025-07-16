@@ -1,5 +1,7 @@
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
+import narwhals as nw
+from narwhals.dependencies import is_numpy_array, is_into_series
 
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
@@ -16,6 +18,17 @@ D3_PATH: str = os.path.join(TEMPLATE_DIR, "d3.min.js")
 JS_PATH: str = os.path.join(TEMPLATE_DIR, "main.js")
 
 env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
+
+
+def _vector_to_list(vector, name="tooltip and tooltip_group") -> list:
+    if isinstance(vector, (list, tuple)) or is_numpy_array(vector):
+        return list(vector)
+    elif is_into_series(vector):
+        return nw.from_native(vector, allow_series=True).to_list()
+    else:
+        raise ValueError(
+            f"{name} must be a Series or a valid iterable (list, tuple, ndarray...)."
+        )
 
 
 class interactivePlot:
@@ -37,18 +50,28 @@ class interactivePlot:
         self.svg_content = Path(svg_path).read_text()
         self.template = env.get_template("template.html")
 
+        with open(CSS_PATH) as f:
+            self.default_css = f.read()
+
+        with open(D3_PATH) as f:
+            self.d3js = f.read()
+
+        with open(JS_PATH) as f:
+            self.js = f.read()
+
         axes: Axes = self.fig.get_axes()
         if len(axes) > 1:
-            raise ValueError("Support only figure with 1 axes.")
+            raise NotImplementedError("Support only figure with 1 axes.")
 
         self.ax = axes[0]
         self.children = self.ax.get_children()
 
+        # tooltip inputs
+        self.tooltip = _vector_to_list(tooltip)
         if tooltip_group is None:
-            self.tooltip_group = list(range(len(tooltip)))
+            self.tooltip_group = list(range(len(self.tooltip)))
         else:
-            self.tooltip_group = tooltip_group
-        self.tooltip = tooltip
+            self.tooltip_group = _vector_to_list(tooltip_group)
 
         # store all plot info not in SVG
         self._set_scatter_data()
@@ -78,7 +101,7 @@ class interactivePlot:
             )
 
         if has_scatter_plot:
-            index_path_collection = is_path_collection.index(True)
+            index_path_collection: int = is_path_collection.index(True)
             self.scatter_data = self.children[index_path_collection].get_offsets().data
             self.scatter_data_json = [
                 {"x": x, "y": y} for x, y in self.scatter_data.tolist()
@@ -96,31 +119,32 @@ class interactivePlot:
         }
 
     def _set_html(self):
-        with open(CSS_PATH) as f:
-            default_css = f.read()
-
-        with open(D3_PATH) as f:
-            d3js = f.read()
-
-        with open(JS_PATH) as f:
-            js = f.read()
-
         self.html: Text = self.template.render(
-            d3js=d3js,
-            js=js,
+            d3js=self.d3js,
+            js=self.js,
             svg=self.svg_content,
-            default_css=default_css,
+            default_css=self.default_css,
             additional_css=self.additional_css,
             plot_data_json=self.plot_data_json,
         )
 
-    def add_css(self, css_dict: dict, selector: str):
-        css: str = f"{selector}{{"
-        for key, val in css_dict.items():
-            css += f"{key}:{val} !important;"
-        css += "};"
+    def add_css(self, css_content: str | dict, selector: str | None = None):
+        if isinstance(css_content, dict):
+            css: str = f"{selector}{{"
+            for key, val in css_content.items():
+                css += f"{key}:{val} !important;"
+            css += "};"
 
-        self.additional_css += css
+            self.additional_css += css
+
+        elif isinstance(css_content, str):
+            if os.path.isfile(css_content):
+                with open(css_content, "r") as f:
+                    self.additional_css += f.read()
+            else:
+                # assume it's raw CSS content
+                self.additional_css += css_content
+
         return self
 
     def save(self, file_path):
@@ -139,9 +163,9 @@ if __name__ == "__main__":
         "Sepal length = "
         + df["sepal_length"].astype(str)
         + "<br>"
-        + "Sepal width = "
+        + "Sepal width = <i><b>"
         + df["sepal_width"].astype(str)
-        + "<br>"
+        + "</b></i><br>"
         + df["species"].str.upper()
     )
 
@@ -159,8 +183,8 @@ if __name__ == "__main__":
 
     interactivePlot(
         fig=fig,
-        tooltip=df["tooltip"].to_list(),
-        tooltip_group=df["species"].to_list(),
+        tooltip=df["tooltip"],  # label for the tooltip
+        tooltip_group=df["species"],  # tooltip selection
     ).add_css(
         {"background": "red", "font-size": "2em"},
         selector=".tooltip",
