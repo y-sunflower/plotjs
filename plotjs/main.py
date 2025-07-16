@@ -85,47 +85,10 @@ class InteractivePlot:
         else:
             self.tooltip_group = _vector_to_list(tooltip_group)
 
-        # store all plot info not in SVG
-        self._set_scatter_data()
-        self._set_x_and_y_labels()
         self._set_plot_data_json()
-
-    def _set_x_and_y_labels(self):
-        if self.ax.get_xlabel() == "":
-            self.x_label = "x"
-        else:
-            self.x_label = self.ax.get_xlabel()
-
-        if self.ax.get_ylabel() == "":
-            self.y_label = "y"
-        else:
-            self.y_label = self.ax.get_ylabel()
-
-    def _set_scatter_data(self):
-        is_path_collection: list[bool] = [
-            isinstance(artist, PathCollection) for artist in self.children
-        ]
-        has_scatter_plot: bool = any(is_path_collection)
-
-        if sum(is_path_collection) > 1:
-            raise ValueError(
-                f"Multiple PathCollection found in artists: {self.children}"
-            )
-
-        if has_scatter_plot:
-            index_path_collection: int = is_path_collection.index(True)
-            self.scatter_data = self.children[index_path_collection].get_offsets().data
-            self.scatter_data_json = [
-                {"x": x, "y": y} for x, y in self.scatter_data.tolist()
-            ]
-        else:
-            self.scatter_data_json = None
 
     def _set_plot_data_json(self):
         self.plot_data_json = {
-            "y_label": self.y_label,
-            "x_label": self.x_label,
-            "scatter_data": self.scatter_data_json,
             "tooltip": self.tooltip,
             "tooltip_group": self.tooltip_group,
         }
@@ -223,19 +186,11 @@ class InteractivePlot:
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
-    import numpy as np
-
-    np.random.seed(0)
-
-    length = 500
-    walk1 = np.cumsum(np.random.choice([-1, 1], size=length))
-    walk2 = np.cumsum(np.random.choice([-1, 1], size=length))
-    walk3 = np.cumsum(np.random.choice([-1, 1], size=length))
-
     fig, ax = plt.subplots()
-    ax.plot(walk1, linewidth=2, color="#264653")
-    ax.plot(walk2, linewidth=2, color="#2a9d8f")
-    ax.plot(walk3, linewidth=2, color="#e9c46a")
+    ax.barh(
+        ["Fries", "Cake", "Apple", "Cheese"],
+        [10, 30, 40, 50],
+    )
 
     InteractivePlot(
         fig=fig,
