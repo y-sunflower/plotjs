@@ -1,4 +1,5 @@
 from pathlib import Path
+from IPython.display import display, HTML
 from jinja2 import Environment, FileSystemLoader
 
 import matplotlib.pyplot as plt
@@ -22,9 +23,11 @@ env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 class interactivePlot:
     def __init__(
         self,
-        tooltip: list | None = None,
+        tooltip: list,
+        tooltip_group: list | None = None,
         fig: Figure | None = None,
     ):
+        self.additional_css = ""
         svg_path: Literal["user_plot.svg"] = "user_plot.svg"
 
         if fig is None:
@@ -42,33 +45,16 @@ class interactivePlot:
         self.ax = axes[0]
         self.children = self.ax.get_children()
 
+        if tooltip_group is None:
+            self.tooltip_group = list(range(len(tooltip)))
+        else:
+            self.tooltip_group = tooltip_group
         self.tooltip = tooltip
 
         # store all plot info not in SVG
         self._set_scatter_data()
         self._set_x_and_y_labels()
-
-        # write json file with all plot info
-        self._save_json_info()
-
-    def save(self, file_path):
-        with open(CSS_PATH) as f:
-            css = f.read()
-
-        with open(D3_PATH) as f:
-            d3js = f.read()
-
-        with open(JS_PATH) as f:
-            js = f.read()
-
-        html: Text = self.template.render(
-            svg=self.svg_content,
-            css=css,
-            d3js=d3js,
-            js=js,
-        )
-        with open(file_path, "w") as f:
-            f.write(html)
+        self._set_plot_data_json()
 
     def _set_x_and_y_labels(self):
         if self.ax.get_xlabel() == "":
@@ -102,22 +88,51 @@ class interactivePlot:
         else:
             self.scatter_data_json = None
 
-    def _save_json_info(self):
-        json_file = {
+    def _set_plot_data_json(self):
+        self.plot_data_json = {
             "y_label": self.y_label,
             "x_label": self.x_label,
             "scatter_data": self.scatter_data_json,
             "tooltip": self.tooltip,
+            "tooltip_group": self.tooltip_group,
         }
-        with open("plot_data.json", "w") as f:
-            json.dump(json_file, f)
 
-    def add_css(self, css_dict: dict, selector: str) -> str:
+    def _set_html(self):
+        with open(CSS_PATH) as f:
+            css = f.read()
+
+        with open(D3_PATH) as f:
+            d3js = f.read()
+
+        with open(JS_PATH) as f:
+            js = f.read()
+
+        self.html: Text = self.template.render(
+            svg=self.svg_content,
+            css=css,
+            d3js=d3js,
+            js=js,
+            additional_css=self.additional_css,
+            plot_data_json=self.plot_data_json,
+        )
+
+    def add_css(self, css_dict: dict, selector: str):
         css: str = f"{selector}{{"
         for key, val in css_dict.items():
-            css += f"{key}:{val};"
+            css += f"{key}:{val} !important;"
+        css += "};"
 
-        return css + "};"
+        self.additional_css += css
+        return self
+
+    def save(self, file_path):
+        self._set_html()
+        with open(file_path, "w") as f:
+            f.write(self.html)
+
+    def show(self):
+        self._set_html()
+        display(HTML(self.html))
 
 
 if __name__ == "__main__":
@@ -148,4 +163,22 @@ if __name__ == "__main__":
     ax.set_xlabel("sepal_length")
     ax.set_ylabel("sepal_width")
 
-    interactivePlot(fig=fig, tooltip=df["tooltip"].to_list()).save("index.html")
+    interactivePlot(
+        fig=fig,
+        tooltip=df["tooltip"].to_list(),
+        tooltip_group=df["species"].to_list(),
+    ).add_css(
+        {
+            "stroke": "blue",
+            "stroke-width": "3px",
+            "stroke-dasharray": "0 4 0",
+            "transition": "stroke 0.5s",
+        },
+        selector=".scatter-point",
+    ).add_css(
+        {
+            "stroke": "red",
+            "stroke-dasharray": "4 2 4",
+        },
+        selector=".scatter-point:hover",
+    ).save("index.html")
