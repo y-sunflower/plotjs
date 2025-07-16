@@ -23,7 +23,7 @@ sandbox.*
 
 *.html
 !plotjs/static/template.html
-!docs/quickstart.html
+!docs/*.html
 
 *.svg
 *.json

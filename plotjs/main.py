@@ -162,6 +162,6 @@ if __name__ == "__main__":
         tooltip=df["tooltip"].to_list(),
         tooltip_group=df["species"].to_list(),
     ).add_css(
-        {"background": "blue", "font-size": "5em"},
+        {"background": "red", "font-size": "2em"},
         selector=".tooltip",
     ).save("index.html")
