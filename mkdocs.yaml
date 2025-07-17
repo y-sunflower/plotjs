@@ -25,6 +25,7 @@ plugins:
 
 nav:
   - Home: index.md
+  - How it works: how-it-works.md
   - Guides:
       - CSS: guides/css/index.md
   - Reference:

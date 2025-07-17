@@ -85,9 +85,12 @@ class InteractivePlot:
         else:
             self.tooltip_group = _vector_to_list(tooltip_group)
 
-        self.polygon_to_data_mapping = _map_polygons_to_data(
-            self.ax.collections[0], gdf, tooltip
-        )
+        if gdf is not None:
+            self.polygon_to_data_mapping = _map_polygons_to_data(
+                self.ax.collections[0], gdf, tooltip
+            )
+        else:
+            self.polygon_to_data_mapping = ""
         self._set_plot_data_json()
 
     def _set_plot_data_json(self):
