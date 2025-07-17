@@ -11,6 +11,7 @@ from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 
 import os
+import uuid
 from typing import Literal, Text
 
 from plotjs.polygons_mapping import _map_polygons_to_data
@@ -47,6 +48,7 @@ class InteractivePlot:
         tooltip_group: list | tuple | np.ndarray | SeriesT | None = None,
         fig: Figure | None = None,
         gdf: object | None = None,
+        **savefig_kws,
     ):
         """
         Initiate an `InteractivePlot` instance to convert matplotlib
@@ -58,21 +60,23 @@ class InteractivePlot:
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
             gdf: An optional GeoDataFrame for proper polygon mapping. It's
                 required when creating a choropleth map.
+            savefig_kws: Additional keyword arguments passed to `plt.savefig()`.
         """
-        self.gdf = gdf
-        self.additional_css = ""
         svg_path: Literal["user_plot.svg"] = "user_plot.svg"
-        self.svg_content = Path(svg_path).read_text()
-        self.template = env.get_template("template.html")
 
         if fig is None:
             fig: Figure = plt.gcf()
         self.fig = fig
-        self.fig.savefig(svg_path)
+        self.fig.savefig(svg_path, **savefig_kws)
         axes: Axes = self.fig.get_axes()
         if len(axes) > 1:
             raise NotImplementedError("Support only figure with 1 axes.")
         self.ax = axes[0]
+
+        self.gdf = gdf
+        self.additional_css = ""
+        self.svg_content = Path(svg_path).read_text()
+        self.template = env.get_template("template.html")
 
         with open(CSS_PATH) as f:
             self.default_css = f.read()
@@ -111,13 +115,16 @@ class InteractivePlot:
 
     def _set_html(self):
         self.html: Text = self.template.render(
-            d3js=self.d3js,
-            js=self.js,
-            svg=self.svg_content,
+            uuid=str(uuid.uuid4()),
             default_css=self.default_css,
             additional_css=self.additional_css,
+            svg=self.svg_content,
             plot_data_json=self.plot_data_json,
         )
+
+    def _repr_html_(self):
+        self._set_html()
+        return self.html
 
     def add_css(self, css_content: str | dict, selector: str | None = None):
         """
@@ -203,29 +210,22 @@ class InteractivePlot:
         with open(file_path, "w") as f:
             f.write(self.html)
 
+        return self
+
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
-    import geopandas as gpd
 
-    df = gpd.read_file(
-        "https://github.com/holtzy/The-Python-Graph-Gallery/blob/master/static/data/europe.geojson?raw=true"
-    ).dropna()
-    df = df[df["name"] != "Russia"]
+    length = 500
+    walk1 = np.cumsum(np.random.choice([-1, 1], size=length))
+    walk2 = np.cumsum(np.random.choice([-1, 1], size=length))
+    walk3 = np.cumsum(np.random.choice([-1, 1], size=length))
 
-    fig, ax = plt.subplots()
-    ax.set_xlim(-25, 42)
-    ax.set_ylim(30, 82)
-    ax.axis("off")
-    df.plot(column="pop_est", ax=ax, cmap="viridis_r")
-
-    custom_tooltip = df.apply(
-        lambda row: f"{row['name']}<br>Population of {round(row['pop_est'] / 1_000_000, 1)} millions",
-        axis=1,
-    )
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.plot(walk1, linewidth=8, color="#264653")
+    ax.plot(walk2, linewidth=8, color="#2a9d8f")
+    ax.plot(walk3, linewidth=8, color="#e9c46a")
 
     InteractivePlot(
-        fig=fig,
-        tooltip=custom_tooltip,
-        gdf=df,
-    ).add_css({"width": "70%"}, selector="svg").save("index.html")
+        tooltip=["S&P500", "CAC40", "Bitcoin"],
+    ).save("index.html")

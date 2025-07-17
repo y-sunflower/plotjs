@@ -22,10 +22,27 @@ df.head()
 
 fig, ax = plt.subplots()
 
-
 for country in df.country.unique():
     df_country = df[df["country"] == country]
-    ax.plot(df_country["date"], df_country["unemployment rate"])
+    ax.plot(df_country["date"], df_country["unemployment rate"], lw=3)
+
+ax.set_xticks(
+    [f"{year}-01-01" for year in range(2020, 2025)],
+    labels=list(range(2020, 2025)),
+)
+ax.set_yticks(
+    list(range(0, 15, 2)),
+    labels=[f"{val}%" for val in range(0, 15, 2)],
+)
+
+fig.text(
+    x=0.87,
+    y=0.8,
+    s="Unemployment rate\nacross the world",
+    size=16,
+    ha="right",
+    va="top",
+)
 
 InteractivePlot(
     fig=fig,
@@ -33,7 +50,7 @@ InteractivePlot(
 ).add_css(
     {
         "stroke": "black",
-        "stroke-width": "15px",
+        "stroke-width": "4px",
         "transition": "all 0.3s ease",
     },
     selector=".line.hovered",
@@ -44,7 +61,7 @@ InteractivePlot(
     {
         "width": "120px",
         "text-align": "center",
-        "font-size": "1.1em",
+        "font-size": "1.2em",
     },
     selector=".tooltip",
 ).save("docs/guides/advanced/advanced.html")
