@@ -184,10 +184,10 @@ custom_tooltip = df.apply(
 
 InteractivePlot(
     tooltip=custom_tooltip,
-    gdf=df,
+    gdf=df, # in this case we need to pass the geodataframe used
 ).save("index.html")
 ```
 
-<iframe width="700" height="1000" src="quickstart7.html" style="border:none;"></iframe>
+<iframe width="700" height="600" src="quickstart7.html" style="border:none;"></iframe>
 
 This is just a basic overview of things you can do with `plotjs`. There is a lot more coming.

@@ -28,6 +28,7 @@ nav:
   - How it works: how-it-works.md
   - Guides:
       - CSS: guides/css/index.md
+      - Advanced: guides/advanced/index.md
   - Reference:
       - reference/interactive-plot.md
       - reference/datasets.md

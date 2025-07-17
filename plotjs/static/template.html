@@ -27,12 +27,7 @@
 
       // get all core plot elements
       const points = svg.selectAll("#PathCollection_1 use");
-      const lines = svg.selectAll('g[id^="line2d"]').filter(function () {
-        return (
-          this.querySelector("path") &&
-          !this.closest('g[id^="matplotlib.axis"]')
-        );
-      });
+      const lines = svg.selectAll('g[id^="line2d"] path');
       const bars = svg.selectAll('g[id^="patch"]').filter(function () {
         const path = d3.select(this).select("path");
         const clip = path.attr("clip-path");
