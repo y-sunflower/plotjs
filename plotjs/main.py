@@ -16,8 +16,8 @@ from typing import Literal, Text
 
 from plotjs.polygons_mapping import _map_polygons_to_data
 
-# TEMPLATE_DIR: str = Path(__file__).parent / "static"
-TEMPLATE_DIR = "/Users/josephbarbier/Desktop/plotjs/plotjs/static"
+# TEMPLATE_DIR = "/Users/josephbarbier/Desktop/plotjs/plotjs/static"
+TEMPLATE_DIR: str = Path(__file__).parent / "static"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
 D3_PATH: str = os.path.join(TEMPLATE_DIR, "d3.min.js")
 JS_PATH: str = os.path.join(TEMPLATE_DIR, "main.js")
