@@ -178,7 +178,7 @@ ax.axis("off")
 df.plot(column="pop_est", ax=ax, cmap="viridis_r", ec="black", lw=0.5)
 
 custom_tooltip = df.apply(
-    lambda row: f"{row['name']}<br>Population of {round(row['pop_est'] / 1_000_000, 1)} millions",
+    lambda row: f"{row['name']}<br>{round(row['pop_est'] / 1_000_000, 1)} millions",
     axis=1,
 )
 
@@ -188,6 +188,6 @@ InteractivePlot(
 ).save("index.html")
 ```
 
-<iframe width="800" height="600" src="quickstart7.html" style="border:none;"></iframe>
+<iframe width="700" height="1000" src="quickstart7.html" style="border:none;"></iframe>
 
 This is just a basic overview of things you can do with `plotjs`. There is a lot more coming.

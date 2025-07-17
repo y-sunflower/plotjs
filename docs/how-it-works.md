@@ -90,3 +90,5 @@ L 398.487273 53.568
 If you pay close attention, you'll see potential patterns in the structure of certain elements.
 
 That's exactly what we'll use to determine what kind of plot elements we have. I'm not gonna detail them here because it's not particularly interesting, but feel free to browse the [source code](https://github.com/y-sunflower/plotjs/blob/main/plotjs/static/template.html){target="\_blank"} if you're curious.
+
+> Note: determining the kind of plot elements could have been done (partially) from the Python side, but this felt easier to me to do it from the JavaScript side.

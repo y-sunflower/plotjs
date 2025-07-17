@@ -109,13 +109,13 @@ df = df[df["name"] != "Russia"]
 
 fig, ax = plt.subplots()
 ax.set_xlim(-25, 42)
-ax.set_ylim(30, 82)
+ax.set_ylim(33, 82)
 ax.axis("off")
 
 df.plot(column="pop_est", ax=ax, cmap="viridis_r", ec="black", lw=0.5)
 
 custom_tooltip = df.apply(
-    lambda row: f"{row['name']}<br>Population of {round(row['pop_est'] / 1_000_000, 1)} millions",
+    lambda row: f"{row['name']}<br>{round(row['pop_est'] / 1_000_000, 1)} millions",
     axis=1,
 )
 

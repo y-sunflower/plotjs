@@ -5,3 +5,5 @@
 The goal is also to give users a large customization power.
 
 > Consider that the project is still **very unstable**.
+
+[Online demo](https://y-sunflower.github.io/plotjs/)

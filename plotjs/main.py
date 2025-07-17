@@ -1,12 +1,15 @@
 import numpy as np
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
+
 import narwhals as nw
 from narwhals.dependencies import is_numpy_array, is_into_series
 from narwhals.typing import SeriesT
+
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
+
 import os
 from typing import Literal, Text
 
@@ -33,11 +36,15 @@ def _vector_to_list(vector, name="tooltip and tooltip_group") -> list:
 
 
 class InteractivePlot:
+    """
+    Class to convert static matplotlib plots to interactive charts.
+    """
+
     def __init__(
         self,
         *,
-        tooltip: list | tuple | SeriesT | np.ndarray,
-        tooltip_group: list | tuple | SeriesT | np.ndarray | None = None,
+        tooltip: list | tuple | np.ndarray | SeriesT | None,
+        tooltip_group: list | tuple | np.ndarray | SeriesT | None = None,
         fig: Figure | None = None,
         gdf: object | None = None,
     ):
@@ -49,19 +56,23 @@ class InteractivePlot:
             tooltip: An iterable containing the labels for the tooltip.
             tooltip_group: An iterable containing the group for tooltip.
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
-            gdf: An optional GeoDataFrame for proper polygon mapping.
+            gdf: An optional GeoDataFrame for proper polygon mapping. It's
+                required when creating a choropleth map.
         """
         self.gdf = gdf
         self.additional_css = ""
         svg_path: Literal["user_plot.svg"] = "user_plot.svg"
+        self.svg_content = Path(svg_path).read_text()
+        self.template = env.get_template("template.html")
 
         if fig is None:
             fig: Figure = plt.gcf()
         self.fig = fig
         self.fig.savefig(svg_path)
-
-        self.svg_content = Path(svg_path).read_text()
-        self.template = env.get_template("template.html")
+        axes: Axes = self.fig.get_axes()
+        if len(axes) > 1:
+            raise NotImplementedError("Support only figure with 1 axes.")
+        self.ax = axes[0]
 
         with open(CSS_PATH) as f:
             self.default_css = f.read()
@@ -72,20 +83,18 @@ class InteractivePlot:
         with open(JS_PATH) as f:
             self.js = f.read()
 
-        axes: Axes = self.fig.get_axes()
-        if len(axes) > 1:
-            raise NotImplementedError("Support only figure with 1 axes.")
-
-        self.ax = axes[0]
-
         # tooltip inputs
-        self.tooltip = _vector_to_list(tooltip)
+        if tooltip is None:
+            self.tooltip = []
+        else:
+            self.tooltip = _vector_to_list(tooltip)
         if tooltip_group is None:
             self.tooltip_group = list(range(len(self.tooltip)))
         else:
             self.tooltip_group = _vector_to_list(tooltip_group)
 
-        if gdf is not None:
+        # edge case with choropleth maps
+        if gdf is not None and len(self.ax.collections) > 0:
             self.polygon_to_data_mapping = _map_polygons_to_data(
                 self.ax.collections[0], gdf, tooltip
             )
@@ -149,7 +158,9 @@ class InteractivePlot:
             ```
 
         Notes:
-            Don't add the `!important` tag, it's already added automatically.
+            Don't add the `!important` tag if you're using the `dict` syntax, it's already
+            added automatically to make sure default parameters are overwritten. Otherwise,
+            it's recommended to add it in case you don't have the expected results.
         """
         if isinstance(css_content, dict):
             css: str = f"{selector}{{"
