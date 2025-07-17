@@ -1,6 +1,3 @@
-from shapely.geometry import MultiPolygon, Polygon
-
-
 def _map_polygons_to_data(collection, gdf, tooltip):
     """
     Create a mapping between polygon paths and data indices.
@@ -8,6 +5,8 @@ def _map_polygons_to_data(collection, gdf, tooltip):
     than we have data points due to multi-part geometries
     (e.g, MultiPolygon).
     """
+    from shapely.geometry import MultiPolygon, Polygon
+
     paths = collection.get_paths()
     polygon_to_data_mapping = []
 

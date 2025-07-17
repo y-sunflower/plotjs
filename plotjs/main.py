@@ -39,7 +39,7 @@ class InteractivePlot:
         tooltip: list | tuple | SeriesT | np.ndarray,
         tooltip_group: list | tuple | SeriesT | np.ndarray | None = None,
         fig: Figure | None = None,
-        gdf: object | None = None,  # GeoDataFrame for proper polygon mapping
+        gdf: object | None = None,
     ):
         """
         Initiate an `InteractivePlot` instance to convert matplotlib
@@ -144,6 +144,9 @@ class InteractivePlot:
                 '.tooltip {"background": "blue";}'
             )
             ```
+
+        Notes:
+            Don't add the `!important` tag, it's already added automatically.
         """
         if isinstance(css_content, dict):
             css: str = f"{selector}{{"
