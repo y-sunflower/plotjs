@@ -16,20 +16,20 @@ svg {
   font-family: "Helvetica Neue", "Arial", sans-serif;
 }
 
-.scatter-point {
+.point {
   opacity: 1;
   transition: opacity 0.1s ease;
 }
 
-.scatter-point:hover {
+.point:hover {
   opacity: 1;
 }
 
-.scatter-point.not-hovered {
+.point.not-hovered {
   opacity: 0.2;
 }
 
-.scatter-point.hovered {
+.point.hovered {
   opacity: 1;
 }
 
@@ -64,5 +64,22 @@ svg {
 }
 
 .bar.hovered {
+  opacity: 1;
+}
+
+.polygon {
+  opacity: 1;
+  transition: opacity 0.1s ease;
+}
+
+.polygon:hover {
+  opacity: 1;
+}
+
+.polygon.not-hovered {
+  opacity: 0.2;
+}
+
+.polygon.hovered {
   opacity: 1;
 }

@@ -1,7 +1,7 @@
 const tooltip = d3.select("#tooltip");
 const svg = d3.select("svg");
 const points = svg.selectAll("#PathCollection_1 use");
-points.attr("class", "scatter-point");
+points.attr("class", "point");
 
 const plot_data = JSON.parse(`{{ plot_data_json | tojson | safe }}`);
 const tooltip_label = plot_data["tooltip"];

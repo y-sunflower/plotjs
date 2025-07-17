@@ -1,18 +1,16 @@
 import numpy as np
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
-
 import narwhals as nw
 from narwhals.dependencies import is_numpy_array, is_into_series
 from narwhals.typing import SeriesT
-
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
-from matplotlib.collections import PathCollection
-
 import os
 from typing import Literal, Text
+
+from plotjs.polygons_mapping import _map_polygons_to_data
 
 # TEMPLATE_DIR: str = Path(__file__).parent / "static"
 TEMPLATE_DIR = "/Users/josephbarbier/Desktop/plotjs/plotjs/static"
@@ -41,6 +39,7 @@ class InteractivePlot:
         tooltip: list | tuple | SeriesT | np.ndarray,
         tooltip_group: list | tuple | SeriesT | np.ndarray | None = None,
         fig: Figure | None = None,
+        gdf: object | None = None,  # GeoDataFrame for proper polygon mapping
     ):
         """
         Initiate an `InteractivePlot` instance to convert matplotlib
@@ -50,7 +49,9 @@ class InteractivePlot:
             tooltip: An iterable containing the labels for the tooltip.
             tooltip_group: An iterable containing the group for tooltip.
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
+            gdf: An optional GeoDataFrame for proper polygon mapping.
         """
+        self.gdf = gdf
         self.additional_css = ""
         svg_path: Literal["user_plot.svg"] = "user_plot.svg"
 
@@ -76,7 +77,6 @@ class InteractivePlot:
             raise NotImplementedError("Support only figure with 1 axes.")
 
         self.ax = axes[0]
-        self.children = self.ax.get_children()
 
         # tooltip inputs
         self.tooltip = _vector_to_list(tooltip)
@@ -85,12 +85,16 @@ class InteractivePlot:
         else:
             self.tooltip_group = _vector_to_list(tooltip_group)
 
+        self.polygon_to_data_mapping = _map_polygons_to_data(
+            self.ax.collections[0], gdf, tooltip
+        )
         self._set_plot_data_json()
 
     def _set_plot_data_json(self):
         self.plot_data_json = {
             "tooltip": self.tooltip,
             "tooltip_group": self.tooltip_group,
+            "polygon_mapping": self.polygon_to_data_mapping,
         }
 
     def _set_html(self):
@@ -185,16 +189,26 @@ class InteractivePlot:
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
+    import geopandas as gpd
+
+    df = gpd.read_file(
+        "https://github.com/holtzy/The-Python-Graph-Gallery/blob/master/static/data/europe.geojson?raw=true"
+    ).dropna()
+    df = df[df["name"] != "Russia"]
 
     fig, ax = plt.subplots()
-    ax.barh(
-        ["Fries", "Cake", "Apple", "Cheese"],
-        [10, 30, 40, 50],
-        height=0.6,
-        color=["#ef476f", "#ffd166", "#06d6a0", "#118ab2"],
+    ax.set_xlim(-25, 42)
+    ax.set_ylim(30, 82)
+    ax.axis("off")
+    df.plot(column="pop_est", ax=ax, cmap="viridis_r")
+
+    custom_tooltip = df.apply(
+        lambda row: f"{row['name']}<br>Population of {round(row['pop_est'] / 1_000_000, 1)} millions",
+        axis=1,
     )
 
     InteractivePlot(
         fig=fig,
-        tooltip=["Fries", "Cake", "Apple", "Cheese"],
-    ).save("index.html")
+        tooltip=custom_tooltip,
+        gdf=df,
+    ).add_css({"width": "70%"}, selector="svg").save("index.html")

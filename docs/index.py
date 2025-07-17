@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import geopandas as gpd
 import numpy as np
 
 from plotjs import data
@@ -35,7 +36,7 @@ InteractivePlot(
     tooltip_group=df["species"],
 ).add_css(
     {"opacity": "0.8", "fill": "red"},
-    selector=".scatter-point.hovered",
+    selector=".point.hovered",
 ).save("docs/quickstart3.html")
 
 ##############################################################
@@ -98,3 +99,27 @@ InteractivePlot(
     },
     selector=".tooltip",
 ).save("docs/quickstart6.html")
+
+##############################################################
+
+df = gpd.read_file(
+    "https://github.com/holtzy/The-Python-Graph-Gallery/blob/master/static/data/europe.geojson?raw=true"
+).dropna()
+df = df[df["name"] != "Russia"]
+
+fig, ax = plt.subplots()
+ax.set_xlim(-25, 42)
+ax.set_ylim(30, 82)
+ax.axis("off")
+
+df.plot(column="pop_est", ax=ax, cmap="viridis_r", ec="black", lw=0.5)
+
+custom_tooltip = df.apply(
+    lambda row: f"{row['name']}<br>Population of {round(row['pop_est'] / 1_000_000, 1)} millions",
+    axis=1,
+)
+
+InteractivePlot(
+    tooltip=custom_tooltip,
+    gdf=df,
+).save("docs/quickstart7.html")
