@@ -20,9 +20,13 @@
     const svg = d3.select(container).select("svg");
 
     const plot_data = JSON.parse(`{{ plot_data_json | tojson | safe }}`);
-    const tooltip_label = plot_data["tooltip"];
     const tooltip_group = plot_data["tooltip_group"];
     const polygon_mapping = plot_data["polygon_mapping"];
+    const tooltip_label = plot_data["tooltip"];
+    if (tooltip_label.length === 0) {
+      tooltip.style("display", "none");
+      return; // Exit early, no need to set up hover effects
+    }
 
     const points = svg.selectAll("#PathCollection_1 use");
     const lines = svg.selectAll('g[id^="line2d"] path').filter(function () {

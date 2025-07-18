@@ -50,6 +50,7 @@ dev = [
     "pypalettes>=0.1.4",
     "pyfonts>=1.0.0",
     "morethemes>=0.4.0",
+    "plotnine>=0.13.6",
 ]
 
 [project.urls]

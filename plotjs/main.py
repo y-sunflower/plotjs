@@ -16,8 +16,8 @@ from typing import Literal, Text
 
 from plotjs.polygons_mapping import _map_polygons_to_data
 
-# TEMPLATE_DIR = "/Users/josephbarbier/Desktop/plotjs/plotjs/static"
-TEMPLATE_DIR: str = Path(__file__).parent / "static"
+# TEMPLATE_DIR: str = Path(__file__).parent / "static"
+TEMPLATE_DIR = "/Users/josephbarbier/Desktop/plotjs/plotjs/static"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
 D3_PATH: str = os.path.join(TEMPLATE_DIR, "d3.min.js")
 JS_PATH: str = os.path.join(TEMPLATE_DIR, "main.js")
@@ -44,11 +44,11 @@ class InteractivePlot:
     def __init__(
         self,
         *,
-        tooltip: list | tuple | np.ndarray | SeriesT | None,
+        tooltip: list | tuple | np.ndarray | SeriesT | None = None,
         tooltip_group: list | tuple | np.ndarray | SeriesT | None = None,
         fig: Figure | None = None,
         gdf: object | None = None,
-        **savefig_kws,
+        **savefig_kws: dict,
     ):
         """
         Initiate an `InteractivePlot` instance to convert matplotlib
@@ -69,8 +69,6 @@ class InteractivePlot:
         self.fig = fig
         self.fig.savefig(svg_path, **savefig_kws)
         axes: Axes = self.fig.get_axes()
-        if len(axes) > 1:
-            raise NotImplementedError("Support only figure with 1 axes.")
         self.ax = axes[0]
 
         self.gdf = gdf
@@ -121,10 +119,6 @@ class InteractivePlot:
             svg=self.svg_content,
             plot_data_json=self.plot_data_json,
         )
-
-    def _repr_html_(self):
-        self._set_html()
-        return self.html
 
     def add_css(self, css_content: str | dict, selector: str | None = None):
         """
@@ -226,6 +220,4 @@ if __name__ == "__main__":
     ax.plot(walk2, linewidth=8, color="#2a9d8f")
     ax.plot(walk3, linewidth=8, color="#e9c46a")
 
-    InteractivePlot(
-        tooltip=["S&P500", "CAC40", "Bitcoin"],
-    ).save("index.html")
+    InteractivePlot().save("index.html")
