@@ -8,9 +8,9 @@ The goal is also to give users a large customization power.
 
 ## What it does?
 
-Matplotlib is **great**: you can draw anything with it.
+Matplotlib is **great**[^1]: you can draw anything with it.
 
-But Matplotlib's graphics are **static**, unlike those of plotly or altair, for example.
+But Matplotlib's graphics are **static**[^2], unlike those of plotly or altair, for example.
 
 For instance, a chart made with matplotlib looks like this:
 
@@ -191,3 +191,8 @@ InteractivePlot(
 <iframe width="700" height="600" src="quickstart7.html" style="border:none;"></iframe>
 
 This is just a basic overview of things you can do with `plotjs`. There is a lot more coming.
+
+## Appendix
+
+[^1]: It really is.
+[^2]: To be exact, you can perfectly create interactive charts natively in Matplotlib. It requires to use its interactive mode and GUI backends to allow actions like zooming and panning in desktop windows. For instance, this differs from Plotly or Altair, which offer richer, browser-based interactivity like tooltips and filtering. Matplotlib’s interactivity is more limited and environment-dependent, while Plotly and Altair provide higher-level, web-friendly features.

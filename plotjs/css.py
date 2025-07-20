@@ -1,7 +1,7 @@
 import re
 
 
-def css_from_dict(css_dict: dict) -> str:
+def from_dict(css_dict: dict) -> str:
     """
     Get raw CSS in a string from a dictionnary. It's a
     utility function useful to write CSS from a Python
@@ -16,9 +16,9 @@ def css_from_dict(css_dict: dict) -> str:
 
     Usage:
         ```python
-        from plotjs import css_from_dict
+        from plotjs import css
 
-        css_from_dict({
+        css.from_dict({
             ".tooltip": {"color": "red", "background": "blue !important"},
             ".point": {"width": "10px", "height": "200px"},
         })
@@ -27,15 +27,15 @@ def css_from_dict(css_dict: dict) -> str:
     css: str = ""
 
     for selector, css_props in css_dict.items():
-        css += f"{selector} {{"
+        css += f"{selector}{{"
         for prop, value in css_props.items():
-            css += f" {prop}: {value};"
-        css += " }\n"
+            css += f"{prop}:{value};"
+        css += "}"
 
     return css
 
 
-def css_from_file(css_file: str) -> str:
+def from_file(css_file: str) -> str:
     """
     Get raw CSS from a CSS file. This function just
     reads the CSS from a given file.
@@ -48,9 +48,9 @@ def css_from_file(css_file: str) -> str:
 
     Usage:
         ```python
-        from plotjs import css_from_file
+        from plotjs import css
 
-        css_from_file("path/to/style.css")
+        css.from_file("path/to/style.css")
         ```
     """
     with open(css_file, "r") as f:
@@ -58,15 +58,15 @@ def css_from_file(css_file: str) -> str:
     return css
 
 
-def is_css_like(css: str) -> bool:
+def is_css_like(s: str) -> bool:
     """
     Check whether a string looks like valid CSS.
 
     Args:
-        css: A string containing CSS.
+        s: A string to evaluate.
 
     Returns:
-        Whether or not `css` looks like valid CSS.
+        Whether or not `s` looks like valid CSS.
 
     Usage:
         ```python
@@ -87,17 +87,17 @@ def is_css_like(css: str) -> bool:
         re.VERBOSE,
     )
 
-    matches = css_block_pattern.findall(css)
+    matches = css_block_pattern.findall(s)
     return bool(matches)
 
 
-css_from_dict({".tooltip": {"color": "red", "background": "blue"}})
+print(from_dict({".tooltip": {"color": "red", "background": "blue"}}))
 
-css_from_file("sandbox/style.css")
+from_file("sandbox/style.css")
 
 print(
     is_css_like(
-        css_from_dict(
+        from_dict(
             {
                 ".tooltip": {"color": "red", "background": "blue"},
                 ".point": {"width": "10px", "max-width": "100px"},

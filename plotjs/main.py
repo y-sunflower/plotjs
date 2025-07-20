@@ -210,14 +210,19 @@ class InteractivePlot:
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
+    np.random.seed(0)
+
     length = 500
     walk1 = np.cumsum(np.random.choice([-1, 1], size=length))
     walk2 = np.cumsum(np.random.choice([-1, 1], size=length))
     walk3 = np.cumsum(np.random.choice([-1, 1], size=length))
 
-    fig, ax = plt.subplots(figsize=(10, 5))
-    ax.plot(walk1, linewidth=8, color="#264653")
-    ax.plot(walk2, linewidth=8, color="#2a9d8f")
-    ax.plot(walk3, linewidth=8, color="#e9c46a")
+    labels = ["S&P", "CAC40", "Bitcoin"]
 
-    InteractivePlot(tooltip=["yes", "no", "yes"]).save("index.html")
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.plot(walk1, linewidth=8, color="#264653", label=labels[0])
+    ax.plot(walk2, linewidth=8, color="#2a9d8f", label=labels[1])
+    ax.plot(walk3, linewidth=8, color="#e9c46a", label=labels[2])
+    ax.legend()
+
+    InteractivePlot(tooltip=labels).save("index.html")

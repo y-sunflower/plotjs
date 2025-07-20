@@ -1,11 +1,10 @@
 import narwhals as nw
 import os
 
-from typing import List
 from narwhals.typing import Frame
 
 PACKAGE_DIR: str = os.path.dirname(os.path.abspath(__file__))
-AVAILABLE_DATASETS: List[str] = ["iris", "mtcars", "titanic"]
+AVAILABLE_DATASETS: list[str] = ["iris", "mtcars", "titanic"]
 
 
 def _load_data(dataset_name: str, backend: str) -> Frame:
@@ -18,6 +17,25 @@ def _load_data(dataset_name: str, backend: str) -> Frame:
         backend: The output format of the dataframe.
     Returns:
         A dataframe with the specified dataset.
+
+    Usage:
+        ```python
+        from plotjs import data
+
+        df = data.load_iris()
+        ```
+
+        ```python
+        from plotjs import data
+
+        df = data.load_iris("polars")
+        ```
+
+        ```python
+        from plotjs import data
+
+        df = data.load_iris("pyarrow")
+        ```
     """
     dataset_name: str = dataset_name.lower()
 
@@ -45,6 +63,25 @@ def load_iris(output_format: str = "pandas") -> Frame:
 
     Returns:
         The iris dataset.
+
+    Usage:
+        ```python
+        from plotjs import data
+
+        df = data.load_iris()
+        ```
+
+        ```python
+        from plotjs import data
+
+        df = data.load_iris("polars")
+        ```
+
+        ```python
+        from plotjs import data
+
+        df = data.load_iris("pyarrow")
+        ```
     """
     return _load_data("iris", backend=output_format)
 
@@ -61,6 +98,25 @@ def load_mtcars(output_format: str = "pandas") -> Frame:
 
     Returns:
         The mtcars dataset.
+
+    Usage:
+        ```python
+        from plotjs import data
+
+        df = data.load_mtcars()
+        ```
+
+        ```python
+        from plotjs import data
+
+        df = data.load_mtcars("polars")
+        ```
+
+        ```python
+        from plotjs import data
+
+        df = data.load_mtcars("pyarrow")
+        ```
     """
     return _load_data("mtcars", backend=output_format)
 
@@ -77,5 +133,24 @@ def load_titanic(output_format: str = "pandas") -> Frame:
 
     Returns:
         The titanic dataset.
+
+    Usage:
+        ```python
+        from plotjs import data
+
+        df = data.load_titanic()
+        ```
+
+        ```python
+        from plotjs import data
+
+        df = data.load_titanic("polars")
+        ```
+
+        ```python
+        from plotjs import data
+
+        df = data.load_titanic("pyarrow")
+        ```
     """
     return _load_data("titanic", backend=output_format)

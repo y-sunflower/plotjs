@@ -12,6 +12,80 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script>
+  const find_lines = function (svg) {
+    // select all <path> of Line2D elements
+    const lines = svg.selectAll('g[id^="line2d"] path').filter(function () {
+      const clip = d3.select(this).attr("clip-path");
+
+      return (
+        // keep only <path> with clip-path attribute
+        clip &&
+        // that starts with "url("
+        clip.startsWith("url(") &&
+        // and are not child of a #matplotlib.axis
+        !this.closest('g[id^="matplotlib.axis"]')
+      );
+    });
+
+    lines.attr("class", "line");
+    return lines;
+  };
+
+  const find_points = function (svg, tooltip_group) {
+    // select all <use> in #PathCollection_1
+    const points = svg.selectAll("#PathCollection_1 use");
+    points.attr("class", "point").each(function (_, i) {
+      d3.select(this).attr("data-group", tooltip_group[i]);
+    });
+
+    return points;
+  };
+
+  const find_bars = function (svg) {
+    // select all #patch
+    const bars = svg.selectAll('g[id^="patch"]').filter(function () {
+      const path = d3.select(this).select("path");
+
+      // that have a clip-path attribute
+      const clip = path.attr("clip-path");
+
+      // starting with "url("
+      return clip && clip.startsWith("url(");
+    });
+    bars.attr("class", "bar");
+
+    return bars;
+  };
+
+  const find_polygons = function (svg) {
+    // select all <path> in #PatchCollection
+    const polygons = svg.selectAll('g[id^="PatchCollection_"] path');
+    polygons.attr("class", "polygon");
+
+    return polygons;
+  };
+
+  const find_legend_handles = function (svg) {
+    // select all <path> of Line2D elements
+    const legend_handles = svg
+      .selectAll('g[id^="line2d"] path')
+      .filter(function () {
+        const path = d3.select(this);
+        const clip = path.attr("clip-path");
+
+        return (
+          // keep only <path> without clip-path attribute
+          !clip &&
+          // and are not child of a #matplotlib.axis
+          !this.closest('g[id^="matplotlib.axis"]')
+        );
+      });
+
+    legend_handles.attr("class", "legend-handles");
+    return legend_handles;
+  };
+</script>
+<script>
   (function () {
     const container = document.getElementById("{{ chart_id }}");
     if (!container) return;
@@ -23,28 +97,11 @@
     const tooltip_group = plot_data["tooltip_group"];
     const polygon_mapping = plot_data["polygon_mapping"];
     const tooltip_label = plot_data["tooltip"];
+
+    // no tooltip? no problem
     if (tooltip_label.length === 0) {
-      tooltip.style("display", "none");
       return; // Exit early, no need to set up hover effects
     }
-
-    const points = svg.selectAll("#PathCollection_1 use");
-    const lines = svg.selectAll('g[id^="line2d"] path').filter(function () {
-      return !this.closest('g[id^="matplotlib.axis"]');
-    });
-    const bars = svg.selectAll('g[id^="patch"]').filter(function () {
-      const path = d3.select(this).select("path");
-      const clip = path.attr("clip-path");
-      return clip && clip.startsWith("url(");
-    });
-    const polygons = svg.selectAll('g[id^="PatchCollection_"] path');
-
-    points.attr("class", "point").each(function (_, i) {
-      d3.select(this).attr("data-group", tooltip_group[i]);
-    });
-    lines.attr("class", "line");
-    bars.attr("class", "bar");
-    polygons.attr("class", "polygon");
 
     function applyHoverEffect(plot_element) {
       plot_element
@@ -87,6 +144,14 @@
         });
     }
 
+    // find all core plot elements
+    lines = find_lines(svg);
+    points = find_points(svg, tooltip_group);
+    bars = find_bars(svg);
+    polygons = find_polygons(svg);
+    legend_handles = find_legend_handles(svg);
+
+    // give them the hover effect
     applyHoverEffect(lines);
     applyHoverEffect(points);
     applyHoverEffect(bars);

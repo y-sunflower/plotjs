@@ -6,7 +6,7 @@ But that does not mean we have to do mystic things to make it to work, because, 
 
 There are 2 ways to tackle this problem:
 
-- Take a matplotlib Figure (instance containing all plot elements) and convert it to a more common format such as json. Then, with this json file, we recreate the figure with an interactive tool such as D3.js (that's what [mpld3](https://github.com/mpld3/mpld3) does btw!).
+- Take a matplotlib Figure (instance containing all plot elements) and convert it to a more common format such as json. We call this **serialization**. Then, with this json file, we recreate the figure with an interactive tool such as D3.js (that's what [mpld3](https://github.com/mpld3/mpld3) does btw!).
 - Use native matplotlib figure output format (especially SVG) and parse this instead (that's what `plotjs` does).
 
 The second option is **much simpler** (well, it depends) because we don't have to
@@ -21,10 +21,10 @@ But it means that we don't have full control over how the plot is structured (fr
 For the moment, we just take user's matplotlib figure and save it as SVG. This is just:
 
 ```python
-fig.savefig("user_plot.svg")
+fig.savefig("plot.svg")
 ```
 
-Now let's say the Figure contains a scatterplot we want to add a tooltip: when someone passes his mouth over a point, it displays a label.
+Now let's say the Figure contains a scatterplot we want to add a tooltip: when someone passes his mouse over a point, it displays a label.
 
 The **core problem to solve** is: "how do I know what elements from the SVG are points"?
 
@@ -89,6 +89,70 @@ L 398.487273 53.568
 
 If you pay close attention, you'll see potential patterns in the structure of certain elements.
 
-That's exactly what we'll use to determine what kind of plot elements we have. I'm not gonna detail them here because it's not particularly interesting, but feel free to browse the [source code](https://github.com/y-sunflower/plotjs/blob/main/plotjs/static/template.html){target="\_blank"} if you're curious.
+That's exactly what we'll use to determine what kind of plot elements we have.
 
 > Note: determining the kind of plot elements could have been done (partially) from the Python side, but this felt easier to me to do it from the JavaScript side.
+
+The next step is to understand matplotlib underlying objects (called [artists](https://matplotlib.org/stable/users/explain/artists/artist_intro.html){target="\_blank"}) and how that translate to SVG.
+
+## TLDR: artists in matplotlib
+
+In matplotlib, artists are all the visual elements you see on a plot. There is the `Artist` base class, and all others artists inherits from this class.
+
+For example:
+
+- the `scatter()` function returns a `PathCollection` object, a subclass of `Artist`.
+- the `plot()` function returns a `Line2D` object, a subclass of `Artist`.
+- and so on
+
+## Selecting artists from SVG
+
+In the SVG output of `savefig("plot.svg")`, we can find some info about what object was used.
+
+For example, all `PathCollection` object looks like `<g id="PathCollection_1">`, `<g id="PathCollection_2">`. And since `PathCollection` is just one or multiple points, we can easily know how many scatter plots there are.
+
+For lines, there are represented by `Line2D`. In the SVG, they look like `<g id="line2d_1">`, `<g id="line2d_2">`, etc. With this, we can easily detect that there are lines the chart.
+
+But there is a major issue here: not all `PathCollection` are relevant, same for `Line2D`, and so on.
+
+By relevant I mean that we want to add interactivity to them. For example, what elements here are considered to be a `Line2D`:
+
+![](img/how-it-works-1.png)
+
+At first, I thought there was 3: one for each main line. But in practice, it's much more:
+
+![](img/how-it-works-2.png)
+
+What that means is that we can't select all `Line2D` and give them an hover effect, for instance. We need to find a way to discriminate relevant lines (the 3 big ones) and the other ones.
+
+## Filtering artists from SVG
+
+This section might not be up to date to the latest version, but it'll give you the idea of how `plotjs` detect what is a "core" plot elements, and what is not.
+
+It's mostly consist of handling edge cases here, and is very different depending on the plot element (`Line2D`, `PathCollection`, etc).
+
+For example, in order to select only "core" `Line2D` (the 3 colored ones in the previous image), we do:
+
+```javascript
+const lines = svg.selectAll('g[id^="line2d"] path').filter(function () {
+  const clip = d3.select(this).attr("clip-path");
+
+  return (
+    // keep only <path> with clip-path attribute
+    clip &&
+    // that starts with "url("
+    clip.startsWith("url(") &&
+    // and are not child of a #matplotlib.axis
+    !this.closest('g[id^="matplotlib.axis"]')
+  );
+});
+```
+
+The idea is basically:
+
+- select all `Line2D` with the first line
+- filter to remove non-wanted `Line2D`
+
+This gives us a `lines` variable that only contains the lines of interest!
+
+The logic is the same for other plot elements: bars, points, polygons, etc.

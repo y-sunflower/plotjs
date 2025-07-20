@@ -1,0 +1,14 @@
+svg {
+  width: 100%;
+  height: auto;
+}
+
+.point {
+  opacity: 1;
+  transition: opacity 0.1s ease;
+}
+
+.polygon {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
