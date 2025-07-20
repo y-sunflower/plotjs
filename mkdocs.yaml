@@ -31,7 +31,8 @@ nav:
       - Advanced: guides/advanced/index.md
   - Reference:
       - reference/interactive-plot.md
-      - reference/datasets.md
+      - CSS: reference/css.md
+      - Datasets: reference/datasets.md
 
 extra_css:
   - stylesheets/style.css

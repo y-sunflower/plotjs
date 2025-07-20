@@ -220,4 +220,4 @@ if __name__ == "__main__":
     ax.plot(walk2, linewidth=8, color="#2a9d8f")
     ax.plot(walk3, linewidth=8, color="#e9c46a")
 
-    InteractivePlot().save("index.html")
+    InteractivePlot(tooltip=["yes", "no", "yes"]).save("index.html")
