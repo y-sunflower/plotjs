@@ -109,8 +109,13 @@
     let tooltip_group = plot_data["tooltip_group"];
 
     // no tooltip? no problem
-    if (tooltip_label.length === 0) {
-      return; // Exit early, no need to set up hover effects
+    if (tooltip_label.length === 0 && tooltip_group.length === 0) {
+      return; // Exit early
+    }
+    if (tooltip_label.length === 0 && tooltip_group > 0) {
+      const tooltip_display = "none";
+    } else {
+      const tooltip_display = "block";
     }
 
     // find all core plot elements
@@ -167,7 +172,7 @@
             .classed("hovered", true);
 
           tooltip
-            .style("display", "block")
+            .style("display", tooltip_display)
             .style("left", event.pageX + 10 + "px")
             .style("top", event.pageY + 10 + "px")
             .html(labels[i]);
