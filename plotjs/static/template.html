@@ -12,61 +12,108 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script>
-  const find_lines = function (svg) {
-    // select all <path> of Line2D elements
-    const lines = svg.selectAll('g[id^="line2d"] path').filter(function () {
-      const clip = d3.select(this).attr("clip-path");
-
-      return (
-        // keep only <path> with clip-path attribute
-        clip &&
-        // that starts with "url("
-        clip.startsWith("url(") &&
-        // and are not child of a #matplotlib.axis
-        !this.closest('g[id^="matplotlib.axis"]')
-      );
-    });
-
-    lines.attr("class", "line");
-    return lines;
-  };
-
-  const find_points = function (svg, tooltip_group) {
-    // select all <use> in #PathCollection_1
-    const points = svg.selectAll('g[id^="PathCollection"] use');
-    points.attr("class", "point").each(function (_, i) {
-      d3.select(this).attr("data-group", tooltip_group[i]);
-    });
-
-    return points;
-  };
-
-  const find_bars = function (svg) {
-    // select all #patch
-    const bars = svg.selectAll('g[id^="patch"]').filter(function () {
-      const path = d3.select(this).select("path");
-
-      // that have a clip-path attribute
-      const clip = path.attr("clip-path");
-
-      // starting with "url("
-      return clip && clip.startsWith("url(");
-    });
-    bars.attr("class", "bar");
-
-    return bars;
-  };
-
-  const find_polygons = function (svg) {
-    // select all <path> in #PatchCollection
-    const polygons = svg.selectAll('g[id^="PatchCollection_"] path');
-    polygons.attr("class", "polygon");
-
-    return polygons;
-  };
-</script>
-<script>
   (function () {
+    class PlotSVGParser {
+      constructor(svg, tooltip, tooltip_label, tooltip_group, show_tooltip) {
+        this.svg = svg;
+        this.tooltip = tooltip;
+        this.tooltip_label = tooltip_label;
+        this.tooltip_group = tooltip_group;
+        this.show_tooltip = show_tooltip;
+
+        this.tooltip_x_shift = 10; // todo: not harcode
+        this.tooltip_y_shift = 10; // todo: not harcode
+      }
+
+      find_bars(svg) {
+        // select all #patch
+        const bars = svg.selectAll('g[id^="patch"]').filter(function () {
+          const path = d3.select(this).select("path");
+
+          // that have a clip-path attribute
+          const clip = path.attr("clip-path");
+
+          // starting with "url("
+          return clip && clip.startsWith("url(");
+        });
+
+        bars.attr("class", "bar");
+        this.bars = bars;
+        return bars;
+      }
+
+      find_points(svg) {
+        const self = this;
+        // select all <use> in #PathCollection_1
+        const points = svg.selectAll('g[id^="PathCollection"] use');
+
+        points.attr("class", "point").each(function (_, i) {
+          d3.select(this).attr("data-group", self.tooltip_group[i]);
+        });
+        this.points = points;
+        return points;
+      }
+
+      find_lines(svg) {
+        // select all <path> of Line2D elements
+        const lines = svg.selectAll('g[id^="line2d"] path').filter(function () {
+          const clip = d3.select(this).attr("clip-path");
+
+          return (
+            // keep only <path> with clip-path attribute
+            clip &&
+            // that starts with "url("
+            clip.startsWith("url(") &&
+            // and are not child of a #matplotlib.axis
+            !this.closest('g[id^="matplotlib.axis"]')
+          );
+        });
+
+        lines.attr("class", "line");
+        this.lines = lines;
+        return lines;
+      }
+
+      find_polygons(svg) {
+        // select all <path> in #PatchCollection
+        const polygons = svg.selectAll('g[id^="PatchCollection_"] path');
+        polygons.attr("class", "polygon");
+
+        this.polygons = polygons;
+        return polygons;
+      }
+
+      applyHoverEffect(plot_element) {
+        const self = this;
+        plot_element
+          .on("mouseover", function (event, d) {
+            const nodes = plot_element.nodes();
+            let i = nodes.indexOf(this);
+
+            const hovered_group = self.tooltip_group[i];
+            plot_element.classed("not-hovered", true);
+            plot_element
+              .filter((_, j) => {
+                return self.tooltip_group[j] === hovered_group;
+              })
+              .classed("not-hovered", false)
+              .classed("hovered", true);
+
+            tooltip
+              .style("display", self.show_tooltip)
+              .style("left", event.pageX + self.tooltip_x_shift + "px")
+              .style("top", event.pageY + self.tooltip_y_shift + "px")
+              .html(self.tooltip_label[i]);
+          })
+          .on("mouseout", function () {
+            plot_element
+              .classed("not-hovered", false)
+              .classed("hovered", false);
+            self.tooltip.style("display", "none");
+          });
+      }
+    }
+
     const container = document.getElementById("{{ chart_id }}");
     if (!container) return;
 
@@ -81,68 +128,31 @@
     if (tooltip_label.length === 0 && tooltip_group.length === 0) {
       return; // Exit early
     }
-    let tooltip_display;
+    let show_tooltip;
     if (tooltip_label.length === 0 && tooltip_group.length > 0) {
-      tooltip_display = "none";
+      show_tooltip = "none";
     } else {
-      tooltip_display = "block";
+      show_tooltip = "block";
     }
+
+    plotParser = new PlotSVGParser(
+      svg,
+      tooltip,
+      tooltip_label,
+      tooltip_group,
+      show_tooltip
+    );
 
     // find all core plot elements
-    lines = find_lines(svg);
-    bars = find_bars(svg);
-    polygons = find_polygons(svg);
-    points = find_points(svg, tooltip_group);
-
-    function applyHoverEffect(plot_element, labels, groups) {
-      plot_element
-        .on("mouseover", function (event, d) {
-          const nodes = plot_element.nodes();
-          const i = nodes.indexOf(this);
-          const hovered_group = groups[i];
-
-          // Apply not-hovered to ALL elements first
-          const all_elements = points.merge(lines).merge(bars).merge(polygons);
-          all_elements.classed("not-hovered", true);
-
-          // Highlight main points with matching group
-          points
-            .filter((_, j) => tooltip_group[j] === hovered_group)
-            .classed("not-hovered", false)
-            .classed("hovered", true);
-
-          // Highlight other plot elements with matching group (if applicable)
-          lines
-            .filter((_, j) => tooltip_group[j] === hovered_group)
-            .classed("not-hovered", false)
-            .classed("hovered", true);
-          bars
-            .filter((_, j) => tooltip_group[j] === hovered_group)
-            .classed("not-hovered", false)
-            .classed("hovered", true);
-          polygons
-            .filter((_, j) => tooltip_group[j] === hovered_group)
-            .classed("not-hovered", false)
-            .classed("hovered", true);
-
-          tooltip
-            .style("display", tooltip_display)
-            .style("left", event.pageX + 10 + "px")
-            .style("top", event.pageY + 10 + "px")
-            .html(labels[i]);
-        })
-        .on("mouseout", function () {
-          const all_elements = points.merge(lines).merge(bars).merge(polygons);
-          all_elements.classed("not-hovered", false).classed("hovered", false);
-
-          tooltip.style("display", "none");
-        });
-    }
+    lines = plotParser.find_lines(svg);
+    bars = plotParser.find_bars(svg);
+    polygons = plotParser.find_polygons(svg);
+    points = plotParser.find_points(svg);
 
     // give them the hover effect
-    applyHoverEffect(points, tooltip_label, tooltip_group);
-    applyHoverEffect(lines, tooltip_label, tooltip_group);
-    applyHoverEffect(bars, tooltip_label, tooltip_group);
-    applyHoverEffect(polygons, tooltip_label, tooltip_group);
+    plotParser.applyHoverEffect(points);
+    plotParser.applyHoverEffect(lines);
+    plotParser.applyHoverEffect(bars);
+    plotParser.applyHoverEffect(polygons);
   })();
 </script>

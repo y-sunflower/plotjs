@@ -1,14 +1,13 @@
-class SVGParser {
-  constructor(svg, tooltip, tooltip_label, tooltip_group) {
+class PlotSVGParser {
+  constructor(svg, tooltip, tooltip_label, tooltip_group, show_tooltip) {
     this.svg = svg;
     this.tooltip = tooltip;
+    this.tooltip_label = tooltip_label;
+    this.tooltip_group = tooltip_group;
+    this.show_tooltip = show_tooltip;
 
-    const unique_groups = [...new Set(tooltip_group)];
-    this.tooltip_label = [...tooltip_label, ...unique_groups];
-    this.tooltip_group = [...tooltip_group, ...unique_groups];
-
-    this.tooltip_x_shift = 10;
-    this.tooltip_y_shift = 10;
+    this.tooltip_x_shift = 10; // todo: not harcode
+    this.tooltip_y_shift = 10; // todo: not harcode
   }
 
   find_bars(svg) {
@@ -22,29 +21,20 @@ class SVGParser {
       // starting with "url("
       return clip && clip.startsWith("url(");
     });
-    bars.attr("class", "bar");
 
+    bars.attr("class", "bar");
     this.bars = bars;
     return bars;
   }
 
   find_points(svg) {
+    const self = this;
     // select all <use> in #PathCollection_1
-    const points = svg
-      .selectAll('g[id^="PathCollection"] use')
-      .filter(function () {
-        return (
-          // not part of the legend handles
-          !this.closest('g[id^="legend"]')
-        );
-      });
+    const points = svg.selectAll('g[id^="PathCollection"] use');
+
     points.attr("class", "point").each(function (_, i) {
-      d3.select(this).attr("data-group", this.tooltip_group[i]);
+      d3.select(this).attr("data-group", self.tooltip_group[i]);
     });
-
-    points_legend_handles = this._find_points_legend_handles();
-    points = points.merge(points_legend_handles);
-
     this.points = points;
     return points;
   }
@@ -69,101 +59,81 @@ class SVGParser {
     return lines;
   }
 
-  _find_points_legend_handles(svg) {
-    const points_legend_handles = svg
-      .selectAll('g[id^="PathCollection"] use')
-      .filter(function () {
-        // only part of the legend handles
-        return this.closest('g[id^="legend"]');
-      });
+  find_polygons(svg) {
+    // select all <path> in #PatchCollection
+    const polygons = svg.selectAll('g[id^="PatchCollection_"] path');
+    polygons.attr("class", "polygon");
 
-    points_legend_handles.attr("class", "legend-point");
-
-    // check if legend handles match tooltip_group
-    const unique_groups = [...new Set(this.tooltip_group)];
-    const should_connect_legend =
-      unique_groups.length === points_legend_handles.size();
-
-    if (should_connect_legend) {
-      points_legend_handles.attr("class", "point").each(function (_, i) {
-        d3.select(this).attr("data-group", unique_groups[i]);
-      });
-    }
-
-    this.points_legend_handles = points_legend_handles;
-    return points_legend_handles;
+    this.polygons = polygons;
+    return polygons;
   }
 
-  applyHoverEffect(plot_element, labels, groups) {
+  applyHoverEffect(plot_element) {
+    const self = this;
     plot_element
       .on("mouseover", function (event, d) {
         const nodes = plot_element.nodes();
-        const i = nodes.indexOf(this);
-        const hovered_group = groups[i];
+        let i = nodes.indexOf(this);
 
-        // Apply not-hovered to ALL elements first
-        const all_elements = points.merge(lines).merge(bars).merge(polygons);
-        all_elements.classed("not-hovered", true);
-
-        // Also apply not-hovered to legend points if they exist
-        points_legend_handles.classed("not-hovered", true);
-
-        // Highlight main points with matching group
-        points
-          .filter((_, j) => tooltip_group[j] === hovered_group)
+        const hovered_group = self.tooltip_group[i];
+        plot_element.classed("not-hovered", true);
+        plot_element
+          .filter((_, j) => {
+            return self.tooltip_group[j] === hovered_group;
+          })
           .classed("not-hovered", false)
           .classed("hovered", true);
 
-        // Highlight legend points with matching group
-        points_legend_handles
-          .filter((_, j) => unique_groups[j] === hovered_group)
-          .classed("not-hovered", false)
-          .classed("hovered", true);
-
-        // Highlight other plot elements with matching group (if applicable)
-        lines
-          .filter((_, j) => tooltip_group[j] === hovered_group)
-          .classed("not-hovered", false)
-          .classed("hovered", true);
-        bars
-          .filter((_, j) => tooltip_group[j] === hovered_group)
-          .classed("not-hovered", false)
-          .classed("hovered", true);
-        polygons
-          .filter((_, j) => tooltip_group[j] === hovered_group)
-          .classed("not-hovered", false)
-          .classed("hovered", true);
-
-        this.tooltip
-          .style("display", "block")
-          .style("left", event.pageX + 10 + "px")
-          .style("top", event.pageY + 10 + "px")
-          .html(labels[i]);
+        tooltip
+          .style("display", self.show_tooltip)
+          .style("left", event.pageX + self.tooltip_x_shift + "px")
+          .style("top", event.pageY + self.tooltip_y_shift + "px")
+          .html(self.tooltip_label[i]);
       })
       .on("mouseout", function () {
-        const all_elements = points.merge(lines).merge(bars).merge(polygons);
-        all_elements.classed("not-hovered", false).classed("hovered", false);
-
-        points_legend_handles
-          .classed("not-hovered", false)
-          .classed("hovered", false);
-
-        tooltip.style("display", "none");
+        plot_element.classed("not-hovered", false).classed("hovered", false);
+        self.tooltip.style("display", "none");
       });
   }
 }
 
-svgParser = new SVGParser(svg, tooltip, tooltip_label, tooltip_group);
+const container = document.getElementById("{{ chart_id }}");
+if (!container) return;
+
+const tooltip = d3.select("#tooltip-{{ uuid }}");
+const svg = d3.select(container).select("svg");
+
+const plot_data = JSON.parse(`{{ plot_data_json | tojson | safe }}`);
+const tooltip_label = plot_data["tooltip"];
+const tooltip_group = plot_data["tooltip_group"];
+
+// no tooltip? no problem
+if (tooltip_label.length === 0 && tooltip_group.length === 0) {
+  return; // Exit early
+}
+let show_tooltip;
+if (tooltip_label.length === 0 && tooltip_group.length > 0) {
+  show_tooltip = "none";
+} else {
+  show_tooltip = "block";
+}
+
+plotParser = new PlotSVGParser(
+  svg,
+  tooltip,
+  tooltip_label,
+  tooltip_group,
+  show_tooltip
+);
 
 // find all core plot elements
-lines = svgParser.find_lines(svg);
-bars = svgParser.find_bars(svg);
-polygons = svgParser.find_polygons(svg);
-points = svgParser.find_points(svg);
+lines = plotParser.find_lines(svg);
+bars = plotParser.find_bars(svg);
+polygons = plotParser.find_polygons(svg);
+points = plotParser.find_points(svg);
 
 // give them the hover effect
-svgParser.applyHoverEffect(points, tooltip_label, tooltip_group);
-svgParser.applyHoverEffect(points_legend_handles, unique_groups, unique_groups);
-svgParser.applyHoverEffect(lines, tooltip_label, tooltip_group);
-svgParser.applyHoverEffect(bars, tooltip_label, tooltip_group);
-svgParser.applyHoverEffect(polygons, tooltip_label, tooltip_group);
+plotParser.applyHoverEffect(points);
+plotParser.applyHoverEffect(lines);
+plotParser.applyHoverEffect(bars);
+plotParser.applyHoverEffect(polygons);
