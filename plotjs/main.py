@@ -2,8 +2,6 @@ import numpy as np
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
-import narwhals as nw
-from narwhals.dependencies import is_numpy_array, is_into_series
 from narwhals.typing import SeriesT
 
 import matplotlib.pyplot as plt
@@ -15,6 +13,7 @@ import uuid
 from typing import Literal, Text
 
 from plotjs.polygons_mapping import _map_polygons_to_data
+from plotjs.utils import _vector_to_list
 
 # TEMPLATE_DIR: str = Path(__file__).parent / "static"
 TEMPLATE_DIR = "/Users/josephbarbier/Desktop/plotjs/plotjs/static"
@@ -23,17 +22,6 @@ D3_PATH: str = os.path.join(TEMPLATE_DIR, "d3.min.js")
 JS_PATH: str = os.path.join(TEMPLATE_DIR, "main.js")
 
 env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
-
-
-def _vector_to_list(vector, name="tooltip and tooltip_group") -> list:
-    if isinstance(vector, (list, tuple)) or is_numpy_array(vector):
-        return list(vector)
-    elif is_into_series(vector):
-        return nw.from_native(vector, allow_series=True).to_list()
-    else:
-        raise ValueError(
-            f"{name} must be a Series or a valid iterable (list, tuple, ndarray...)."
-        )
 
 
 class InteractivePlot:
@@ -70,6 +58,9 @@ class InteractivePlot:
         self.fig.savefig(svg_path, **savefig_kws)
         axes: Axes = self.fig.get_axes()
         self.ax = axes[0]
+        self.legend_handles, self.legend_handles_labels = (
+            self.ax.get_legend_handles_labels()
+        )
 
         self.gdf = gdf
         self.additional_css = ""
@@ -90,10 +81,12 @@ class InteractivePlot:
             self.tooltip = []
         else:
             self.tooltip = _vector_to_list(tooltip)
+            self.tooltip.extend(self.legend_handles_labels)
         if tooltip_group is None:
             self.tooltip_group = list(range(len(self.tooltip)))
         else:
             self.tooltip_group = _vector_to_list(tooltip_group)
+            self.tooltip_group.extend(self.legend_handles_labels)
 
         # edge case with choropleth maps
         if gdf is not None and len(self.ax.collections) > 0:
@@ -210,19 +203,25 @@ class InteractivePlot:
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
-    np.random.seed(0)
+    from plotjs import data
 
-    length = 500
-    walk1 = np.cumsum(np.random.choice([-1, 1], size=length))
-    walk2 = np.cumsum(np.random.choice([-1, 1], size=length))
-    walk3 = np.cumsum(np.random.choice([-1, 1], size=length))
+    df = data.load_iris()
 
-    labels = ["S&P", "CAC40", "Bitcoin"]
+    fig, ax = plt.subplots(dpi=300)
 
-    fig, ax = plt.subplots(figsize=(10, 5))
-    ax.plot(walk1, linewidth=8, color="#264653", label=labels[0])
-    ax.plot(walk2, linewidth=8, color="#2a9d8f", label=labels[1])
-    ax.plot(walk3, linewidth=8, color="#e9c46a", label=labels[2])
+    for specie in df["species"].unique():
+        specie_df = df[df["species"] == specie]
+        ax.scatter(
+            specie_df["sepal_length"],
+            specie_df["sepal_width"],
+            s=200,
+            ec="black",
+            label=specie,
+        )
     ax.legend()
 
-    InteractivePlot(tooltip=labels).save("index.html")
+    ip = InteractivePlot(
+        fig=fig,
+        # tooltip=df["species"],
+        tooltip_group=df["species"],
+    ).save("index.html")

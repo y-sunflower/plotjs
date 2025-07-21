@@ -33,43 +33,12 @@
 
   const find_points = function (svg, tooltip_group) {
     // select all <use> in #PathCollection_1
-    const points = svg
-      .selectAll('g[id^="PathCollection"] use')
-      .filter(function () {
-        return (
-          // not part of the legend handles
-          !this.closest('g[id^="legend"]')
-        );
-      });
+    const points = svg.selectAll('g[id^="PathCollection"] use');
     points.attr("class", "point").each(function (_, i) {
       d3.select(this).attr("data-group", tooltip_group[i]);
     });
 
     return points;
-  };
-
-  const find_points_legend_handles = function (svg, tooltip_group) {
-    const points_legend_handles = svg
-      .selectAll('g[id^="PathCollection"] use')
-      .filter(function () {
-        // only part of the legend handles
-        return this.closest('g[id^="legend"]');
-      });
-
-    points_legend_handles.attr("class", "legend-point");
-
-    // check if legend handles match tooltip_group
-    const unique_groups = [...new Set(tooltip_group)];
-    const should_connect_legend =
-      unique_groups.length === points_legend_handles.size();
-
-    if (should_connect_legend) {
-      points_legend_handles.attr("class", "point").each(function (_, i) {
-        d3.select(this).attr("data-group", unique_groups[i]);
-      });
-    }
-
-    return points_legend_handles;
   };
 
   const find_bars = function (svg) {
@@ -105,17 +74,18 @@
     const svg = d3.select(container).select("svg");
 
     const plot_data = JSON.parse(`{{ plot_data_json | tojson | safe }}`);
-    let tooltip_label = plot_data["tooltip"];
-    let tooltip_group = plot_data["tooltip_group"];
+    const tooltip_label = plot_data["tooltip"];
+    const tooltip_group = plot_data["tooltip_group"];
 
     // no tooltip? no problem
     if (tooltip_label.length === 0 && tooltip_group.length === 0) {
       return; // Exit early
     }
-    if (tooltip_label.length === 0 && tooltip_group > 0) {
-      const tooltip_display = "none";
+    let tooltip_display;
+    if (tooltip_label.length === 0 && tooltip_group.length > 0) {
+      tooltip_display = "none";
     } else {
-      const tooltip_display = "block";
+      tooltip_display = "block";
     }
 
     // find all core plot elements
@@ -123,13 +93,6 @@
     bars = find_bars(svg);
     polygons = find_polygons(svg);
     points = find_points(svg, tooltip_group);
-    points_legend_handles = find_points_legend_handles(svg, tooltip_group);
-
-    const unique_groups = [...new Set(tooltip_group)];
-
-    points = points.merge(points_legend_handles);
-    tooltip_label = [...tooltip_label, ...unique_groups];
-    tooltip_group = [...tooltip_group, ...unique_groups];
 
     function applyHoverEffect(plot_element, labels, groups) {
       plot_element
@@ -142,18 +105,9 @@
           const all_elements = points.merge(lines).merge(bars).merge(polygons);
           all_elements.classed("not-hovered", true);
 
-          // Also apply not-hovered to legend points if they exist
-          points_legend_handles.classed("not-hovered", true);
-
           // Highlight main points with matching group
           points
             .filter((_, j) => tooltip_group[j] === hovered_group)
-            .classed("not-hovered", false)
-            .classed("hovered", true);
-
-          // Highlight legend points with matching group
-          points_legend_handles
-            .filter((_, j) => unique_groups[j] === hovered_group)
             .classed("not-hovered", false)
             .classed("hovered", true);
 
@@ -181,18 +135,12 @@
           const all_elements = points.merge(lines).merge(bars).merge(polygons);
           all_elements.classed("not-hovered", false).classed("hovered", false);
 
-          // Also remove classes from legend points
-          points_legend_handles
-            .classed("not-hovered", false)
-            .classed("hovered", false);
-
           tooltip.style("display", "none");
         });
     }
 
     // give them the hover effect
     applyHoverEffect(points, tooltip_label, tooltip_group);
-    applyHoverEffect(points_legend_handles, unique_groups, unique_groups);
     applyHoverEffect(lines, tooltip_label, tooltip_group);
     applyHoverEffect(bars, tooltip_label, tooltip_group);
     applyHoverEffect(polygons, tooltip_label, tooltip_group);
