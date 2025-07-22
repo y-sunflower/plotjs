@@ -24,7 +24,7 @@ sandbox/
 
 *.html
 !plotjs/static/template.html
-!docs/*.html
+!docs/**/*.html
 
 *.svg
 *.json

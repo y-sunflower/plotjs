@@ -34,34 +34,33 @@ InteractivePlot(
 
 Being able to pass CSS inside a string is convenient, but not very readable when you want to pass a lot of CSS.
 
-One option that you can use is to define your CSS via dictionnary:
+One option that you can use is to define your CSS via dictionnary. For this we need to import the css module from `plotjs`.
 
 ```python
+from plotjs import css
+
 InteractivePlot(
-   tooltip=df["tooltip"],
+    tooltip=df["tooltip"],
 ).add_css(
-   {"background": "red", "color": "blue"},
-   selector=".tooltip"
+    css.from_dict({".tooltip": {"background": "red", "color": "blue"}}),
 )
 ```
 
-With this, you can just call `add_css()` many times:
+Since `add_css()` returns the instance itself, you can do method chaining:
 
 ```python
 InteractivePlot(
     tooltip=df["tooltip"],
 ).add_css(
-    {"background": "red"},
-    selector=".tooltip",
+    {".tooltip": {"color": "blue"}}
 ).add_css(
-    {"color": "blue"},
-    selector=".tooltip",
+    {".tooltip": {"background": "red"}}
 )
 ```
 
 ## Pass a CSS file
 
-Finally, you can just pass the path to a CSS file directly to `add_css()`. Assuming "style.css" is:
+Finally, if your CSS is in a CSS file, you can use `css.from_file()`. Assuming your CSS file looks like this:
 
 ```CSS
 .tooltip {
@@ -75,7 +74,7 @@ We now do:
 ```python
 InteractivePlot(
     tooltip=df["tooltip"],
-).add_css("style.css")
+).add_css(css.from_file("style.css"))
 ```
 
 <iframe width="800" height="600" src="CSS-2.html" style="border:none;"></iframe>

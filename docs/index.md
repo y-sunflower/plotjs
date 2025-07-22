@@ -159,37 +159,6 @@ InteractivePlot(
 
 <iframe width="800" height="600" src="quickstart6.html" style="border:none;"></iframe>
 
-How about a choropleth map? (currently does not work if you install the package)
-
-```python
-import matplotlib.pyplot as plt
-import geopandas as gpd
-
-df = gpd.read_file(
-    "https://github.com/holtzy/The-Python-Graph-Gallery/blob/master/static/data/europe.geojson?raw=true"
-).dropna()
-df = df[df["name"] != "Russia"]
-
-fig, ax = plt.subplots()
-ax.set_xlim(-25, 42)
-ax.set_ylim(30, 82)
-ax.axis("off")
-
-df.plot(column="pop_est", ax=ax, cmap="viridis_r", ec="black", lw=0.5)
-
-custom_tooltip = df.apply(
-    lambda row: f"{row['name']}<br>{round(row['pop_est'] / 1_000_000, 1)} millions",
-    axis=1,
-)
-
-InteractivePlot(
-    tooltip=custom_tooltip,
-    gdf=df, # in this case we need to pass the geodataframe used
-).save("index.html")
-```
-
-<iframe width="700" height="600" src="quickstart7.html" style="border:none;"></iframe>
-
 This is just a basic overview of things you can do with `plotjs`. There is a lot more coming.
 
 ## Appendix

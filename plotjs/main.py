@@ -107,6 +107,8 @@ class InteractivePlot:
         Add CSS to the final HTML output. This function allows you to override
         default styles or add custom CSS rules.
 
+        See the [CSS guide](../../guides/css/) for more info on how to work with CSS.
+
         Args:
             css_content: CSS rules to apply. This can be:
 
@@ -139,27 +141,8 @@ class InteractivePlot:
                 '.tooltip {"background": "blue";}'
             )
             ```
-
-        Notes:
-            Don't add the `!important` tag if you're using the `dict` syntax, it's already
-            added automatically to make sure default parameters are overwritten. Otherwise,
-            it's recommended to add it in case you don't have the expected results.
         """
-        if isinstance(css_content, dict):
-            css: str = f"{selector}{{"
-            for key, val in css_content.items():
-                css += f"{key}:{val} !important;"
-            css += "}"
-
-            self.additional_css += css
-
-        elif isinstance(css_content, str):
-            if os.path.isfile(css_content):
-                with open(css_content, "r") as f:
-                    self.additional_css += f.read()
-            else:
-                # assume it's raw CSS content
-                self.additional_css += css_content
+        self.additional_css += css_content
 
         return self
 

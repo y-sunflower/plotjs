@@ -14,7 +14,7 @@ def from_dict(css_dict: dict) -> str:
     Returns:
         A string of raw CSS.
 
-    Usage:
+    Examples:
         ```python
         from plotjs import css
 
@@ -46,7 +46,7 @@ def from_file(css_file: str) -> str:
     Returns:
         A string of raw CSS
 
-    Usage:
+    Examples:
         ```python
         from plotjs import css
 
@@ -68,7 +68,7 @@ def is_css_like(s: str) -> bool:
     Returns:
         Whether or not `s` looks like valid CSS.
 
-    Usage:
+    Examples:
         ```python
         from plotjs import is_css_like
 
@@ -89,23 +89,3 @@ def is_css_like(s: str) -> bool:
 
     matches = css_block_pattern.findall(s)
     return bool(matches)
-
-
-print(from_dict({".tooltip": {"color": "red", "background": "blue"}}))
-
-from_file("sandbox/style.css")
-
-print(
-    is_css_like(
-        from_dict(
-            {
-                ".tooltip": {"color": "red", "background": "blue"},
-                ".point": {"width": "10px", "max-width": "100px"},
-            }
-        )
-    )
-)
-
-print(is_css_like("This is not CSS."))  # False
-
-print(is_css_like(".box { broken }"))  # False

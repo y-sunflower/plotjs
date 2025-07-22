@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
-import geopandas as gpd
 import numpy as np
 
 from plotjs import data
 from plotjs import InteractivePlot
+from plotjs import css
+
 
 np.random.seed(0)
 
@@ -35,8 +36,7 @@ InteractivePlot(
     tooltip=df["species"],
     tooltip_group=df["species"],
 ).add_css(
-    {"opacity": "0.8", "fill": "red"},
-    selector=".point.hovered",
+    css.from_dict({".point.hovered": {"opacity": "0.8", "fill": "red"}}),
 ).save("docs/quickstart3.html")
 
 ##############################################################
@@ -52,13 +52,16 @@ InteractivePlot(
     tooltip=custom_tooltip,
     tooltip_group=df["species"],
 ).add_css(
-    {
-        "width": "200px",
-        "text-align": "center",
-        "opacity": "0.7",
-        "font-size": "1.1em",
-    },
-    selector=".tooltip",
+    css.from_dict(
+        {
+            ".tooltip": {
+                "width": "200px",
+                "text-align": "center",
+                "opacity": "0.7",
+                "font-size": "1.1em",
+            }
+        }
+    ),
 ).save("docs/quickstart4.html")
 
 ##############################################################
@@ -92,34 +95,15 @@ InteractivePlot(
     tooltip=["Fries (good)", "Cake (good)", "Apple (bad)", "Cheese (good)"],
     tooltip_group=["Good", "Good", "Bad", "Good"],
 ).add_css(
-    {
-        "width": "100px",
-        "text-align": "center",
-        "font-size": "1.1em",
-    },
-    selector=".tooltip",
+    css.from_dict(
+        {
+            ".tooltip": {
+                "width": "100px",
+                "text-align": "center",
+                "font-size": "1.1em",
+            }
+        }
+    )
 ).save("docs/quickstart6.html")
 
 ##############################################################
-
-df = gpd.read_file(
-    "https://github.com/holtzy/The-Python-Graph-Gallery/blob/master/static/data/europe.geojson?raw=true"
-).dropna()
-df = df[df["name"] != "Russia"]
-
-fig, ax = plt.subplots()
-ax.set_xlim(-25, 42)
-ax.set_ylim(33, 82)
-ax.axis("off")
-
-df.plot(column="pop_est", ax=ax, cmap="viridis_r", ec="black", lw=0.5)
-
-custom_tooltip = df.apply(
-    lambda row: f"{row['name']}<br>{round(row['pop_est'] / 1_000_000, 1)} millions",
-    axis=1,
-)
-
-InteractivePlot(
-    tooltip=custom_tooltip,
-    gdf=df,
-).save("docs/quickstart7.html")
