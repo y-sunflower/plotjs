@@ -36,6 +36,8 @@ class InteractivePlot:
         *,
         tooltip: list | tuple | np.ndarray | SeriesT | None = None,
         tooltip_group: list | tuple | np.ndarray | SeriesT | None = None,
+        tooltip_x_shift: int = 10,
+        tooltip_y_shift: int = 10,
         fig: Figure | None = None,
         **savefig_kws: dict,
     ):
@@ -47,9 +49,15 @@ class InteractivePlot:
             tooltip: An iterable containing the labels for the tooltip.
             tooltip_group: An iterable containing the group for tooltip.
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
+            tooltip_x_shift: Number of pixels to shift the tooltip from
+                the cursor, on the x axis.
+            tooltip_y_shift: Number of pixels to shift the tooltip from
+                the cursor, on the y axis.
             savefig_kws: Additional keyword arguments passed to `plt.savefig()`.
         """
         svg_path: Literal["user_plot.svg"] = "user_plot.svg"
+        self.tooltip_x_shift = tooltip_x_shift
+        self.tooltip_y_shift = tooltip_y_shift
 
         if fig is None:
             fig: Figure = plt.gcf()
@@ -92,6 +100,8 @@ class InteractivePlot:
         self.plot_data_json = {
             "tooltip": self.tooltip,
             "tooltip_group": self.tooltip_group,
+            "tooltip_x_shift": self.tooltip_x_shift,
+            "tooltip_y_shift": self.tooltip_y_shift,
         }
 
     def _set_html(self):
