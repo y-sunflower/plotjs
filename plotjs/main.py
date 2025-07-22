@@ -1,3 +1,4 @@
+from importlib.resources import files
 import numpy as np
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
@@ -16,7 +17,7 @@ from plotjs.polygons_mapping import _map_polygons_to_data
 from plotjs.utils import _vector_to_list
 
 # TEMPLATE_DIR: str = Path(__file__).parent / "static"
-TEMPLATE_DIR = "/Users/josephbarbier/Desktop/plotjs/plotjs/static"
+TEMPLATE_DIR = str(files("plotjs") / "static")
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
 D3_PATH: str = os.path.join(TEMPLATE_DIR, "d3.min.js")
 JS_PATH: str = os.path.join(TEMPLATE_DIR, "main.js")
