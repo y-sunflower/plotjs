@@ -51,11 +51,6 @@ def test_css_from_file():
   opacity: 1;
   transition: opacity 0.1s ease;
 }
-
-.polygon {
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
 """
     assert css_content == css_expected
 
