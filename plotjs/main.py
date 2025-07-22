@@ -123,22 +123,28 @@ class InteractivePlot:
 
         Examples:
             ```python
-            InteractivePlot(...).add_css({"color": "red"}, selector=".tooltip")
-            ```
-
-            ```python
-            InteractivePlot(...).add_css("path/to/style.css")
-            ```
-
-            ```python
             InteractivePlot(...).add_css('.tooltip {"color": "red";}')
             ```
 
             ```python
+            from plotjs import css
+
+            InteractivePlot(...).add_css(css.from_file("path/to/style.css"))
+            ```
+
+            ```python
+            from plotjs import css
+
+            InteractivePlot(...).add_css(css.from_dict({".tooltip": {"color": "red";}}))
+            ```
+
+            ```python
+            from plotjs import css
+
             InteractivePlot(...).add_css(
-                '.tooltip {"color": "red";}'
+                css.from_dict({".tooltip": {"color": "red";}}),
             ).add_css(
-                '.tooltip {"background": "blue";}'
+                css.from_dict({".tooltip": {"background": "blue";}}),
             )
             ```
         """
