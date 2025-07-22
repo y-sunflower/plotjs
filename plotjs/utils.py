@@ -2,7 +2,7 @@ import narwhals as nw
 from narwhals.dependencies import is_numpy_array, is_into_series
 
 
-def _vector_to_list(vector, name="tooltip and tooltip_group") -> list:
+def _vector_to_list(vector, name="labels and groups") -> list:
     if isinstance(vector, (list, tuple)) or is_numpy_array(vector):
         return list(vector)
     elif is_into_series(vector):

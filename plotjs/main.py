@@ -34,10 +34,8 @@ class InteractivePlot:
     def __init__(
         self,
         *,
-        tooltip: list | tuple | np.ndarray | SeriesT | None = None,
-        tooltip_group: list | tuple | np.ndarray | SeriesT | None = None,
         tooltip_x_shift: int = 10,
-        tooltip_y_shift: int = 10,
+        tooltip_y_shift: int = -10,
         fig: Figure | None = None,
         **savefig_kws: dict,
     ):
@@ -46,8 +44,6 @@ class InteractivePlot:
         figures to interactive charts.
 
         Args:
-            tooltip: An iterable containing the labels for the tooltip.
-            tooltip_group: An iterable containing the group for tooltip.
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
             tooltip_x_shift: Number of pixels to shift the tooltip from
                 the cursor, on the x axis.
@@ -82,31 +78,68 @@ class InteractivePlot:
         with open(JS_PATH) as f:
             self.js = f.read()
 
-        # tooltip inputs
-        if tooltip is None:
-            self.tooltip = []
-        else:
-            self.tooltip = _vector_to_list(tooltip)
-            self.tooltip.extend(self.legend_handles_labels)
-        if tooltip_group is None:
-            self.tooltip_group = list(range(len(self.tooltip)))
-        else:
-            self.tooltip_group = _vector_to_list(tooltip_group)
-            self.tooltip_group.extend(self.legend_handles_labels)
+    def add_tooltip(
+        self,
+        *,
+        labels: list | tuple | np.ndarray | SeriesT | None = None,
+        groups: list | tuple | np.ndarray | SeriesT | None = None,
+    ):
+        """
+        Add a tooltip to the interactive plot. You can set either
+        just `labels`, just `groups`, both or none.
 
-        print(self.tooltip_group)
+        Args:
+            labels: An iterable containing the labels for the tooltip.
+                It corresponds to the text that will appear on hover.
+            groups: An iterable containing the group for tooltip. It
+                corresponds to how to 'group' the tooltip. The easiest
+                way to understand this argument is to check the examples
+                below. Also note that the use of this argument is required
+                to 'connect' the legend with plot elements.
 
-        self._set_plot_data_json()
+        Returns:
+            self: Returns the instance to allow method chaining.
+
+        Examples:
+            ```python
+            InteractivePlot(...).add_tooltip(
+                labels=["S&P500", "CAC40", "Sunflower"],
+            )
+            ```
+
+            ```python
+            InteractivePlot(...).add_tooltip(
+                labels=["S&P500", "CAC40", "Sunflower"],
+                columns=["S&P500", "CAC40", "Sunflower"],
+            )
+            ```
+        """
+        if labels is None:
+            self.tooltip_labels = []
+        else:
+            self.tooltip_labels = _vector_to_list(labels)
+            self.tooltip_labels.extend(self.legend_handles_labels)
+        if groups is None:
+            self.tooltip_groups = list(range(len(self.tooltip_labels)))
+        else:
+            self.tooltip_groups = _vector_to_list(groups)
+            self.tooltip_groups.extend(self.legend_handles_labels)
+
+        return self
 
     def _set_plot_data_json(self):
+        if not hasattr(self, "tooltip_labels"):
+            self.add_tooltip()
+
         self.plot_data_json = {
-            "tooltip": self.tooltip,
-            "tooltip_group": self.tooltip_group,
+            "tooltip_labels": self.tooltip_labels,
+            "tooltip_groups": self.tooltip_groups,
             "tooltip_x_shift": self.tooltip_x_shift,
             "tooltip_y_shift": self.tooltip_y_shift,
         }
 
     def _set_html(self):
+        self._set_plot_data_json()
         self.html: Text = self.template.render(
             uuid=str(uuid.uuid4()),
             default_css=self.default_css,
@@ -115,7 +148,7 @@ class InteractivePlot:
             plot_data_json=self.plot_data_json,
         )
 
-    def add_css(self, css_content: str | dict, selector: str | None = None):
+    def add_css(self, css_content: str):
         """
         Add CSS to the final HTML output. This function allows you to override
         default styles or add custom CSS rules.
@@ -123,13 +156,7 @@ class InteractivePlot:
         See the [CSS guide](../../guides/css/) for more info on how to work with CSS.
 
         Args:
-            css_content: CSS rules to apply. This can be:
-
-                - A dictionary of CSS property-value pairs (e.g., {"color": "red"}).
-                When using a dict, a `selector` must be provided.
-                - A string representing either the path to a CSS file or raw CSS code.
-            selector: A CSS selector (e.g., ".my-class" or "#id") to wrap around the
-                dictionary styles. Required if `css_content` is a dict, ignored otherwise.
+            css_content: CSS rules to apply, as a string.
 
         Returns:
             self: Returns the instance to allow method chaining.
@@ -162,7 +189,6 @@ class InteractivePlot:
             ```
         """
         self.additional_css += css_content
-
         return self
 
     def save(self, file_path: str):
@@ -192,37 +218,21 @@ class InteractivePlot:
 
 
 if __name__ == "__main__":
-    import pandas as pd
-    import numpy as np
-    import matplotlib.pyplot as plt
+    from plotjs import data
 
-    url = "https://raw.githubusercontent.com/holtzy/The-Python-Graph-Gallery/master/static/data/disaster-events.csv"
-    df = pd.read_csv(url)
+    df = data.load_iris()
 
-    def remove_agg_rows(entity: str):
-        if entity.lower().startswith("all disasters"):
-            return False
-        else:
-            return True
+    fig, ax = plt.subplots()
 
-    df = df.replace("Dry mass movement", "Drought")
-    df = df[df["Entity"].apply(remove_agg_rows)]
-    df = df[~df["Entity"].isin(["Fog", "Glacial lake outburst flood"])]
-    df = df.pivot_table(index="Entity", columns="Year", values="Disasters").T
-    df.loc[1900, :] = df.loc[1900, :].fillna(0)
-    df = df[df.index >= 1960]
-    df = df[df.index <= 2023]
-    df = df.interpolate(axis=1)
-    df.head()
-
-    fig, ax = plt.subplots(figsize=(14, 7))
-    columns = df.sum().sort_values().index.to_list()
-
-    areas = np.stack(df[columns].values, axis=-1)
-    ax.stackplot(df.index, areas, labels=columns)
+    for specie in df["species"].unique():
+        specie_df = df[df["species"] == specie]
+        ax.scatter(
+            specie_df["sepal_length"],
+            specie_df["sepal_width"],
+            s=200,
+            ec="black",
+            label=specie,
+        )
     ax.legend()
 
-    InteractivePlot(
-        tooltip=columns,
-        tooltip_group=columns,
-    ).save("index.html")
+    InteractivePlot().add_tooltip(df["species"]).save("index.html")

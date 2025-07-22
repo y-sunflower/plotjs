@@ -1,8 +1,14 @@
 
 
-<div id="plot-container-076eed34-abb7-4831-89cb-e5fd654a8ffd">
+<div id="plot-container-f2905929-5b17-4a90-8880-a681b4c4bccb">
   <style>
-    svg {
+    :root {
+  --default-opacity: 1;
+  --default-not-hovered-opacity: 0.2;
+  --default-transition: opacity 0.1s ease;
+}
+
+svg {
   width: 100%;
   height: auto;
 }
@@ -21,54 +27,71 @@
 }
 
 .point {
-  opacity: 1;
-  transition: opacity 0.1s ease;
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
 }
 
 .point:hover {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .point.not-hovered {
-  opacity: 0.2;
+  opacity: var(--default-not-hovered-opacity);
 }
 
 .point.hovered {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .line {
-  opacity: 1;
-  transition: opacity 0.1s ease;
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
 }
 
 .line:hover {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .line.not-hovered {
-  opacity: 0.2;
+  opacity: var(--default-not-hovered-opacity);
 }
 
 .line.hovered {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .bar {
-  opacity: 1;
-  transition: opacity 0.1s ease;
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
 }
 
 .bar:hover {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .bar.not-hovered {
-  opacity: 0.2;
+  opacity: var(--default-not-hovered-opacity);
 }
 
 .bar.hovered {
-  opacity: 1;
+  opacity: var(--default-opacity);
+}
+
+.area {
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
+}
+
+.area:hover {
+  opacity: var(--default-opacity);
+}
+
+.area.not-hovered {
+  opacity: var(--default-not-hovered-opacity);
+}
+
+.area.hovered {
+  opacity: var(--default-opacity);
 }
 
     .tooltip{width:100px;text-align:center;font-size:1.1em;}
@@ -82,7 +105,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2025-07-22T17:41:39.566233</dc:date>
+    <dc:date>2025-07-22T21:07:30.013775</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -119,7 +142,7 @@ L 125.622857 295.488
 L 125.622857 255.168 
 L 57.6 255.168 
 z
-" clip-path="url(#p66d84ffb9d)" style="fill: #06d6a0"/>
+" clip-path="url(#pa696af7f6d)" style="fill: #06d6a0"/>
    </g>
    <g id="patch_4">
     <path d="M 57.6 228.288 
@@ -127,7 +150,7 @@ L 261.668571 228.288
 L 261.668571 187.968 
 L 57.6 187.968 
 z
-" clip-path="url(#p66d84ffb9d)" style="fill: #06d6a0"/>
+" clip-path="url(#pa696af7f6d)" style="fill: #06d6a0"/>
    </g>
    <g id="patch_5">
     <path d="M 57.6 161.088 
@@ -135,7 +158,7 @@ L 329.691429 161.088
 L 329.691429 120.768 
 L 57.6 120.768 
 z
-" clip-path="url(#p66d84ffb9d)" style="fill: #ef476f"/>
+" clip-path="url(#pa696af7f6d)" style="fill: #ef476f"/>
    </g>
    <g id="patch_6">
     <path d="M 57.6 93.888 
@@ -143,18 +166,18 @@ L 397.714286 93.888
 L 397.714286 53.568 
 L 57.6 53.568 
 z
-" clip-path="url(#p66d84ffb9d)" style="fill: #06d6a0"/>
+" clip-path="url(#pa696af7f6d)" style="fill: #06d6a0"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="mcb36ea722d" d="M 0 0 
+       <path id="m275ecd7fd2" d="M 0 0 
 L 0 3.5 
 " style="stroke: #000000; stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#mcb36ea722d" x="57.6" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="57.6" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -190,7 +213,7 @@ z
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use xlink:href="#mcb36ea722d" x="125.622857" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="125.622857" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -220,7 +243,7 @@ z
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use xlink:href="#mcb36ea722d" x="193.645714" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="193.645714" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -260,7 +283,7 @@ z
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use xlink:href="#mcb36ea722d" x="261.668571" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="261.668571" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -308,7 +331,7 @@ z
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use xlink:href="#mcb36ea722d" x="329.691429" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="329.691429" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -343,7 +366,7 @@ z
     <g id="xtick_6">
      <g id="line2d_6">
       <g>
-       <use xlink:href="#mcb36ea722d" x="397.714286" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="397.714286" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -386,12 +409,12 @@ z
     <g id="ytick_1">
      <g id="line2d_7">
       <defs>
-       <path id="m3177c7e5bc" d="M 0 0 
+       <path id="maf782bdd0f" d="M 0 0 
 L -3.5 0 
 " style="stroke: #000000; stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m3177c7e5bc" x="57.6" y="275.328" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#maf782bdd0f" x="57.6" y="275.328" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
@@ -509,7 +532,7 @@ z
     <g id="ytick_2">
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m3177c7e5bc" x="57.6" y="208.128" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#maf782bdd0f" x="57.6" y="208.128" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -595,7 +618,7 @@ z
     <g id="ytick_3">
      <g id="line2d_9">
       <g>
-       <use xlink:href="#m3177c7e5bc" x="57.6" y="140.928" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#maf782bdd0f" x="57.6" y="140.928" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_9">
@@ -663,7 +686,7 @@ z
     <g id="ytick_4">
      <g id="line2d_10">
       <g>
-       <use xlink:href="#m3177c7e5bc" x="57.6" y="73.728" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#maf782bdd0f" x="57.6" y="73.728" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -723,28 +746,35 @@ L 414.72 41.472
   </g>
  </g>
  <defs>
-  <clipPath id="p66d84ffb9d">
+  <clipPath id="pa696af7f6d">
    <rect x="57.6" y="41.472" width="357.12" height="266.112"/>
   </clipPath>
  </defs>
 </svg>
 
-  <div class="tooltip" id="tooltip-076eed34-abb7-4831-89cb-e5fd654a8ffd"></div>
+  <div class="tooltip" id="tooltip-f2905929-5b17-4a90-8880-a681b4c4bccb"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script>
   (function () {
     class PlotSVGParser {
-      constructor(svg, tooltip, tooltip_label, tooltip_group, show_tooltip) {
+      constructor(
+        svg,
+        tooltip,
+        tooltip_labels,
+        tooltip_groups,
+        show_tooltip,
+        tooltip_x_shift,
+        tooltip_y_shift
+      ) {
         this.svg = svg;
         this.tooltip = tooltip;
-        this.tooltip_label = tooltip_label;
-        this.tooltip_group = tooltip_group;
+        this.tooltip_labels = tooltip_labels;
+        this.tooltip_groups = tooltip_groups;
         this.show_tooltip = show_tooltip;
-
-        this.tooltip_x_shift = 10; // todo: not harcode
-        this.tooltip_y_shift = 10; // todo: not harcode
+        this.tooltip_x_shift = tooltip_x_shift;
+        this.tooltip_y_shift = tooltip_y_shift;
       }
 
       find_bars(svg) {
@@ -770,7 +800,7 @@ L 414.72 41.472
         const points = svg.selectAll('g[id^="PathCollection"] use');
 
         points.attr("class", "point").each(function (_, i) {
-          d3.select(this).attr("data-group", self.tooltip_group[i]);
+          d3.select(this).attr("data-group", self.tooltip_groups[i]);
         });
         this.points = points;
         return points;
@@ -779,21 +809,21 @@ L 414.72 41.472
       find_lines(svg) {
         // select all <path> of Line2D elements
         const lines = svg.selectAll('g[id^="line2d"] path').filter(function () {
-          const clip = d3.select(this).attr("clip-path");
-
-          return (
-            // keep only <path> with clip-path attribute
-            clip &&
-            // that starts with "url("
-            clip.startsWith("url(") &&
-            // and are not child of a #matplotlib.axis
-            !this.closest('g[id^="matplotlib.axis"]')
-          );
+          return !this.closest('g[id^="matplotlib.axis"]');
         });
 
         lines.attr("class", "line");
         this.lines = lines;
         return lines;
+      }
+
+      find_areas(svg) {
+        // select all <path> of FillBetweenPolyCollection elements
+        const areas = svg.selectAll('g[id^="FillBetweenPolyCollection"] path');
+
+        areas.attr("class", "area");
+        this.areas = areas;
+        return areas;
       }
 
       setHoverEffect(plot_element) {
@@ -803,11 +833,11 @@ L 414.72 41.472
             const nodes = plot_element.nodes();
             let i = nodes.indexOf(this);
 
-            const hovered_group = self.tooltip_group[i];
+            const hovered_group = self.tooltip_groups[i];
             plot_element.classed("not-hovered", true);
             plot_element
               .filter((_, j) => {
-                return self.tooltip_group[j] === hovered_group;
+                return self.tooltip_groups[j] === hovered_group;
               })
               .classed("not-hovered", false)
               .classed("hovered", true);
@@ -816,7 +846,7 @@ L 414.72 41.472
               .style("display", self.show_tooltip)
               .style("left", event.pageX + self.tooltip_x_shift + "px")
               .style("top", event.pageY + self.tooltip_y_shift + "px")
-              .html(self.tooltip_label[i]);
+              .html(self.tooltip_labels[i]);
           })
           .on("mouseout", function () {
             plot_element
@@ -827,22 +857,24 @@ L 414.72 41.472
       }
     }
 
-    const container = document.getElementById("plot-container-076eed34-abb7-4831-89cb-e5fd654a8ffd");
+    const container = document.getElementById("plot-container-f2905929-5b17-4a90-8880-a681b4c4bccb");
     if (!container) return;
 
-    const tooltip = d3.select("#tooltip-076eed34-abb7-4831-89cb-e5fd654a8ffd");
+    const tooltip = d3.select("#tooltip-f2905929-5b17-4a90-8880-a681b4c4bccb");
     const svg = d3.select(container).select("svg");
 
-    const plot_data = JSON.parse(`{"tooltip": ["Fries (good)", "Cake (good)", "Apple (bad)", "Cheese (good)"], "tooltip_group": ["Good", "Good", "Bad", "Good"]}`);
-    const tooltip_label = plot_data["tooltip"];
-    const tooltip_group = plot_data["tooltip_group"];
+    const plot_data = JSON.parse(`{"tooltip_groups": ["Good", "Good", "Bad", "Good"], "tooltip_labels": ["Fries", "Cake", "Apple", "Cheese"], "tooltip_x_shift": 10, "tooltip_y_shift": -10}`);
+    const tooltip_labels = plot_data["tooltip_labels"];
+    const tooltip_groups = plot_data["tooltip_groups"];
+    const tooltip_x_shift = plot_data["tooltip_x_shift"];
+    const tooltip_y_shift = -plot_data["tooltip_y_shift"];
 
     // no tooltip? no problem
-    if (tooltip_label.length === 0 && tooltip_group.length === 0) {
+    if (tooltip_labels.length === 0 && tooltip_groups.length === 0) {
       return; // Exit early
     }
     let show_tooltip;
-    if (tooltip_label.length === 0 && tooltip_group.length > 0) {
+    if (tooltip_labels.length === 0 && tooltip_groups.length > 0) {
       show_tooltip = "none";
     } else {
       show_tooltip = "block";
@@ -851,19 +883,23 @@ L 414.72 41.472
     plotParser = new PlotSVGParser(
       svg,
       tooltip,
-      tooltip_label,
-      tooltip_group,
-      show_tooltip
+      tooltip_labels,
+      tooltip_groups,
+      show_tooltip,
+      tooltip_x_shift,
+      tooltip_y_shift
     );
 
     // find all core plot elements
     lines = plotParser.find_lines(svg);
     bars = plotParser.find_bars(svg);
     points = plotParser.find_points(svg);
+    areas = plotParser.find_areas(svg);
 
     // give them the hover effect
     plotParser.setHoverEffect(points);
     plotParser.setHoverEffect(lines);
     plotParser.setHoverEffect(bars);
+    plotParser.setHoverEffect(areas);
   })();
 </script>
