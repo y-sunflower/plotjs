@@ -56,3 +56,7 @@ Homepage = "https://y-sunflower.github.io/plotjs/"
 Issues = "https://github.com/y-sunflower/plotjs/issues"
 Documentation = "https://y-sunflower.github.io/plotjs/"
 Repository = "https://github.com/y-sunflower/plotjs"
+
+[tool.ty.src]
+include = ["plotjs"]
+exclude = ["tests", "sandbox"]
