@@ -94,6 +94,8 @@ class InteractivePlot:
             self.tooltip_group = _vector_to_list(tooltip_group)
             self.tooltip_group.extend(self.legend_handles_labels)
 
+        print(self.tooltip_group)
+
         self._set_plot_data_json()
 
     def _set_plot_data_json(self):
@@ -190,21 +192,37 @@ class InteractivePlot:
 
 
 if __name__ == "__main__":
+    import pandas as pd
+    import numpy as np
     import matplotlib.pyplot as plt
 
-    length = 500
-    walk1 = np.cumsum(np.random.choice([-1, 1], size=length))
-    walk2 = np.cumsum(np.random.choice([-1, 1], size=length))
-    walk3 = np.cumsum(np.random.choice([-1, 1], size=length))
-    labels = ["S&P500", "CAC40", "Bitcoin"]
+    url = "https://raw.githubusercontent.com/holtzy/The-Python-Graph-Gallery/master/static/data/disaster-events.csv"
+    df = pd.read_csv(url)
 
-    fig, ax = plt.subplots(figsize=(10, 5))
-    ax.plot(walk1, linewidth=8, color="#264653", label=labels[0])
-    ax.plot(walk2, linewidth=8, color="#2a9d8f", label=labels[1])
-    ax.plot(walk3, linewidth=8, color="#e9c46a", label=labels[2])
+    def remove_agg_rows(entity: str):
+        if entity.lower().startswith("all disasters"):
+            return False
+        else:
+            return True
+
+    df = df.replace("Dry mass movement", "Drought")
+    df = df[df["Entity"].apply(remove_agg_rows)]
+    df = df[~df["Entity"].isin(["Fog", "Glacial lake outburst flood"])]
+    df = df.pivot_table(index="Entity", columns="Year", values="Disasters").T
+    df.loc[1900, :] = df.loc[1900, :].fillna(0)
+    df = df[df.index >= 1960]
+    df = df[df.index <= 2023]
+    df = df.interpolate(axis=1)
+    df.head()
+
+    fig, ax = plt.subplots(figsize=(14, 7))
+    columns = df.sum().sort_values().index.to_list()
+
+    areas = np.stack(df[columns].values, axis=-1)
+    ax.stackplot(df.index, areas, labels=columns)
     ax.legend()
 
     InteractivePlot(
-        tooltip=labels,
-        tooltip_group=labels,
+        tooltip=columns,
+        tooltip_group=columns,
     ).save("index.html")

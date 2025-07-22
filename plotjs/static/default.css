@@ -66,3 +66,20 @@ svg {
 .bar.hovered {
   opacity: 1;
 }
+
+.area {
+  opacity: 1;
+  transition: opacity 0.1s ease;
+}
+
+.area:hover {
+  opacity: 1;
+}
+
+.area.not-hovered {
+  opacity: 0.2;
+}
+
+.area.hovered {
+  opacity: 1;
+}

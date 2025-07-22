@@ -28,7 +28,6 @@
         this.tooltip_label = tooltip_label;
         this.tooltip_group = tooltip_group;
         this.show_tooltip = show_tooltip;
-
         this.tooltip_x_shift = tooltip_x_shift;
         this.tooltip_y_shift = tooltip_y_shift;
       }
@@ -71,6 +70,15 @@
         lines.attr("class", "line");
         this.lines = lines;
         return lines;
+      }
+
+      find_areas(svg) {
+        // select all <path> of FillBetweenPolyCollection elements
+        const areas = svg.selectAll('g[id^="FillBetweenPolyCollection"] path');
+
+        areas.attr("class", "area");
+        this.areas = areas;
+        return areas;
       }
 
       setHoverEffect(plot_element) {
@@ -141,10 +149,12 @@
     lines = plotParser.find_lines(svg);
     bars = plotParser.find_bars(svg);
     points = plotParser.find_points(svg);
+    areas = plotParser.find_areas(svg);
 
     // give them the hover effect
     plotParser.setHoverEffect(points);
     plotParser.setHoverEffect(lines);
     plotParser.setHoverEffect(bars);
+    plotParser.setHoverEffect(areas);
   })();
 </script>
