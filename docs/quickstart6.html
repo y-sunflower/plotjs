@@ -1,8 +1,14 @@
 
 
-<div id="plot-container-f444b20a-e4f1-434b-9110-22b46a99afec">
+<div id="plot-container-f2905929-5b17-4a90-8880-a681b4c4bccb">
   <style>
-    svg {
+    :root {
+  --default-opacity: 1;
+  --default-not-hovered-opacity: 0.2;
+  --default-transition: opacity 0.1s ease;
+}
+
+svg {
   width: 100%;
   height: auto;
 }
@@ -21,76 +27,71 @@
 }
 
 .point {
-  opacity: 1;
-  transition: opacity 0.1s ease;
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
 }
 
 .point:hover {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .point.not-hovered {
-  opacity: 0.2;
+  opacity: var(--default-not-hovered-opacity);
 }
 
 .point.hovered {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .line {
-  opacity: 1;
-  transition: opacity 0.1s ease;
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
 }
 
 .line:hover {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .line.not-hovered {
-  opacity: 0.2;
+  opacity: var(--default-not-hovered-opacity);
 }
 
 .line.hovered {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .bar {
-  opacity: 1;
-  transition: opacity 0.1s ease;
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
 }
 
 .bar:hover {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .bar.not-hovered {
-  opacity: 0.2;
+  opacity: var(--default-not-hovered-opacity);
 }
 
 .bar.hovered {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .area {
-  opacity: 1;
-  transition: opacity 0.1s ease;
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
 }
 
 .area:hover {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .area.not-hovered {
-  opacity: 0.2;
+  opacity: var(--default-not-hovered-opacity);
 }
 
 .area.hovered {
-  opacity: 1;
-}
-
-.point.hovered {
-  opacity: 0.8;
-  fill: red;
+  opacity: var(--default-opacity);
 }
 
     .tooltip{width:100px;text-align:center;font-size:1.1em;}
@@ -104,7 +105,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2025-07-22T20:27:51.460482</dc:date>
+    <dc:date>2025-07-22T21:07:30.013775</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -141,7 +142,7 @@ L 125.622857 295.488
 L 125.622857 255.168 
 L 57.6 255.168 
 z
-" clip-path="url(#p2c6779882f)" style="fill: #06d6a0"/>
+" clip-path="url(#pa696af7f6d)" style="fill: #06d6a0"/>
    </g>
    <g id="patch_4">
     <path d="M 57.6 228.288 
@@ -149,7 +150,7 @@ L 261.668571 228.288
 L 261.668571 187.968 
 L 57.6 187.968 
 z
-" clip-path="url(#p2c6779882f)" style="fill: #06d6a0"/>
+" clip-path="url(#pa696af7f6d)" style="fill: #06d6a0"/>
    </g>
    <g id="patch_5">
     <path d="M 57.6 161.088 
@@ -157,7 +158,7 @@ L 329.691429 161.088
 L 329.691429 120.768 
 L 57.6 120.768 
 z
-" clip-path="url(#p2c6779882f)" style="fill: #ef476f"/>
+" clip-path="url(#pa696af7f6d)" style="fill: #ef476f"/>
    </g>
    <g id="patch_6">
     <path d="M 57.6 93.888 
@@ -165,18 +166,18 @@ L 397.714286 93.888
 L 397.714286 53.568 
 L 57.6 53.568 
 z
-" clip-path="url(#p2c6779882f)" style="fill: #06d6a0"/>
+" clip-path="url(#pa696af7f6d)" style="fill: #06d6a0"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="mdb0d9ca9cd" d="M 0 0 
+       <path id="m275ecd7fd2" d="M 0 0 
 L 0 3.5 
 " style="stroke: #000000; stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#mdb0d9ca9cd" x="57.6" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="57.6" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -212,7 +213,7 @@ z
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use xlink:href="#mdb0d9ca9cd" x="125.622857" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="125.622857" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -242,7 +243,7 @@ z
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use xlink:href="#mdb0d9ca9cd" x="193.645714" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="193.645714" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -282,7 +283,7 @@ z
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use xlink:href="#mdb0d9ca9cd" x="261.668571" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="261.668571" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -330,7 +331,7 @@ z
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use xlink:href="#mdb0d9ca9cd" x="329.691429" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="329.691429" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -365,7 +366,7 @@ z
     <g id="xtick_6">
      <g id="line2d_6">
       <g>
-       <use xlink:href="#mdb0d9ca9cd" x="397.714286" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m275ecd7fd2" x="397.714286" y="307.584" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -408,12 +409,12 @@ z
     <g id="ytick_1">
      <g id="line2d_7">
       <defs>
-       <path id="me469af265d" d="M 0 0 
+       <path id="maf782bdd0f" d="M 0 0 
 L -3.5 0 
 " style="stroke: #000000; stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#me469af265d" x="57.6" y="275.328" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#maf782bdd0f" x="57.6" y="275.328" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
@@ -531,7 +532,7 @@ z
     <g id="ytick_2">
      <g id="line2d_8">
       <g>
-       <use xlink:href="#me469af265d" x="57.6" y="208.128" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#maf782bdd0f" x="57.6" y="208.128" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -617,7 +618,7 @@ z
     <g id="ytick_3">
      <g id="line2d_9">
       <g>
-       <use xlink:href="#me469af265d" x="57.6" y="140.928" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#maf782bdd0f" x="57.6" y="140.928" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_9">
@@ -685,7 +686,7 @@ z
     <g id="ytick_4">
      <g id="line2d_10">
       <g>
-       <use xlink:href="#me469af265d" x="57.6" y="73.728" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#maf782bdd0f" x="57.6" y="73.728" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -745,13 +746,13 @@ L 414.72 41.472
   </g>
  </g>
  <defs>
-  <clipPath id="p2c6779882f">
+  <clipPath id="pa696af7f6d">
    <rect x="57.6" y="41.472" width="357.12" height="266.112"/>
   </clipPath>
  </defs>
 </svg>
 
-  <div class="tooltip" id="tooltip-f444b20a-e4f1-434b-9110-22b46a99afec"></div>
+  <div class="tooltip" id="tooltip-f2905929-5b17-4a90-8880-a681b4c4bccb"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
@@ -856,13 +857,13 @@ L 414.72 41.472
       }
     }
 
-    const container = document.getElementById("plot-container-f444b20a-e4f1-434b-9110-22b46a99afec");
+    const container = document.getElementById("plot-container-f2905929-5b17-4a90-8880-a681b4c4bccb");
     if (!container) return;
 
-    const tooltip = d3.select("#tooltip-f444b20a-e4f1-434b-9110-22b46a99afec");
+    const tooltip = d3.select("#tooltip-f2905929-5b17-4a90-8880-a681b4c4bccb");
     const svg = d3.select(container).select("svg");
 
-    const plot_data = JSON.parse(`{"tooltip_groups": ["Good", "Good", "Bad", "Good"], "tooltip_labels": ["Fries", "Cake", "Apple", "Cheese"], "tooltip_x_shift": 10, "tooltip_y_shift": 10}`);
+    const plot_data = JSON.parse(`{"tooltip_groups": ["Good", "Good", "Bad", "Good"], "tooltip_labels": ["Fries", "Cake", "Apple", "Cheese"], "tooltip_x_shift": 10, "tooltip_y_shift": -10}`);
     const tooltip_labels = plot_data["tooltip_labels"];
     const tooltip_groups = plot_data["tooltip_groups"];
     const tooltip_x_shift = plot_data["tooltip_x_shift"];

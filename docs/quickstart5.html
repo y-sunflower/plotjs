@@ -1,8 +1,14 @@
 
 
-<div id="plot-container-e2f710b6-5343-4a70-b69c-c1f08cf17ae7">
+<div id="plot-container-9d98d985-848a-451a-ab2d-4cd04a918274">
   <style>
-    svg {
+    :root {
+  --default-opacity: 1;
+  --default-not-hovered-opacity: 0.2;
+  --default-transition: opacity 0.1s ease;
+}
+
+svg {
   width: 100%;
   height: auto;
 }
@@ -21,76 +27,71 @@
 }
 
 .point {
-  opacity: 1;
-  transition: opacity 0.1s ease;
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
 }
 
 .point:hover {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .point.not-hovered {
-  opacity: 0.2;
+  opacity: var(--default-not-hovered-opacity);
 }
 
 .point.hovered {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .line {
-  opacity: 1;
-  transition: opacity 0.1s ease;
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
 }
 
 .line:hover {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .line.not-hovered {
-  opacity: 0.2;
+  opacity: var(--default-not-hovered-opacity);
 }
 
 .line.hovered {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .bar {
-  opacity: 1;
-  transition: opacity 0.1s ease;
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
 }
 
 .bar:hover {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .bar.not-hovered {
-  opacity: 0.2;
+  opacity: var(--default-not-hovered-opacity);
 }
 
 .bar.hovered {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .area {
-  opacity: 1;
-  transition: opacity 0.1s ease;
+  opacity: var(--default-opacity);
+  transition: var(--default-transition);
 }
 
 .area:hover {
-  opacity: 1;
+  opacity: var(--default-opacity);
 }
 
 .area.not-hovered {
-  opacity: 0.2;
+  opacity: var(--default-not-hovered-opacity);
 }
 
 .area.hovered {
-  opacity: 1;
-}
-
-.point.hovered {
-  opacity: 0.8;
-  fill: red;
+  opacity: var(--default-opacity);
 }
 
     
@@ -104,7 +105,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2025-07-22T20:27:51.439879</dc:date>
+    <dc:date>2025-07-22T21:07:29.993288</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -139,12 +140,12 @@ z
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="mea220747bd" d="M 0 0 
+       <path id="mb604b3c79c" d="M 0 0 
 L 0 3.5 
 " style="stroke: #000000; stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#mea220747bd" x="115.363636" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#mb604b3c79c" x="115.363636" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -180,7 +181,7 @@ z
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use xlink:href="#mea220747bd" x="217.021498" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#mb604b3c79c" x="217.021498" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -211,7 +212,7 @@ z
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use xlink:href="#mea220747bd" x="318.679359" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#mb604b3c79c" x="318.679359" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -252,7 +253,7 @@ z
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use xlink:href="#mea220747bd" x="420.33722" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#mb604b3c79c" x="420.33722" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -301,7 +302,7 @@ z
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use xlink:href="#mea220747bd" x="521.995081" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#mb604b3c79c" x="521.995081" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -337,7 +338,7 @@ z
     <g id="xtick_6">
      <g id="line2d_6">
       <g>
-       <use xlink:href="#mea220747bd" x="623.652942" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#mb604b3c79c" x="623.652942" y="320.4" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -381,12 +382,12 @@ z
     <g id="ytick_1">
      <g id="line2d_7">
       <defs>
-       <path id="m1b57b27539" d="M 0 0 
+       <path id="m87fda93b58" d="M 0 0 
 L -3.5 0 
 " style="stroke: #000000; stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m1b57b27539" x="90" y="271.05" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m87fda93b58" x="90" y="271.05" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_7">
@@ -410,7 +411,7 @@ z
     <g id="ytick_2">
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m1b57b27539" x="90" y="218.55" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m87fda93b58" x="90" y="218.55" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -423,7 +424,7 @@ z
     <g id="ytick_3">
      <g id="line2d_9">
       <g>
-       <use xlink:href="#m1b57b27539" x="90" y="166.05" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m87fda93b58" x="90" y="166.05" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_9">
@@ -437,7 +438,7 @@ z
     <g id="ytick_4">
      <g id="line2d_10">
       <g>
-       <use xlink:href="#m1b57b27539" x="90" y="113.55" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m87fda93b58" x="90" y="113.55" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -451,7 +452,7 @@ z
     <g id="ytick_5">
      <g id="line2d_11">
       <g>
-       <use xlink:href="#m1b57b27539" x="90" y="61.05" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m87fda93b58" x="90" y="61.05" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_11">
@@ -718,7 +719,7 @@ L 620.603206 92.55
 L 621.619785 87.3 
 L 622.636364 92.55 
 L 622.636364 92.55 
-" clip-path="url(#p2caf88e81b)" style="fill: none; stroke: #264653; stroke-width: 8; stroke-linecap: square"/>
+" clip-path="url(#p5144dceac6)" style="fill: none; stroke: #264653; stroke-width: 8; stroke-linecap: square"/>
    </g>
    <g id="line2d_13">
     <path d="M 115.363636 213.3 
@@ -969,7 +970,7 @@ L 620.603206 302.55
 L 621.619785 297.3 
 L 622.636364 302.55 
 L 622.636364 302.55 
-" clip-path="url(#p2caf88e81b)" style="fill: none; stroke: #2a9d8f; stroke-width: 8; stroke-linecap: square"/>
+" clip-path="url(#p5144dceac6)" style="fill: none; stroke: #2a9d8f; stroke-width: 8; stroke-linecap: square"/>
    </g>
    <g id="line2d_14">
     <path d="M 115.363636 213.3 
@@ -1239,7 +1240,7 @@ L 619.586628 108.3
 L 620.603206 103.05 
 L 622.636364 113.55 
 L 622.636364 113.55 
-" clip-path="url(#p2caf88e81b)" style="fill: none; stroke: #e9c46a; stroke-width: 8; stroke-linecap: square"/>
+" clip-path="url(#p5144dceac6)" style="fill: none; stroke: #e9c46a; stroke-width: 8; stroke-linecap: square"/>
    </g>
    <g id="patch_3">
     <path d="M 90 320.4 
@@ -1264,13 +1265,13 @@ L 648 43.2
   </g>
  </g>
  <defs>
-  <clipPath id="p2caf88e81b">
+  <clipPath id="p5144dceac6">
    <rect x="90" y="43.2" width="558" height="277.2"/>
   </clipPath>
  </defs>
 </svg>
 
-  <div class="tooltip" id="tooltip-e2f710b6-5343-4a70-b69c-c1f08cf17ae7"></div>
+  <div class="tooltip" id="tooltip-9d98d985-848a-451a-ab2d-4cd04a918274"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
@@ -1375,13 +1376,13 @@ L 648 43.2
       }
     }
 
-    const container = document.getElementById("plot-container-e2f710b6-5343-4a70-b69c-c1f08cf17ae7");
+    const container = document.getElementById("plot-container-9d98d985-848a-451a-ab2d-4cd04a918274");
     if (!container) return;
 
-    const tooltip = d3.select("#tooltip-e2f710b6-5343-4a70-b69c-c1f08cf17ae7");
+    const tooltip = d3.select("#tooltip-9d98d985-848a-451a-ab2d-4cd04a918274");
     const svg = d3.select(container).select("svg");
 
-    const plot_data = JSON.parse(`{"tooltip_groups": [0, 1, 2], "tooltip_labels": ["S\u0026P500", "CAC40", "Bitcoin"], "tooltip_x_shift": 10, "tooltip_y_shift": 10}`);
+    const plot_data = JSON.parse(`{"tooltip_groups": [0, 1, 2], "tooltip_labels": ["S\u0026P500", "CAC40", "Bitcoin"], "tooltip_x_shift": 10, "tooltip_y_shift": -10}`);
     const tooltip_labels = plot_data["tooltip_labels"];
     const tooltip_groups = plot_data["tooltip_groups"];
     const tooltip_x_shift = plot_data["tooltip_x_shift"];

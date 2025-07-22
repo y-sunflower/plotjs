@@ -9,6 +9,7 @@ theme:
     - content.code.copy
     - navigation.path
     - content.footnote.tooltips
+    - navigation.expand
   icon:
     repo: fontawesome/brands/github
 
