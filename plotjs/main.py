@@ -10,7 +10,7 @@ from matplotlib.axes import Axes
 
 import os
 import uuid
-from typing import Literal, Text
+from typing import Literal, Text, Self
 
 from plotjs.utils import _vector_to_list
 
@@ -97,6 +97,8 @@ class InteractivePlot:
         print(self.tooltip_group)
 
         self._set_plot_data_json()
+
+    def add_tooltip() -> Self: ...
 
     def _set_plot_data_json(self):
         self.plot_data_json = {
