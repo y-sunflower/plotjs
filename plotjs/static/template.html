@@ -57,16 +57,7 @@
       find_lines(svg) {
         // select all <path> of Line2D elements
         const lines = svg.selectAll('g[id^="line2d"] path').filter(function () {
-          const clip = d3.select(this).attr("clip-path");
-
-          return (
-            // keep only <path> with clip-path attribute
-            clip &&
-            // that starts with "url("
-            clip.startsWith("url(") &&
-            // and are not child of a #matplotlib.axis
-            !this.closest('g[id^="matplotlib.axis"]')
-          );
+          return !this.closest('g[id^="matplotlib.axis"]');
         });
 
         lines.attr("class", "line");

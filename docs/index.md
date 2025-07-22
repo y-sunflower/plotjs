@@ -159,6 +159,56 @@ InteractivePlot(
 
 <iframe width="800" height="600" src="quickstart6.html" style="border:none;"></iframe>
 
+Connect legend and plot elements:
+
+=== "Scatter plot"
+
+    ```python
+    fig, ax = plt.subplots()
+
+    for specie in df["species"].unique():
+        specie_df = df[df["species"] == specie]
+        ax.scatter(
+            specie_df["sepal_length"],
+            specie_df["sepal_width"],
+            s=200,
+            ec="black",
+            label=specie,
+        )
+    ax.legend()
+
+    InteractivePlot(
+        fig=fig,
+        tooltip_group=df["species"],
+    )
+    ```
+
+    <iframe width="800" height="600" src="quickstart7.html" style="border:none;"></iframe>
+
+=== "Line chart"
+
+    ```python
+    length = 500
+    walk1 = np.cumsum(np.random.choice([-1, 1], size=length))
+    walk2 = np.cumsum(np.random.choice([-1, 1], size=length))
+    walk3 = np.cumsum(np.random.choice([-1, 1], size=length))
+
+    labels = ["S&P500", "CAC40", "Bitcoin"]
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.plot(walk1, linewidth=8, color="#264653", label=labels[0])
+    ax.plot(walk2, linewidth=8, color="#2a9d8f", label=labels[1])
+    ax.plot(walk3, linewidth=8, color="#e9c46a", label=labels[2])
+    ax.legend()
+
+    InteractivePlot(
+        tooltip=labels,
+        tooltip_group=labels,
+    )
+    ```
+
+    <iframe width="800" height="600" src="quickstart8.html" style="border:none;"></iframe>
+
 This is just a basic overview of things you can do with `plotjs`. There is a lot more coming.
 
 ## Appendix
