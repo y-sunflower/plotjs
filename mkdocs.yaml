@@ -29,9 +29,10 @@ nav:
   - How it works: how-it-works.md
   - Guides:
       - CSS: guides/css/index.md
+      - Troubleshooting: guides/troubleshooting/index.md
       - Advanced: guides/advanced/index.md
   - Reference:
-      - reference/interactive-plot.md
+      - Interactive Plot: reference/interactive-plot.md
       - CSS: reference/css.md
       - Datasets: reference/datasets.md
 
