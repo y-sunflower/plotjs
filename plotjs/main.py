@@ -10,7 +10,7 @@ from matplotlib.axes import Axes
 
 import os
 import uuid
-from typing import Literal, Text, Self
+from typing import Literal, Text
 
 from plotjs.utils import _vector_to_list
 
@@ -34,8 +34,6 @@ class InteractivePlot:
     def __init__(
         self,
         *,
-        tooltip: list | tuple | np.ndarray | SeriesT | None = None,
-        tooltip_group: list | tuple | np.ndarray | SeriesT | None = None,
         tooltip_x_shift: int = 10,
         tooltip_y_shift: int = 10,
         fig: Figure | None = None,
@@ -46,8 +44,6 @@ class InteractivePlot:
         figures to interactive charts.
 
         Args:
-            tooltip: An iterable containing the labels for the tooltip.
-            tooltip_group: An iterable containing the group for tooltip.
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
             tooltip_x_shift: Number of pixels to shift the tooltip from
                 the cursor, on the x axis.
@@ -82,33 +78,47 @@ class InteractivePlot:
         with open(JS_PATH) as f:
             self.js = f.read()
 
-        # tooltip inputs
-        if tooltip is None:
-            self.tooltip = []
+    def add_tooltip(
+        self,
+        labels: list | tuple | np.ndarray | SeriesT | None = None,
+        groups: list | tuple | np.ndarray | SeriesT | None = None,
+    ):
+        """
+        Add a tooltip to the interactive plot.
+
+        Args:
+            labels: An iterable containing the labels for the tooltip.
+            groups: An iterable containing the group for tooltip.
+
+        Returns:
+            self: Returns the instance to allow method chaining.
+        """
+        if labels is None:
+            self.tooltip_labels = []
         else:
-            self.tooltip = _vector_to_list(tooltip)
-            self.tooltip.extend(self.legend_handles_labels)
-        if tooltip_group is None:
-            self.tooltip_group = list(range(len(self.tooltip)))
+            self.tooltip_labels = _vector_to_list(labels)
+            self.tooltip_labels.extend(self.legend_handles_labels)
+        if groups is None:
+            self.tooltip_groups = list(range(len(self.tooltip_labels)))
         else:
-            self.tooltip_group = _vector_to_list(tooltip_group)
-            self.tooltip_group.extend(self.legend_handles_labels)
+            self.tooltip_groups = _vector_to_list(groups)
+            self.tooltip_groups.extend(self.legend_handles_labels)
 
-        print(self.tooltip_group)
-
-        self._set_plot_data_json()
-
-    def add_tooltip() -> Self: ...
+        return self
 
     def _set_plot_data_json(self):
+        if not hasattr(self, "tooltip_labels"):
+            self.add_tooltip()
+
         self.plot_data_json = {
-            "tooltip": self.tooltip,
-            "tooltip_group": self.tooltip_group,
+            "tooltip_labels": self.tooltip_labels,
+            "tooltip_groups": self.tooltip_groups,
             "tooltip_x_shift": self.tooltip_x_shift,
             "tooltip_y_shift": self.tooltip_y_shift,
         }
 
     def _set_html(self):
+        self._set_plot_data_json()
         self.html: Text = self.template.render(
             uuid=str(uuid.uuid4()),
             default_css=self.default_css,
@@ -224,7 +234,7 @@ if __name__ == "__main__":
     ax.stackplot(df.index, areas, labels=columns)
     ax.legend()
 
-    InteractivePlot(
-        tooltip=columns,
-        tooltip_group=columns,
+    InteractivePlot().add_tooltip(
+        labels=columns,
+        groups=columns,
     ).save("index.html")

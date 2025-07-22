@@ -1,4 +1,5 @@
 import re
+import warnings
 
 
 def from_dict(css_dict: dict) -> str:
@@ -32,6 +33,9 @@ def from_dict(css_dict: dict) -> str:
             css += f"{prop}:{value};"
         css += "}"
 
+    if not is_css_like(css):
+        warnings.warn(f"CSS may be invalid: {css}")
+
     return css
 
 
@@ -55,6 +59,9 @@ def from_file(css_file: str) -> str:
     """
     with open(css_file, "r") as f:
         css: str = f.read()
+
+    if not is_css_like(css):
+        warnings.warn(f"CSS may be invalid: {css}")
     return css
 
 
