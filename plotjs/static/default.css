@@ -83,3 +83,8 @@ svg {
 .area.hovered {
   opacity: 1;
 }
+
+.point.hovered {
+  opacity: 0.8;
+  fill: red;
+}

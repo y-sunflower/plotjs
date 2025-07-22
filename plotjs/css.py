@@ -42,7 +42,8 @@ def from_dict(css_dict: dict) -> str:
 def from_file(css_file: str) -> str:
     """
     Get raw CSS from a CSS file. This function just
-    reads the CSS from a given file.
+    reads the CSS from a given file and checks that
+    it looks like valid CSS.
 
     Args:
         css_file: Path to a CSS file.
@@ -67,7 +68,8 @@ def from_file(css_file: str) -> str:
 
 def is_css_like(s: str) -> bool:
     """
-    Check whether a string looks like valid CSS.
+    Check whether a string looks like valid CSS. This function
+    is primarly used internally, but you can use it too.
 
     Args:
         s: A string to evaluate.
