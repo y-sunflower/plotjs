@@ -68,7 +68,7 @@ class PlotSVGParser {
     return polygons;
   }
 
-  applyHoverEffect(plot_element) {
+  setHoverEffect(plot_element) {
     const self = this;
     plot_element
       .on("mouseover", function (event, d) {
@@ -133,7 +133,7 @@ polygons = plotParser.find_polygons(svg);
 points = plotParser.find_points(svg);
 
 // give them the hover effect
-plotParser.applyHoverEffect(points);
-plotParser.applyHoverEffect(lines);
-plotParser.applyHoverEffect(bars);
-plotParser.applyHoverEffect(polygons);
+plotParser.setHoverEffect(points);
+plotParser.setHoverEffect(lines);
+plotParser.setHoverEffect(bars);
+plotParser.setHoverEffect(polygons);

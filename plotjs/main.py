@@ -1,4 +1,3 @@
-from importlib.resources import files
 import numpy as np
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
@@ -13,11 +12,12 @@ import os
 import uuid
 from typing import Literal, Text
 
-from plotjs.polygons_mapping import _map_polygons_to_data
 from plotjs.utils import _vector_to_list
 
-# TEMPLATE_DIR: str = Path(__file__).parent / "static"
-TEMPLATE_DIR = str(files("plotjs") / "static")
+if os.getcwd() == "/Users/josephbarbier/Desktop/plotjs":
+    TEMPLATE_DIR = f"{os.getcwd()}/plotjs/static"
+else:
+    TEMPLATE_DIR: str = Path(__file__).parent / "static"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
 D3_PATH: str = os.path.join(TEMPLATE_DIR, "d3.min.js")
 JS_PATH: str = os.path.join(TEMPLATE_DIR, "main.js")
@@ -36,7 +36,6 @@ class InteractivePlot:
         tooltip: list | tuple | np.ndarray | SeriesT | None = None,
         tooltip_group: list | tuple | np.ndarray | SeriesT | None = None,
         fig: Figure | None = None,
-        gdf: object | None = None,
         **savefig_kws: dict,
     ):
         """
@@ -47,8 +46,6 @@ class InteractivePlot:
             tooltip: An iterable containing the labels for the tooltip.
             tooltip_group: An iterable containing the group for tooltip.
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
-            gdf: An optional GeoDataFrame for proper polygon mapping. It's
-                required when creating a choropleth map.
             savefig_kws: Additional keyword arguments passed to `plt.savefig()`.
         """
         svg_path: Literal["user_plot.svg"] = "user_plot.svg"
@@ -63,7 +60,6 @@ class InteractivePlot:
             self.ax.get_legend_handles_labels()
         )
 
-        self.gdf = gdf
         self.additional_css = ""
         self.svg_content = Path(svg_path).read_text()
         self.template = env.get_template("template.html")
@@ -89,20 +85,12 @@ class InteractivePlot:
             self.tooltip_group = _vector_to_list(tooltip_group)
             self.tooltip_group.extend(self.legend_handles_labels)
 
-        # edge case with choropleth maps
-        if gdf is not None and len(self.ax.collections) > 0:
-            self.polygon_to_data_mapping = _map_polygons_to_data(
-                self.ax.collections[0], gdf, tooltip
-            )
-        else:
-            self.polygon_to_data_mapping = ""
         self._set_plot_data_json()
 
     def _set_plot_data_json(self):
         self.plot_data_json = {
             "tooltip": self.tooltip,
             "tooltip_group": self.tooltip_group,
-            "polygon_mapping": self.polygon_to_data_mapping,
         }
 
     def _set_html(self):

@@ -7,8 +7,3 @@ svg {
   opacity: 1;
   transition: opacity 0.1s ease;
 }
-
-.polygon {
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}

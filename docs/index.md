@@ -159,7 +159,7 @@ InteractivePlot(
 
 <iframe width="800" height="600" src="quickstart6.html" style="border:none;"></iframe>
 
-How about a choropleth map?
+How about a choropleth map? (currently does not work if you install the package)
 
 ```python
 import matplotlib.pyplot as plt
