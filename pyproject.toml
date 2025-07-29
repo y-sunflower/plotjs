@@ -49,6 +49,7 @@ dev = [
     "pyfonts>=1.0.0",
     "morethemes>=0.4.0",
     "plotnine>=0.13.6",
+    "ty>=0.0.1a16",
 ]
 
 [project.urls]
