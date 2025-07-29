@@ -1,12 +1,5 @@
 import matplotlib.pyplot as plt
-import numpy as np
-
-from plotjs import data
-from plotjs import InteractivePlot
-from plotjs import css
-
-
-np.random.seed(0)
+from plotjs import MagicPlot, data
 
 df = data.load_iris()
 
@@ -20,19 +13,35 @@ ax.scatter(
     ec="black",
 )
 
-
-InteractivePlot().add_tooltip(labels=df["species"]).save("docs/quickstart.html")
+plot = MagicPlot(fig=fig)
+plot.add_tooltip(labels=df["sepal_length"]).save("docs/quickstart.html")
 
 ##############################################################
 
-InteractivePlot().add_tooltip(
+import matplotlib.pyplot as plt
+from plotjs import MagicPlot, data
+
+df = data.load_iris()
+
+fig, ax = plt.subplots()
+ax.scatter(
+    df["sepal_length"],
+    df["sepal_width"],
+    c=df["species"].astype("category").cat.codes,
+    s=300,
+    alpha=0.5,
+    ec="black",
+)
+
+plot = MagicPlot(fig=fig)
+plot.add_tooltip(
     labels=df["species"],
     groups=df["species"],
 ).save("docs/quickstart2.html")
 
 ##############################################################
 
-InteractivePlot().add_tooltip(
+MagicPlot().add_tooltip(
     labels=df["species"],
     groups=df["species"],
 ).add_css(
@@ -48,7 +57,7 @@ custom_tooltip = df.apply(
     axis=1,
 )
 
-InteractivePlot().add_tooltip(
+MagicPlot().add_tooltip(
     labels=custom_tooltip,
     groups=df["species"],
 ).add_css(
@@ -76,7 +85,7 @@ ax.plot(walk1, linewidth=8, color="#264653")
 ax.plot(walk2, linewidth=8, color="#2a9d8f")
 ax.plot(walk3, linewidth=8, color="#e9c46a")
 
-InteractivePlot().add_tooltip(labels=["S&P500", "CAC40", "Bitcoin"]).save(
+MagicPlot().add_tooltip(labels=["S&P500", "CAC40", "Bitcoin"]).save(
     "docs/quickstart5.html"
 )
 
@@ -90,7 +99,7 @@ ax.barh(
     color=["#06d6a0", "#06d6a0", "#ef476f", "#06d6a0"],
 )
 
-InteractivePlot().add_tooltip(
+MagicPlot().add_tooltip(
     labels=["Fries", "Cake", "Apple", "Cheese"],
     groups=["Good", "Good", "Bad", "Good"],
 ).add_css(
@@ -122,7 +131,7 @@ for specie in df["species"].unique():
     )
 ax.legend()
 
-InteractivePlot().add_tooltip(
+MagicPlot().add_tooltip(
     labels=df["species"],
     groups=df["species"],
 ).save("docs/quickstart7.html")
@@ -142,7 +151,7 @@ ax.plot(walk2, linewidth=8, color="#2a9d8f", label=labels[1])
 ax.plot(walk3, linewidth=8, color="#e9c46a", label=labels[2])
 ax.legend()
 
-InteractivePlot().add_tooltip(
+MagicPlot().add_tooltip(
     labels=labels,
     groups=labels,
 ).save("docs/quickstart8.html")

@@ -1,3 +1,3 @@
 # Interactive plot
 
-::: plotjs.main.InteractivePlot
+::: plotjs.main.MagicPlot

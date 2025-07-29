@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import morethemes as mt
 
-from plotjs import InteractivePlot
+from plotjs import MagicPlot
 
 mt.set_theme("wsj")
 
@@ -44,7 +44,7 @@ fig.text(
     va="top",
 )
 
-InteractivePlot(
+MagicPlot(
     fig=fig,
     tooltip=df.country.str.title().unique(),
 ).add_css(

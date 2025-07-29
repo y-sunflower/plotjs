@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from plotjs import InteractivePlot, data, css
+from plotjs import MagicPlot, data, css
 
 df = data.load_iris()
 
@@ -25,22 +25,22 @@ df["tooltip"] = (
     + df["species"].str.upper()
 )
 
-InteractivePlot(
+MagicPlot(
     tooltip=df["tooltip"],
 ).add_css(".tooltip {background: red; color: blue;}").save("docs/guides/css/CSS.html")
 
 
-InteractivePlot(
+MagicPlot(
     tooltip=df["tooltip"],
 ).add_css(
     css.from_dict({".tooltip": {"background": "red", "color": "blue"}}),
 )
 
-InteractivePlot(
+MagicPlot(
     tooltip=df["tooltip"],
 ).add_css({".tooltip": {"color": "blue"}}).add_css({".tooltip": {"background": "red"}})
 
-InteractivePlot(
+MagicPlot(
     tooltip=df["tooltip"],
 ).add_css(
     css.from_file("docs/static/style.css"),

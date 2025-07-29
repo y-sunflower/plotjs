@@ -15,27 +15,9 @@ def _load_data(dataset_name: str, backend: str) -> Frame:
         dataset_name: A string specifying the name of the dataset. Currently,
             "iris", "mtcars" and "titanic" are supported.
         backend: The output format of the dataframe.
+
     Returns:
         A dataframe with the specified dataset.
-
-    Usage:
-        ```python
-        from plotjs import data
-
-        df = data.load_iris()
-        ```
-
-        ```python
-        from plotjs import data
-
-        df = data.load_iris("polars")
-        ```
-
-        ```python
-        from plotjs import data
-
-        df = data.load_iris("pyarrow")
-        ```
     """
     dataset_name: str = dataset_name.lower()
 
@@ -64,7 +46,7 @@ def load_iris(output_format: str = "pandas") -> Frame:
     Returns:
         The iris dataset.
 
-    Usage:
+    Examples:
         ```python
         from plotjs import data
 
@@ -99,7 +81,7 @@ def load_mtcars(output_format: str = "pandas") -> Frame:
     Returns:
         The mtcars dataset.
 
-    Usage:
+    Examples:
         ```python
         from plotjs import data
 
@@ -134,7 +116,7 @@ def load_titanic(output_format: str = "pandas") -> Frame:
     Returns:
         The titanic dataset.
 
-    Usage:
+    Examples:
         ```python
         from plotjs import data
 
