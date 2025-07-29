@@ -26,9 +26,9 @@ MagicPlot(
 ).add_css(".tooltip {background: red; color: blue;}")
 ```
 
-> Note that this does not require any indentation, contrary to Python. We can write CSS with a single line of code.
-
 <iframe width="800" height="600" src="CSS.html" style="border:none;"></iframe>
+
+> Note that this does not require any indentation, contrary to Python. We can write CSS with a single line of code.
 
 ## Pass CSS as a Python dictionnary
 

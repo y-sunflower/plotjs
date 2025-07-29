@@ -236,5 +236,7 @@ if __name__ == "__main__":
         )
     ax.legend()
 
-    plot = MagicPlot()
-    plot.add_tooltip(labels=df["species"]).save("index.html")
+    plot = MagicPlot(fig=fig)
+    plot.add_tooltip(labels=df["species"]).add_css(
+        ".hovered{opacity: 0.8 !important; fill: blue !important;}",
+    ).save("index.html")

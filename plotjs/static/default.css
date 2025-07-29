@@ -22,70 +22,19 @@ svg {
   font-family: "Helvetica Neue", "Arial", sans-serif;
 }
 
-.point {
+.plot-element {
   opacity: var(--default-opacity);
   transition: var(--default-transition);
 }
 
-.point:hover {
+.plot-element:hover {
   opacity: var(--default-opacity);
 }
 
-.point.not-hovered {
+.plot-element.not-hovered {
   opacity: var(--default-not-hovered-opacity);
 }
 
-.point.hovered {
-  opacity: var(--default-opacity);
-}
-
-.line {
-  opacity: var(--default-opacity);
-  transition: var(--default-transition);
-}
-
-.line:hover {
-  opacity: var(--default-opacity);
-}
-
-.line.not-hovered {
-  opacity: var(--default-not-hovered-opacity);
-}
-
-.line.hovered {
-  opacity: var(--default-opacity);
-}
-
-.bar {
-  opacity: var(--default-opacity);
-  transition: var(--default-transition);
-}
-
-.bar:hover {
-  opacity: var(--default-opacity);
-}
-
-.bar.not-hovered {
-  opacity: var(--default-not-hovered-opacity);
-}
-
-.bar.hovered {
-  opacity: var(--default-opacity);
-}
-
-.area {
-  opacity: var(--default-opacity);
-  transition: var(--default-transition);
-}
-
-.area:hover {
-  opacity: var(--default-opacity);
-}
-
-.area.not-hovered {
-  opacity: var(--default-not-hovered-opacity);
-}
-
-.area.hovered {
+.plot-element.hovered {
   opacity: var(--default-opacity);
 }

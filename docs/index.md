@@ -10,7 +10,7 @@ The goal is also to give users a large customization power.
 
 > Consider that the project is still **very unstable**.
 
-## What it does?
+## Get started
 
 Matplotlib is **great**[^1]: you can draw anything with it.
 
@@ -46,7 +46,7 @@ if I put my mouse on a point, it displays something?
 <i>
 <center>
 
-Introducting ✨<code>plotjs</code>✨
+Introducting ✨plotjs✨
 </center>
 
 </i>
@@ -85,9 +85,8 @@ Now, let's say we want to a *finer control* over the hover effects.
 
 That's easily possible with some basic CSS:
 
-- we select `.point.hovered` to control CSS for the hovered points
-- we select `.point.not-hovered` to control CSS for the un-hovered
-  points
+- we select `.hovered` to control CSS for the hovered points
+- we select `.not-hovered` to control CSS for the un-hovered points
 
 ``` python
 from plotjs import MagicPlot
@@ -97,7 +96,7 @@ plot.add_tooltip(
     labels=df["species"],
     groups=df["species"],
 ).add_css(
-    ".point.hovered{opacity: 0.8 !important; fill: blue !important;}",
+    ".hovered{opacity: 0.8 !important; fill: blue !important;}",
 ).save("iframes/quickstart3.html")
 ```
 
@@ -191,16 +190,6 @@ plot = MagicPlot(fig=fig)
 plot.add_tooltip(
     labels=["Fries", "Cake", "Apple", "Cheese", "Broccoli"],
     groups=["Good", "Good", "Bad", "Good", "Bad"],
-).add_css(
-    css.from_dict(
-        {
-            ".tooltip": {
-                "width": "100px",
-                "text-align": "center",
-                "font-size": "1.1em",
-            }
-        }
-    )
 ).save("iframes/quickstart6.html")
 ```
 

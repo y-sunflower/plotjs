@@ -33,7 +33,7 @@ nav:
       - Troubleshooting: guides/troubleshooting/index.md
       - Advanced: guides/advanced/index.md
   - Reference:
-      - Interactive MagicPlot: reference/interactive-plot.md
+      - MagicPlot: reference/interactive-plot.md
       - CSS: reference/css.md
       - Datasets: reference/datasets.md
 
