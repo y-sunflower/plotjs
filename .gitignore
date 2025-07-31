@@ -27,5 +27,3 @@ sandbox/
 !docs/**/*.html
 
 *.svg
-*.json
-!docs/plot_data.json

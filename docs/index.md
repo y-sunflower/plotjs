@@ -8,7 +8,9 @@ interactive (for the browser) with minimum user inputs.
 
 The goal is also to give users a large customization power.
 
-> Consider that the project is still **very unstable**.
+???+ warning
+
+    `plotjs` is in very early stage: expect regular breaking changes.
 
 ## Get started
 
@@ -54,8 +56,9 @@ Introducting ✨plotjs✨
 ``` python
 from plotjs import MagicPlot
 
-plot = MagicPlot(fig=fig)
-plot.add_tooltip(labels=df["species"]).save("iframes/quickstart.html")
+MagicPlot(fig=fig).add_tooltip(
+    labels=df["species"],
+).save("iframes/quickstart.html")
 ```
 
 <iframe width="800" height="600" src="iframes/quickstart.html" style="border:none;">
@@ -70,11 +73,14 @@ What if we want to highlight all points from a specie for example?
 ``` python
 from plotjs import MagicPlot
 
-plot = MagicPlot(fig=fig)
-plot.add_tooltip(
-    labels=df["species"],
-    groups=df["species"],
-).save("iframes/quickstart2.html")
+(
+    MagicPlot(fig=fig)
+    .add_tooltip(
+        labels=df["species"],
+        groups=df["species"],
+    )
+    .save("iframes/quickstart2.html")
+)
 ```
 
 <iframe width="800" height="600" src="iframes/quickstart2.html" style="border:none;">
@@ -91,13 +97,15 @@ That's easily possible with some basic CSS:
 ``` python
 from plotjs import MagicPlot
 
-plot = MagicPlot(fig=fig)
-plot.add_tooltip(
-    labels=df["species"],
-    groups=df["species"],
-).add_css(
-    ".hovered{opacity: 0.8 !important; fill: blue !important;}",
-).save("iframes/quickstart3.html")
+(
+    MagicPlot(fig=fig)
+    .add_tooltip(
+        labels=df["species"],
+        groups=df["species"],
+    )
+    .add_css(".hovered{opacity: 0.8 !important; fill: blue !important;}")
+    .save("iframes/quickstart3.html")
+)
 ```
 
 <iframe width="800" height="600" src="iframes/quickstart3.html" style="border:none;">
@@ -124,22 +132,26 @@ Then we use this as the new tooltip:
 ``` python
 from plotjs import MagicPlot, css
 
-plot = MagicPlot(fig=fig)
-plot.add_tooltip(
-    labels=custom_tooltip,
-    groups=df["species"],
-).add_css(
-    css.from_dict(
-        {
-            ".tooltip": {
-                "width": "200px",
-                "text-align": "center",
-                "opacity": "0.7",
-                "font-size": "1.1em",
+(
+    MagicPlot(fig=fig)
+    .add_tooltip(
+        labels=custom_tooltip,
+        groups=df["species"],
+    )
+    .add_css(
+        css.from_dict(
+            {
+                ".tooltip": {
+                    "width": "200px",
+                    "text-align": "center",
+                    "opacity": "0.7",
+                    "font-size": "1.1em",
+                }
             }
-        }
-    ),
-).save("iframes/quickstart4.html")
+        )
+    )
+    .save("iframes/quickstart4.html")
+)
 ```
 
 <iframe width="800" height="600" src="iframes/quickstart4.html" style="border:none;">
@@ -164,8 +176,11 @@ ax.plot(walk1, linewidth=8, color="#264653")
 ax.plot(walk2, linewidth=8, color="#2a9d8f")
 ax.plot(walk3, linewidth=8, color="#e9c46a")
 
-plot = MagicPlot(fig=fig)
-plot.add_tooltip(labels=["S&P500", "CAC40", "Bitcoin"]).save("iframes/quickstart5.html")
+(
+    MagicPlot(fig=fig)
+    .add_tooltip(labels=["S&P500", "CAC40", "Bitcoin"])
+    .save("iframes/quickstart5.html")
+)
 ```
 
 <iframe width="800" height="400" src="iframes/quickstart5.html" style="border:none;">
@@ -186,11 +201,14 @@ ax.barh(
     color=["#06d6a0", "#06d6a0", "#ef476f", "#06d6a0", "#ef476f"],
 )
 
-plot = MagicPlot(fig=fig)
-plot.add_tooltip(
-    labels=["Fries", "Cake", "Apple", "Cheese", "Broccoli"],
-    groups=["Good", "Good", "Bad", "Good", "Bad"],
-).save("iframes/quickstart6.html")
+(
+    MagicPlot(fig=fig)
+    .add_tooltip(
+        labels=["Fries", "Cake", "Apple", "Cheese", "Broccoli"],
+        groups=["Good", "Good", "Bad", "Good", "Bad"],
+    )
+    .save("iframes/quickstart6.html")
+)
 ```
 
 <iframe width="800" height="600" src="iframes/quickstart6.html" style="border:none;">
@@ -217,10 +235,13 @@ for specie in df["species"].unique():
     )
 ax.legend()
 
-plot = MagicPlot(fig=fig)
-plot.add_tooltip(
-    groups=df["species"],
-).save("iframes/quickstart7.html")
+(
+    MagicPlot(fig=fig)
+    .add_tooltip(
+        groups=df["species"],
+    )
+    .save("iframes/quickstart7.html")
+)
 ```
 
 <iframe width="800" height="600" src="iframes/quickstart7.html" style="border:none;">
@@ -249,11 +270,14 @@ ax.plot(walk2, linewidth=8, color="#2a9d8f", label=labels[1])
 ax.plot(walk3, linewidth=8, color="#e9c46a", label=labels[2])
 ax.legend()
 
-plot = MagicPlot(fig=fig)
-plot.add_tooltip(
-   labels=labels,
-   groups=labels,
-).save("iframes/quickstart8.html")
+(
+    MagicPlot(fig=fig)
+    .add_tooltip(
+        labels=labels,
+        groups=labels,
+    )
+    .save("iframes/quickstart8.html")
+)
 ```
 
 <iframe width="800" height="400" src="iframes/quickstart8.html" style="border:none;">
@@ -262,6 +286,10 @@ plot.add_tooltip(
 
 This is just a basic overview of things you can do with `plotjs`. There
 is a lot more coming.
+
+If you want to try it on your machine:
+
+    pip install git+https://github.com/y-sunflower/plotjs.git
 
 ## Appendix
 

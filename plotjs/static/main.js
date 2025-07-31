@@ -30,7 +30,7 @@
         return clip && clip.startsWith("url(");
       });
 
-      bars.attr("class", "bar");
+      bars.attr("class", "bar plot-element");
       this.bars = bars;
       return bars;
     }
@@ -40,7 +40,7 @@
       // select all <use> in #PathCollection_1
       const points = svg.selectAll('g[id^="PathCollection"] use');
 
-      points.attr("class", "point").each(function (_, i) {
+      points.attr("class", "point plot-element").each(function (_, i) {
         d3.select(this).attr("data-group", self.tooltip_groups[i]);
       });
       this.points = points;
@@ -53,7 +53,7 @@
         return !this.closest('g[id^="matplotlib.axis"]');
       });
 
-      lines.attr("class", "line");
+      lines.attr("class", "line plot-element");
       this.lines = lines;
       return lines;
     }
@@ -62,7 +62,7 @@
       // select all <path> of FillBetweenPolyCollection elements
       const areas = svg.selectAll('g[id^="FillBetweenPolyCollection"] path');
 
-      areas.attr("class", "area");
+      areas.attr("class", "area plot-element");
       this.areas = areas;
       return areas;
     }
@@ -106,7 +106,7 @@
   const tooltip_labels = plot_data["tooltip_labels"];
   const tooltip_groups = plot_data["tooltip_groups"];
   const tooltip_x_shift = plot_data["tooltip_x_shift"];
-  const tooltip_y_shift = plot_data["tooltip_y_shift"];
+  const tooltip_y_shift = -plot_data["tooltip_y_shift"];
 
   // no tooltip? no problem
   if (tooltip_labels.length === 0 && tooltip_groups.length === 0) {

@@ -58,6 +58,7 @@ class MagicPlot:
         )
 
         self.additional_css = ""
+        self.additional_javascript = ""
         self.svg_content = Path(svg_path).read_text()
         self.template = env.get_template("template.html")
 
@@ -145,6 +146,7 @@ class MagicPlot:
             uuid=str(uuid.uuid4()),
             default_css=self.default_css,
             additional_css=self.additional_css,
+            additional_javascript=self.additional_javascript,
             svg=self.svg_content,
             plot_data_json=self.plot_data_json,
         )
@@ -192,6 +194,33 @@ class MagicPlot:
         self.additional_css += css_content
         return self
 
+    def add_javascript(self, javascript_content: str):
+        """
+        Add custom JavaScript to the final HTML output. This function allows
+        users to enhance interactivity, define custom behaviors, or extend
+        the existing chart logic.
+
+        Args:
+            javascript_content: JavaScript code to include, as a string.
+
+        Returns:
+            self: Returns the instance to allow method chaining.
+
+        Examples:
+            ```python
+            MagicPlot(...).add_javascript("console.log('Custom JS loaded!');")
+            ```
+
+            ```python
+            from plotjs import javascript
+
+            custom_js = javascript.from_file("script.js")
+            MagicPlot(...).add_javascript(custom_js)
+            ```
+        """
+        self.additional_javascript += javascript_content
+        return self
+
     def save(self, file_path: str):
         """
         Save the interactive matplotlib plots to an HTML file.
@@ -236,7 +265,48 @@ if __name__ == "__main__":
         )
     ax.legend()
 
+    custom_js: str = """
+    document.querySelectorAll('.point').forEach(el => {
+    el.addEventListener('click', function() {
+        const group = this.getAttribute('data-group');
+
+        // Toggle logic
+        const active = this.classList.contains('clicked');
+        document.querySelectorAll('.point').forEach(p => {
+        p.classList.remove('clicked');
+        p.classList.remove('dimmed');
+        });
+
+        if (!active) {
+        this.classList.add('clicked');
+        document.querySelectorAll('.point').forEach(p => {
+            if (p.getAttribute('data-group') !== group) {
+            p.classList.add('dimmed');
+            }
+        });
+        }
+    });
+    });
+    """
+
+    custom_css: str = """
+    .point.dimmed {
+        opacity: 0.2 !important;
+        transition: opacity 0.3s ease;
+    }
+    .point.clicked {
+        stroke: gold !important;
+        stroke-width: 2px;
+    }
+    """
+
     plot = MagicPlot(fig=fig)
-    plot.add_tooltip(labels=df["species"]).add_css(
-        ".hovered{opacity: 0.8 !important; fill: blue !important;}",
-    ).save("index.html")
+    (
+        plot.add_tooltip(
+            labels=df["species"],
+            groups=df["species"],
+        )
+        .add_css(custom_css)
+        .add_javascript(custom_js)
+        .save("index2.html")
+    )
