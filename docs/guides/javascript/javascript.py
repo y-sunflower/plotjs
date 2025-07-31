@@ -25,9 +25,6 @@ d3.selectAll(".point").on("click", () =>
 
 ###############################
 
-import matplotlib.pyplot as plt
-from plotjs import MagicPlot, data
-
 df = data.load_iris()
 
 fig, ax = plt.subplots()
