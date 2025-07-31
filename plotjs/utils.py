@@ -1,5 +1,5 @@
-import narwhals as nw
-from narwhals.dependencies import is_numpy_array, is_into_series
+import narwhals.stable.v2 as nw
+from narwhals.stable.v2.dependencies import is_numpy_array, is_into_series
 
 
 def _vector_to_list(vector, name="labels and groups") -> list:

@@ -1,7 +1,7 @@
-import narwhals as nw
+import narwhals.stable.v2 as nw
 import os
 
-from narwhals.typing import Frame
+from narwhals.stable.v2.typing import Frame
 
 PACKAGE_DIR: str = os.path.dirname(os.path.abspath(__file__))
 AVAILABLE_DATASETS: list[str] = ["iris", "mtcars", "titanic"]
