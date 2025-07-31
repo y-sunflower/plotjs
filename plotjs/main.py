@@ -26,7 +26,7 @@ JS_PATH: str = os.path.join(TEMPLATE_DIR, "main.js")
 env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 
 
-class InteractivePlot:
+class MagicPlot:
     """
     Class to convert static matplotlib plots to interactive charts.
     """
@@ -34,26 +34,18 @@ class InteractivePlot:
     def __init__(
         self,
         *,
-        tooltip_x_shift: int = 10,
-        tooltip_y_shift: int = -10,
         fig: Figure | None = None,
         **savefig_kws: dict,
     ):
         """
-        Initiate an `InteractivePlot` instance to convert matplotlib
+        Initiate an `MagicPlot` instance to convert matplotlib
         figures to interactive charts.
 
         Args:
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
-            tooltip_x_shift: Number of pixels to shift the tooltip from
-                the cursor, on the x axis.
-            tooltip_y_shift: Number of pixels to shift the tooltip from
-                the cursor, on the y axis.
             savefig_kws: Additional keyword arguments passed to `plt.savefig()`.
         """
         svg_path: Literal["user_plot.svg"] = "user_plot.svg"
-        self.tooltip_x_shift = tooltip_x_shift
-        self.tooltip_y_shift = tooltip_y_shift
 
         if fig is None:
             fig: Figure = plt.gcf()
@@ -66,6 +58,7 @@ class InteractivePlot:
         )
 
         self.additional_css = ""
+        self.additional_javascript = ""
         self.svg_content = Path(svg_path).read_text()
         self.template = env.get_template("template.html")
 
@@ -83,6 +76,8 @@ class InteractivePlot:
         *,
         labels: list | tuple | np.ndarray | SeriesT | None = None,
         groups: list | tuple | np.ndarray | SeriesT | None = None,
+        tooltip_x_shift: int = 10,
+        tooltip_y_shift: int = -10,
     ):
         """
         Add a tooltip to the interactive plot. You can set either
@@ -96,24 +91,31 @@ class InteractivePlot:
                 way to understand this argument is to check the examples
                 below. Also note that the use of this argument is required
                 to 'connect' the legend with plot elements.
+            tooltip_x_shift: Number of pixels to shift the tooltip from
+                the cursor, on the x axis.
+            tooltip_y_shift: Number of pixels to shift the tooltip from
+                the cursor, on the y axis.
 
         Returns:
             self: Returns the instance to allow method chaining.
 
         Examples:
             ```python
-            InteractivePlot(...).add_tooltip(
+            MagicPlot(...).add_tooltip(
                 labels=["S&P500", "CAC40", "Sunflower"],
             )
             ```
 
             ```python
-            InteractivePlot(...).add_tooltip(
+            MagicPlot(...).add_tooltip(
                 labels=["S&P500", "CAC40", "Sunflower"],
                 columns=["S&P500", "CAC40", "Sunflower"],
             )
             ```
         """
+        self.tooltip_x_shift = tooltip_x_shift
+        self.tooltip_y_shift = tooltip_y_shift
+
         if labels is None:
             self.tooltip_labels = []
         else:
@@ -144,6 +146,7 @@ class InteractivePlot:
             uuid=str(uuid.uuid4()),
             default_css=self.default_css,
             additional_css=self.additional_css,
+            additional_javascript=self.additional_javascript,
             svg=self.svg_content,
             plot_data_json=self.plot_data_json,
         )
@@ -163,25 +166,25 @@ class InteractivePlot:
 
         Examples:
             ```python
-            InteractivePlot(...).add_css('.tooltip {"color": "red";}')
+            MagicPlot(...).add_css('.tooltip {"color": "red";}')
             ```
 
             ```python
             from plotjs import css
 
-            InteractivePlot(...).add_css(css.from_file("path/to/style.css"))
+            MagicPlot(...).add_css(css.from_file("path/to/style.css"))
             ```
 
             ```python
             from plotjs import css
 
-            InteractivePlot(...).add_css(css.from_dict({".tooltip": {"color": "red";}}))
+            MagicPlot(...).add_css(css.from_dict({".tooltip": {"color": "red";}}))
             ```
 
             ```python
             from plotjs import css
 
-            InteractivePlot(...).add_css(
+            MagicPlot(...).add_css(
                 css.from_dict({".tooltip": {"color": "red";}}),
             ).add_css(
                 css.from_dict({".tooltip": {"background": "blue";}}),
@@ -189,6 +192,33 @@ class InteractivePlot:
             ```
         """
         self.additional_css += css_content
+        return self
+
+    def add_javascript(self, javascript_content: str):
+        """
+        Add custom JavaScript to the final HTML output. This function allows
+        users to enhance interactivity, define custom behaviors, or extend
+        the existing chart logic.
+
+        Args:
+            javascript_content: JavaScript code to include, as a string.
+
+        Returns:
+            self: Returns the instance to allow method chaining.
+
+        Examples:
+            ```python
+            MagicPlot(...).add_javascript("console.log('Custom JS loaded!');")
+            ```
+
+            ```python
+            from plotjs import javascript
+
+            custom_js = javascript.from_file("script.js")
+            MagicPlot(...).add_javascript(custom_js)
+            ```
+        """
+        self.additional_javascript += javascript_content
         return self
 
     def save(self, file_path: str):
@@ -201,11 +231,11 @@ class InteractivePlot:
 
         Examples:
             ```python
-            InteractivePlot(...).save("index.html")
+            MagicPlot(...).save("index.html")
             ```
 
             ```python
-            InteractivePlot(...).save("path/to/my_chart.html")
+            MagicPlot(...).save("path/to/my_chart.html")
             ```
         """
         self._set_html()
@@ -235,4 +265,48 @@ if __name__ == "__main__":
         )
     ax.legend()
 
-    InteractivePlot().add_tooltip(df["species"]).save("index.html")
+    custom_js: str = """
+    document.querySelectorAll('.point').forEach(el => {
+    el.addEventListener('click', function() {
+        const group = this.getAttribute('data-group');
+
+        // Toggle logic
+        const active = this.classList.contains('clicked');
+        document.querySelectorAll('.point').forEach(p => {
+        p.classList.remove('clicked');
+        p.classList.remove('dimmed');
+        });
+
+        if (!active) {
+        this.classList.add('clicked');
+        document.querySelectorAll('.point').forEach(p => {
+            if (p.getAttribute('data-group') !== group) {
+            p.classList.add('dimmed');
+            }
+        });
+        }
+    });
+    });
+    """
+
+    custom_css: str = """
+    .point.dimmed {
+        opacity: 0.2 !important;
+        transition: opacity 0.3s ease;
+    }
+    .point.clicked {
+        stroke: gold !important;
+        stroke-width: 2px;
+    }
+    """
+
+    plot = MagicPlot(fig=fig)
+    (
+        plot.add_tooltip(
+            labels=df["species"],
+            groups=df["species"],
+        )
+        .add_css(custom_css)
+        .add_javascript(custom_js)
+        .save("index2.html")
+    )

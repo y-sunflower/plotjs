@@ -1,10 +1,20 @@
-# `plotjs`: bridge between static matplotlib and interactive
-storytelling
+---
+format: gfm
+from: markdown-smart
+execute: 
+  output: false
+---
 
+```{python}
+# | include: false
+import matplotlib.pyplot as plt
 
-`plotjs` is a proof of concept, inspired by
-[mpld3](https://github.com/mpld3/mpld3), to make matplotlib plots
-interactive (for the browser) with minimum user inputs.
+plt.rcParams["figure.dpi"] = 300
+```
+
+# `plotjs`: bridge between static matplotlib and interactive storytelling
+
+`plotjs` is a proof of concept, inspired by [mpld3](https://github.com/mpld3/mpld3), to make matplotlib plots interactive (for the browser) with minimum user inputs.
 
 The goal is also to give users a large customization power.
 
@@ -16,12 +26,12 @@ The goal is also to give users a large customization power.
 
 Matplotlib is **great**[^1]: you can draw anything with it.
 
-But Matplotlib's graphics are **static**[^2], unlike those of plotly or
-altair, for example.
+But Matplotlib's graphics are **static**[^2], unlike those of plotly or altair, for example.
 
 For instance, a chart made with matplotlib looks like this:
 
-``` python
+```{python}
+# | output: true
 import matplotlib.pyplot as plt
 from plotjs import data
 
@@ -38,22 +48,13 @@ ax.scatter(
 )
 ```
 
-![](index_files/figure-commonmark/cell-3-output-1.png)
-
 This is **just a png** file, nothing crazy.
 
-Wouldn't it be cool if we could, for example, have hover effects? Like,
-if I put my mouse on a point, it displays something?
+Wouldn't it be cool if we could, for example, have hover effects? Like, if I put my mouse on a point, it displays something?
 
-<i>
-<center>
+<i><center>Introducting ✨plotjs✨</center></i>
 
-Introducting ✨plotjs✨
-</center>
-
-</i>
-
-``` python
+```{python}
 from plotjs import MagicPlot
 
 MagicPlot(fig=fig).add_tooltip(
@@ -61,16 +62,13 @@ MagicPlot(fig=fig).add_tooltip(
 ).save("iframes/quickstart.html")
 ```
 
-<iframe width="800" height="600" src="iframes/quickstart.html" style="border:none;">
+<iframe width="800" height="600" src="iframes/quickstart.html" style="border:none;"></iframe>
 
-</iframe>
-
-By default, `plotjs` will highlight the hovered point and fade other
-points.
+By default, `plotjs` will highlight the hovered point and fade other points.
 
 What if we want to highlight all points from a specie for example?
 
-``` python
+```{python}
 from plotjs import MagicPlot
 
 (
@@ -83,18 +81,16 @@ from plotjs import MagicPlot
 )
 ```
 
-<iframe width="800" height="600" src="iframes/quickstart2.html" style="border:none;">
+<iframe width="800" height="600" src="iframes/quickstart2.html" style="border:none;"></iframe>
 
-</iframe>
-
-Now, let's say we want to a *finer control* over the hover effects.
+Now, let's say we want to a _finer control_ over the hover effects.
 
 That's easily possible with some basic CSS:
 
 - we select `.hovered` to control CSS for the hovered points
 - we select `.not-hovered` to control CSS for the un-hovered points
 
-``` python
+```{python}
 from plotjs import MagicPlot
 
 (
@@ -108,17 +104,13 @@ from plotjs import MagicPlot
 )
 ```
 
-<iframe width="800" height="600" src="iframes/quickstart3.html" style="border:none;">
-
-</iframe>
+<iframe width="800" height="600" src="iframes/quickstart3.html" style="border:none;"></iframe>
 
 Now let's setup **better labels** than the current ones.
 
-The `tooltip` argument just requires an iterable, and will use this for
-the labels. That means we can do pretty much whatever we want. For
-instance, with pandas, we can do:
+The `tooltip` argument just requires an iterable, and will use this for the labels. That means we can do pretty much whatever we want. For instance, with pandas, we can do:
 
-``` python
+```{python}
 custom_tooltip = df.apply(
     lambda row: f"Sepal length = {row['sepal_length']}<br>"
     f"Sepal width = {row['sepal_width']}<br>"
@@ -129,7 +121,7 @@ custom_tooltip = df.apply(
 
 Then we use this as the new tooltip:
 
-``` python
+```{python}
 from plotjs import MagicPlot, css
 
 (
@@ -154,16 +146,13 @@ from plotjs import MagicPlot, css
 )
 ```
 
-<iframe width="800" height="600" src="iframes/quickstart4.html" style="border:none;">
+<iframe width="800" height="600" src="iframes/quickstart4.html" style="border:none;"></iframe>
 
-</iframe>
-
-Now that you understand the core components of `plotjs`, let's see how
-it looks with a line chart.
+Now that you understand the core components of `plotjs`, let's see how it looks with a line chart.
 
 It turns out that it's always the same thing:
 
-``` python
+```{python}
 import numpy as np
 from plotjs import MagicPlot, css
 
@@ -183,13 +172,11 @@ ax.plot(walk3, linewidth=8, color="#e9c46a")
 )
 ```
 
-<iframe width="800" height="400" src="iframes/quickstart5.html" style="border:none;">
-
-</iframe>
+<iframe width="800" height="400" src="iframes/quickstart5.html" style="border:none;"></iframe>
 
 How about a barplot?
 
-``` python
+```{python}
 import matplotlib.pyplot as plt
 from plotjs import MagicPlot, css
 
@@ -211,15 +198,13 @@ ax.barh(
 )
 ```
 
-<iframe width="800" height="600" src="iframes/quickstart6.html" style="border:none;">
-
-</iframe>
+<iframe width="800" height="600" src="iframes/quickstart6.html" style="border:none;"></iframe>
 
 Connect legend and plot elements:
 
 - Scatter plot
 
-``` python
+```{python}
 import matplotlib.pyplot as plt
 from plotjs import MagicPlot
 
@@ -244,13 +229,11 @@ ax.legend()
 )
 ```
 
-<iframe width="800" height="600" src="iframes/quickstart7.html" style="border:none;">
-
-</iframe>
+<iframe width="800" height="600" src="iframes/quickstart7.html" style="border:none;"></iframe>
 
 - Line chart
 
-``` python
+```{python}
 import matplotlib.pyplot as plt
 import numpy as np
 from plotjs import MagicPlot
@@ -280,26 +263,17 @@ ax.legend()
 )
 ```
 
-<iframe width="800" height="400" src="iframes/quickstart8.html" style="border:none;">
+<iframe width="800" height="400" src="iframes/quickstart8.html" style="border:none;"></iframe>
 
-</iframe>
-
-This is just a basic overview of things you can do with `plotjs`. There
-is a lot more coming.
+This is just a basic overview of things you can do with `plotjs`. There is a lot more coming.
 
 If you want to try it on your machine:
 
-    pip install git+https://github.com/y-sunflower/plotjs.git
+```
+pip install git+https://github.com/y-sunflower/plotjs.git
+```
 
 ## Appendix
 
 [^1]: It really is.
-
-[^2]: To be exact, you can perfectly create interactive charts natively
-    in Matplotlib. It requires to use its interactive mode and GUI
-    backends to allow actions like zooming and panning in desktop
-    windows. For instance, this differs from Plotly or Altair, which
-    offer richer, browser-based interactivity like tooltips and
-    filtering. Matplotlib’s interactivity is more limited and
-    environment-dependent, while Plotly and Altair provide higher-level,
-    web-friendly features.
+[^2]: To be exact, you can perfectly create interactive charts natively in Matplotlib. It requires to use its interactive mode and GUI backends to allow actions like zooming and panning in desktop windows. For instance, this differs from Plotly or Altair, which offer richer, browser-based interactivity like tooltips and filtering. Matplotlib’s interactivity is more limited and environment-dependent, while Plotly and Altair provide higher-level, web-friendly features.

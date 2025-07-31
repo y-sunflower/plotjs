@@ -21,14 +21,14 @@ Here we basically say _"To all objects of the class `tooltip`, set the `backgrou
 Now let's add this CSS to our plot to change the tooltip:
 
 ```python
-InteractivePlot(
+MagicPlot(
    tooltip=df["tooltip"],
 ).add_css(".tooltip {background: red; color: blue;}")
 ```
 
-> Note that this does not require any indentation, contrary to Python. We can write CSS with a single line of code.
-
 <iframe width="800" height="600" src="CSS.html" style="border:none;"></iframe>
+
+> Note that this does not require any indentation, contrary to Python. We can write CSS with a single line of code.
 
 ## Pass CSS as a Python dictionnary
 
@@ -39,7 +39,7 @@ One option that you can use is to define your CSS via dictionnary. For this we n
 ```python
 from plotjs import css
 
-InteractivePlot(
+MagicPlot(
     tooltip=df["tooltip"],
 ).add_css(
     css.from_dict({".tooltip": {"background": "red", "color": "blue"}}),
@@ -49,7 +49,7 @@ InteractivePlot(
 Since `add_css()` returns the instance itself, you can do method chaining:
 
 ```python
-InteractivePlot(
+MagicPlot(
     tooltip=df["tooltip"],
 ).add_css(
     {".tooltip": {"color": "blue"}}
@@ -72,7 +72,7 @@ Finally, if your CSS is in a CSS file, you can use `css.from_file()`. Assuming y
 We now do:
 
 ```python
-InteractivePlot(
+MagicPlot(
     tooltip=df["tooltip"],
 ).add_css(css.from_file("style.css"))
 ```
