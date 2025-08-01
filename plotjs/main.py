@@ -9,8 +9,9 @@ from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 
 import os
+import io
 import uuid
-from typing import Literal, Text
+from typing import Text
 import warnings
 
 from .utils import _vector_to_list
@@ -43,12 +44,14 @@ class MagicPlot:
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
             savefig_kws: Additional keyword arguments passed to `plt.savefig()`.
         """
-        svg_path: Literal["user_plot.svg"] = "user_plot.svg"
-
         if fig is None:
             fig: Figure = plt.gcf()
+        buf: io.StringIO = io.StringIO()
+        fig.savefig(buf, format="svg", **savefig_kws)
+        buf.seek(0)
+        self.svg_content = buf.getvalue()
+
         self.fig = fig
-        self.fig.savefig(svg_path, **savefig_kws)
         axes: Axes = self.fig.get_axes()
         if len(axes) == 0:
             raise ValueError(
@@ -65,7 +68,6 @@ class MagicPlot:
 
         self.additional_css = ""
         self.additional_javascript = ""
-        self.svg_content = Path(svg_path).read_text()
         self.template = env.get_template("template.html")
 
         with open(CSS_PATH) as f:
@@ -130,7 +132,7 @@ class MagicPlot:
         return self
 
     def _set_plot_data_json(self):
-        if not hasattr(self, "tooltip_labels"):
+        if not hasattr(self, "_tooltip_labels"):
             self.add_tooltip()
 
         self.plot_data_json = {
@@ -245,7 +247,3 @@ class MagicPlot:
             f.write(self.html)
 
         return self
-
-    def _repr_html_(self):
-        self._set_html()
-        return str(self.html)
