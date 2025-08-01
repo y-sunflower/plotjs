@@ -27,3 +27,4 @@ sandbox/
 !docs/**/*.html
 
 *.svg
+!coverage-badge.svg

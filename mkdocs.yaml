@@ -34,7 +34,7 @@ nav:
       - Troubleshooting: guides/troubleshooting/index.md
       - Advanced: guides/advanced/index.md
   - Reference:
-      - MagicPlot: reference/interactive-plot.md
+      - MagicPlot: reference/magic-plot.md
       - CSS: reference/css.md
       - JavaScript: reference/javascript.md
       - Datasets: reference/datasets.md

@@ -11,8 +11,9 @@ from matplotlib.axes import Axes
 import os
 import uuid
 from typing import Literal, Text
+import warnings
 
-from plotjs.utils import _vector_to_list
+from .utils import _vector_to_list
 
 if os.getcwd() == "/Users/josephbarbier/Desktop/plotjs":
     # for debugging
@@ -52,6 +53,14 @@ class MagicPlot:
         self.fig = fig
         self.fig.savefig(svg_path, **savefig_kws)
         axes: Axes = self.fig.get_axes()
+        if len(axes) == 0:
+            raise ValueError(
+                "No Axes found in Figure. Make sure your graph is not empty."
+            )
+        elif len(axes) > 1:
+            warnings.warn(
+                "Figure with multiple Axes is not supported yet.", category=UserWarning
+            )
         self.ax = axes[0]
         self.legend_handles, self.legend_handles_labels = (
             self.ax.get_legend_handles_labels()
@@ -78,7 +87,7 @@ class MagicPlot:
         groups: list | tuple | np.ndarray | SeriesT | None = None,
         tooltip_x_shift: int = 10,
         tooltip_y_shift: int = -10,
-    ):
+    ) -> "MagicPlot":
         """
         Add a tooltip to the interactive plot. You can set either
         just `labels`, just `groups`, both or none.
@@ -151,12 +160,12 @@ class MagicPlot:
             plot_data_json=self.plot_data_json,
         )
 
-    def add_css(self, css_content: str):
+    def add_css(self, css_content: str) -> "MagicPlot":
         """
         Add CSS to the final HTML output. This function allows you to override
         default styles or add custom CSS rules.
 
-        See the [CSS guide](../../guides/css/) for more info on how to work with CSS.
+        See the [CSS guide](../guides/css/index.md) for more info on how to work with CSS.
 
         Args:
             css_content: CSS rules to apply, as a string.
@@ -194,7 +203,7 @@ class MagicPlot:
         self.additional_css += css_content
         return self
 
-    def add_javascript(self, javascript_content: str):
+    def add_javascript(self, javascript_content: str) -> "MagicPlot":
         """
         Add custom JavaScript to the final HTML output. This function allows
         users to enhance interactivity, define custom behaviors, or extend
@@ -221,7 +230,7 @@ class MagicPlot:
         self.additional_javascript += javascript_content
         return self
 
-    def save(self, file_path: str):
+    def save(self, file_path: str) -> "MagicPlot":
         """
         Save the interactive matplotlib plots to an HTML file.
 
@@ -245,68 +254,3 @@ class MagicPlot:
             f.write(self.html)
 
         return self
-
-
-if __name__ == "__main__":
-    from plotjs import data
-
-    df = data.load_iris()
-
-    fig, ax = plt.subplots()
-
-    for specie in df["species"].unique():
-        specie_df = df[df["species"] == specie]
-        ax.scatter(
-            specie_df["sepal_length"],
-            specie_df["sepal_width"],
-            s=200,
-            ec="black",
-            label=specie,
-        )
-    ax.legend()
-
-    custom_js: str = """
-    document.querySelectorAll('.point').forEach(el => {
-    el.addEventListener('click', function() {
-        const group = this.getAttribute('data-group');
-
-        // Toggle logic
-        const active = this.classList.contains('clicked');
-        document.querySelectorAll('.point').forEach(p => {
-        p.classList.remove('clicked');
-        p.classList.remove('dimmed');
-        });
-
-        if (!active) {
-        this.classList.add('clicked');
-        document.querySelectorAll('.point').forEach(p => {
-            if (p.getAttribute('data-group') !== group) {
-            p.classList.add('dimmed');
-            }
-        });
-        }
-    });
-    });
-    """
-
-    custom_css: str = """
-    .point.dimmed {
-        opacity: 0.2 !important;
-        transition: opacity 0.3s ease;
-    }
-    .point.clicked {
-        stroke: gold !important;
-        stroke-width: 2px;
-    }
-    """
-
-    plot = MagicPlot(fig=fig)
-    (
-        plot.add_tooltip(
-            labels=df["species"],
-            groups=df["species"],
-        )
-        .add_css(custom_css)
-        .add_javascript(custom_js)
-        .save("index2.html")
-    )

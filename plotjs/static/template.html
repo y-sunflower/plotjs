@@ -124,16 +124,15 @@
     const tooltip_x_shift = plot_data["tooltip_x_shift"];
     const tooltip_y_shift = -plot_data["tooltip_y_shift"];
 
-    // no tooltip? no problem
-    if (tooltip_labels.length === 0 && tooltip_groups.length === 0) {
-      return; // Exit early
-    }
     let show_tooltip;
-    if (tooltip_labels.length === 0 && tooltip_groups.length > 0) {
+    if (tooltip_labels.length === 0 && tooltip_groups.length === 0) {
+      show_tooltip = "none";
+    } else if (tooltip_labels.length === 0 && tooltip_groups.length > 0) {
       show_tooltip = "none";
     } else {
       show_tooltip = "block";
     }
+    console.log(show_tooltip);
 
     plotParser = new PlotSVGParser(
       svg,

@@ -1,4 +1,4 @@
-from plotjs import css
+from plotjs import css, javascript
 import pytest
 
 
@@ -70,3 +70,10 @@ def test_css_from_file():
 )
 def test_is_css_like(input, output):
     assert css.is_css_like(input) == output
+
+
+def test_javascript_from_file():
+    js_content = javascript.from_file("tests/static/script.js")
+    with open("tests/static/script.js") as f:
+        js_content_expected = f.read()
+    assert js_content == js_content_expected

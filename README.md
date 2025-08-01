@@ -10,7 +10,15 @@ The goal is also to give users a large customization power.
 
 <br><br>
 
-If you want to try it on your machine:
+## Installation
+
+From PyPI:
+
+```
+pip install plotjs
+```
+
+Latest dev version:
 
 ```
 pip install git+https://github.com/y-sunflower/plotjs.git

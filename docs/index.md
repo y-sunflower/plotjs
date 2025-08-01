@@ -1,10 +1,8 @@
-# `plotjs`: bridge between static matplotlib and interactive
-storytelling
+# Bridge between static matplotlib and interactive storytelling
 
 
-`plotjs` is a proof of concept, inspired by
-[mpld3](https://github.com/mpld3/mpld3), to make matplotlib plots
-interactive (for the browser) with minimum user inputs.
+`plotjs` is a proof of concept to make matplotlib plots interactive (for
+the browser) with minimum user inputs.
 
 The goal is also to give users a large customization power.
 
@@ -290,6 +288,11 @@ is a lot more coming.
 If you want to try it on your machine:
 
     pip install git+https://github.com/y-sunflower/plotjs.git
+
+## Dependencies
+
+- Python 3.10+
+- matplotlib, jinja2 and narwhals
 
 ## Appendix
 
