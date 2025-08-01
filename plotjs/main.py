@@ -51,8 +51,7 @@ class MagicPlot:
         buf.seek(0)
         self.svg_content = buf.getvalue()
 
-        self.fig = fig
-        axes: Axes = self.fig.get_axes()
+        axes: list[Axes] = fig.get_axes()
         if len(axes) == 0:
             raise ValueError(
                 "No Axes found in Figure. Make sure your graph is not empty."
@@ -61,7 +60,7 @@ class MagicPlot:
             warnings.warn(
                 "Figure with multiple Axes is not supported yet.", category=UserWarning
             )
-        self._ax = axes[0]
+        self._ax: Axes = axes[0]
         self._legend_handles, self._legend_handles_labels = (
             self._ax.get_legend_handles_labels()
         )

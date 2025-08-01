@@ -3,8 +3,6 @@ from plotjs import data, MagicPlot
 
 import matplotlib.pyplot as plt
 
-import pytest
-
 
 def test_overall():
     df = data.load_iris()
@@ -71,8 +69,6 @@ def test_overall():
     assert isinstance(plot, MagicPlot)
     assert plot.additional_javascript == custom_js
     assert plot.additional_css == custom_css
-    assert plot.ax == ax
-    assert plot.fig == fig
 
 
 def test_version():
