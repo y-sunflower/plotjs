@@ -1,10 +1,10 @@
 [project]
 name = "plotjs"
 description = "Bridge between static matplotlib and interactive storytelling"
-version = "0.0.1"
+version = "0.0.2"
 license = "MIT"
 license-files = ["LICENSE"]
-keywords = ["matplotlib", "interactive", "javascript", "web", "css", "d3", "mpld3"]
+keywords = ["matplotlib", "interactive", "javascript", "web", "css", "d3", "mpld3", "plotnine"]
 authors = [
   { name="Joseph Barbier", email="joseph.barbierdarnal@mail.com" },
 ]
