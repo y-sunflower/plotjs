@@ -54,6 +54,7 @@ dev = [
     "nbformat>=5.10.4",
     "nbclient>=0.10.2",
     "jupyter>=1.1.1",
+    "ipywidgets>=8.1.7",
 ]
 
 [project.urls]

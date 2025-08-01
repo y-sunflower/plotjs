@@ -9,8 +9,9 @@ from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 
 import os
+import io
 import uuid
-from typing import Literal, Text
+from typing import Text
 import warnings
 
 from .utils import _vector_to_list
@@ -21,8 +22,6 @@ if os.getcwd() == "/Users/josephbarbier/Desktop/plotjs":
 else:
     TEMPLATE_DIR: str = Path(__file__).parent / "static"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
-D3_PATH: str = os.path.join(TEMPLATE_DIR, "d3.min.js")
-JS_PATH: str = os.path.join(TEMPLATE_DIR, "main.js")
 
 env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 
@@ -34,7 +33,6 @@ class MagicPlot:
 
     def __init__(
         self,
-        *,
         fig: Figure | None = None,
         **savefig_kws: dict,
     ):
@@ -46,13 +44,14 @@ class MagicPlot:
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
             savefig_kws: Additional keyword arguments passed to `plt.savefig()`.
         """
-        svg_path: Literal["user_plot.svg"] = "user_plot.svg"
-
         if fig is None:
             fig: Figure = plt.gcf()
-        self.fig = fig
-        self.fig.savefig(svg_path, **savefig_kws)
-        axes: Axes = self.fig.get_axes()
+        buf: io.StringIO = io.StringIO()
+        fig.savefig(buf, format="svg", **savefig_kws)
+        buf.seek(0)
+        self.svg_content = buf.getvalue()
+
+        axes: list[Axes] = fig.get_axes()
         if len(axes) == 0:
             raise ValueError(
                 "No Axes found in Figure. Make sure your graph is not empty."
@@ -61,24 +60,17 @@ class MagicPlot:
             warnings.warn(
                 "Figure with multiple Axes is not supported yet.", category=UserWarning
             )
-        self.ax = axes[0]
-        self.legend_handles, self.legend_handles_labels = (
-            self.ax.get_legend_handles_labels()
+        self._ax: Axes = axes[0]
+        self._legend_handles, self._legend_handles_labels = (
+            self._ax.get_legend_handles_labels()
         )
 
         self.additional_css = ""
         self.additional_javascript = ""
-        self.svg_content = Path(svg_path).read_text()
         self.template = env.get_template("template.html")
 
         with open(CSS_PATH) as f:
-            self.default_css = f.read()
-
-        with open(D3_PATH) as f:
-            self.d3js = f.read()
-
-        with open(JS_PATH) as f:
-            self.js = f.read()
+            self._default_css = f.read()
 
     def add_tooltip(
         self,
@@ -122,38 +114,38 @@ class MagicPlot:
             )
             ```
         """
-        self.tooltip_x_shift = tooltip_x_shift
-        self.tooltip_y_shift = tooltip_y_shift
+        self._tooltip_x_shift = tooltip_x_shift
+        self._tooltip_y_shift = tooltip_y_shift
 
         if labels is None:
-            self.tooltip_labels = []
+            self._tooltip_labels = []
         else:
-            self.tooltip_labels = _vector_to_list(labels)
-            self.tooltip_labels.extend(self.legend_handles_labels)
+            self._tooltip_labels = _vector_to_list(labels)
+            self._tooltip_labels.extend(self._legend_handles_labels)
         if groups is None:
-            self.tooltip_groups = list(range(len(self.tooltip_labels)))
+            self._tooltip_groups = list(range(len(self._tooltip_labels)))
         else:
-            self.tooltip_groups = _vector_to_list(groups)
-            self.tooltip_groups.extend(self.legend_handles_labels)
+            self._tooltip_groups = _vector_to_list(groups)
+            self._tooltip_groups.extend(self._legend_handles_labels)
 
         return self
 
     def _set_plot_data_json(self):
-        if not hasattr(self, "tooltip_labels"):
+        if not hasattr(self, "_tooltip_labels"):
             self.add_tooltip()
 
         self.plot_data_json = {
-            "tooltip_labels": self.tooltip_labels,
-            "tooltip_groups": self.tooltip_groups,
-            "tooltip_x_shift": self.tooltip_x_shift,
-            "tooltip_y_shift": self.tooltip_y_shift,
+            "tooltip_labels": self._tooltip_labels,
+            "tooltip_groups": self._tooltip_groups,
+            "tooltip_x_shift": self._tooltip_x_shift,
+            "tooltip_y_shift": self._tooltip_y_shift,
         }
 
     def _set_html(self):
         self._set_plot_data_json()
         self.html: Text = self.template.render(
             uuid=str(uuid.uuid4()),
-            default_css=self.default_css,
+            default_css=self._default_css,
             additional_css=self.additional_css,
             additional_javascript=self.additional_javascript,
             svg=self.svg_content,
