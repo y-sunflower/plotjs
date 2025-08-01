@@ -27,7 +27,6 @@ plugins:
 
 nav:
   - Home: index.md
-  - How it works: how-it-works.md
   - Guides:
       - Add your own CSS: guides/css/index.md
       - Add your own JavaScript: guides/javascript/index.md
@@ -38,6 +37,9 @@ nav:
       - CSS: reference/css.md
       - JavaScript: reference/javascript.md
       - Datasets: reference/datasets.md
+  - For developers:
+      - How it works: developers/how-it-works.md
+      - Contributing: developers/contributing.md
 
 extra_css:
   - stylesheets/style.css

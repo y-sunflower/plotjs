@@ -117,11 +117,11 @@ But there is a major issue here: not all `PathCollection` are relevant, same for
 
 By relevant I mean that we want to add interactivity to them. For example, what elements here are considered to be a `Line2D`:
 
-![](img/how-it-works-1.png)
+![](../img/how-it-works-1.png)
 
 At first, I thought there was 3: one for each main line. But in practice, it's much more:
 
-![](img/how-it-works-2.png)
+![](../img/how-it-works-2.png)
 
 What that means is that we can't select all `Line2D` and give them an hover effect, for instance. We need to find a way to discriminate relevant lines (the 3 big ones) and the other ones.
 
