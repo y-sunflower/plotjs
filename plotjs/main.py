@@ -21,8 +21,6 @@ if os.getcwd() == "/Users/josephbarbier/Desktop/plotjs":
 else:
     TEMPLATE_DIR: str = Path(__file__).parent / "static"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
-D3_PATH: str = os.path.join(TEMPLATE_DIR, "d3.min.js")
-JS_PATH: str = os.path.join(TEMPLATE_DIR, "main.js")
 
 env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 
@@ -34,7 +32,6 @@ class MagicPlot:
 
     def __init__(
         self,
-        *,
         fig: Figure | None = None,
         **savefig_kws: dict,
     ):
@@ -61,9 +58,9 @@ class MagicPlot:
             warnings.warn(
                 "Figure with multiple Axes is not supported yet.", category=UserWarning
             )
-        self.ax = axes[0]
-        self.legend_handles, self.legend_handles_labels = (
-            self.ax.get_legend_handles_labels()
+        self._ax = axes[0]
+        self._legend_handles, self._legend_handles_labels = (
+            self._ax.get_legend_handles_labels()
         )
 
         self.additional_css = ""
@@ -72,13 +69,7 @@ class MagicPlot:
         self.template = env.get_template("template.html")
 
         with open(CSS_PATH) as f:
-            self.default_css = f.read()
-
-        with open(D3_PATH) as f:
-            self.d3js = f.read()
-
-        with open(JS_PATH) as f:
-            self.js = f.read()
+            self._default_css = f.read()
 
     def add_tooltip(
         self,
@@ -122,19 +113,19 @@ class MagicPlot:
             )
             ```
         """
-        self.tooltip_x_shift = tooltip_x_shift
-        self.tooltip_y_shift = tooltip_y_shift
+        self._tooltip_x_shift = tooltip_x_shift
+        self._tooltip_y_shift = tooltip_y_shift
 
         if labels is None:
-            self.tooltip_labels = []
+            self._tooltip_labels = []
         else:
-            self.tooltip_labels = _vector_to_list(labels)
-            self.tooltip_labels.extend(self.legend_handles_labels)
+            self._tooltip_labels = _vector_to_list(labels)
+            self._tooltip_labels.extend(self._legend_handles_labels)
         if groups is None:
-            self.tooltip_groups = list(range(len(self.tooltip_labels)))
+            self._tooltip_groups = list(range(len(self._tooltip_labels)))
         else:
-            self.tooltip_groups = _vector_to_list(groups)
-            self.tooltip_groups.extend(self.legend_handles_labels)
+            self._tooltip_groups = _vector_to_list(groups)
+            self._tooltip_groups.extend(self._legend_handles_labels)
 
         return self
 
@@ -143,17 +134,17 @@ class MagicPlot:
             self.add_tooltip()
 
         self.plot_data_json = {
-            "tooltip_labels": self.tooltip_labels,
-            "tooltip_groups": self.tooltip_groups,
-            "tooltip_x_shift": self.tooltip_x_shift,
-            "tooltip_y_shift": self.tooltip_y_shift,
+            "tooltip_labels": self._tooltip_labels,
+            "tooltip_groups": self._tooltip_groups,
+            "tooltip_x_shift": self._tooltip_x_shift,
+            "tooltip_y_shift": self._tooltip_y_shift,
         }
 
     def _set_html(self):
         self._set_plot_data_json()
         self.html: Text = self.template.render(
             uuid=str(uuid.uuid4()),
-            default_css=self.default_css,
+            default_css=self._default_css,
             additional_css=self.additional_css,
             additional_javascript=self.additional_javascript,
             svg=self.svg_content,
@@ -254,3 +245,7 @@ class MagicPlot:
             f.write(self.html)
 
         return self
+
+    def _repr_html_(self):
+        self._set_html()
+        return str(self.html)

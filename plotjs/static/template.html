@@ -5,7 +5,6 @@
     {{ default_css | safe }}
     {{ additional_css | safe }}
   </style>
-
   {{ svg | safe }}
   <div class="tooltip" id="tooltip-{{ uuid }}"></div>
 </div>
@@ -123,16 +122,7 @@
     const tooltip_groups = plot_data["tooltip_groups"];
     const tooltip_x_shift = plot_data["tooltip_x_shift"];
     const tooltip_y_shift = -plot_data["tooltip_y_shift"];
-
-    let show_tooltip;
-    if (tooltip_labels.length === 0 && tooltip_groups.length === 0) {
-      show_tooltip = "none";
-    } else if (tooltip_labels.length === 0 && tooltip_groups.length > 0) {
-      show_tooltip = "none";
-    } else {
-      show_tooltip = "block";
-    }
-    console.log(show_tooltip);
+    const show_tooltip = tooltip_labels.length === 0 ? "none" : "block";
 
     plotParser = new PlotSVGParser(
       svg,
