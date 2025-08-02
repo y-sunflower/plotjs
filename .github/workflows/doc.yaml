@@ -35,17 +35,6 @@ jobs:
       - name: Install the project
         run: uv sync --all-groups
 
-      - name: Update coverage badge
-        run: |
-          chmod +x ./scripts/coverage.sh
-          ./scripts/coverage.sh
-
-      - name: Commit coverage badge
-        run: |
-          git add coverage-badge.svg
-          git commit -m "chore: update coverage badge" || echo "No changes to commit"
-          git push
-
       - name: Deploy MkDocs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,5 +1,5 @@
 import plotjs
-from plotjs import data, MagicPlot
+from plotjs import data, MagicPlot, css
 
 import matplotlib.pyplot as plt
 
@@ -44,16 +44,18 @@ def test_overall():
     });
     """
 
-    custom_css: str = """
-    .point.dimmed {
-        opacity: 0.2 !important;
-        transition: opacity 0.3s ease;
-    }
-    .point.clicked {
-        stroke: gold !important;
-        stroke-width: 2px;
-    }
-    """
+    custom_css: str = css.from_dict(
+        {
+            ".point.dimmed": {
+                "opacity": "0.2 !important",
+                "transition": "opacity 0.3s ease",
+            },
+            ".point.clicked": {
+                "stroke": "gold !important",
+                "stroke-width": "2px",
+            },
+        }
+    )
 
     plot = MagicPlot(fig=fig)
     (
