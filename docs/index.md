@@ -1,6 +1,5 @@
 # Bridge between static matplotlib and interactive storytelling
 
-
 `plotjs` is a proof of concept to make matplotlib plots interactive (for
 the browser) with minimum user inputs.
 
@@ -19,7 +18,7 @@ altair, for example.
 
 For instance, a chart made with matplotlib looks like this:
 
-``` python
+```python
 import matplotlib.pyplot as plt
 from plotjs import data
 
@@ -47,11 +46,12 @@ if I put my mouse on a point, it displays something?
 <center>
 
 Introducting ✨plotjs✨
+
 </center>
 
 </i>
 
-``` python
+```python
 from plotjs import MagicPlot
 
 MagicPlot(fig=fig).add_tooltip(
@@ -68,7 +68,7 @@ points.
 
 What if we want to highlight all points from a specie for example?
 
-``` python
+```python
 from plotjs import MagicPlot
 
 (
@@ -85,14 +85,14 @@ from plotjs import MagicPlot
 
 </iframe>
 
-Now, let's say we want to a *finer control* over the hover effects.
+Now, let's say we want to a _finer control_ over the hover effects.
 
 That's easily possible with some basic CSS:
 
 - we select `.hovered` to control CSS for the hovered points
 - we select `.not-hovered` to control CSS for the un-hovered points
 
-``` python
+```python
 from plotjs import MagicPlot
 
 (
@@ -116,7 +116,7 @@ The `tooltip` argument just requires an iterable, and will use this for
 the labels. That means we can do pretty much whatever we want. For
 instance, with pandas, we can do:
 
-``` python
+```python
 custom_tooltip = df.apply(
     lambda row: f"Sepal length = {row['sepal_length']}<br>"
     f"Sepal width = {row['sepal_width']}<br>"
@@ -127,7 +127,7 @@ custom_tooltip = df.apply(
 
 Then we use this as the new tooltip:
 
-``` python
+```python
 from plotjs import MagicPlot, css
 
 (
@@ -161,7 +161,7 @@ it looks with a line chart.
 
 It turns out that it's always the same thing:
 
-``` python
+```python
 import numpy as np
 from plotjs import MagicPlot, css
 
@@ -187,7 +187,7 @@ ax.plot(walk3, linewidth=8, color="#e9c46a")
 
 How about a barplot?
 
-``` python
+```python
 import matplotlib.pyplot as plt
 from plotjs import MagicPlot, css
 
@@ -217,7 +217,7 @@ Connect legend and plot elements:
 
 - Scatter plot
 
-``` python
+```python
 import matplotlib.pyplot as plt
 from plotjs import MagicPlot
 
@@ -248,7 +248,7 @@ ax.legend()
 
 - Line chart
 
-``` python
+```python
 import matplotlib.pyplot as plt
 import numpy as np
 from plotjs import MagicPlot
@@ -289,26 +289,26 @@ is a lot more coming.
 
 - From PyPI:
 
-``` bash
+```bash
 pip install plotjs
 ```
 
 - Latest dev version:
 
-``` bash
+```bash
 pip install git+https://github.com/y-sunflower/plotjs.git
 ```
 
 ## Dependencies
 
 - Python 3.10+
-- matplotlib, jinja2 and narwhals
+- [matplotlib](https://matplotlib.org/), [jinja2](https://jinja.palletsprojects.com/en/stable/) and [narwhals](https://narwhals-dev.github.io/narwhals/)
 
 ## Appendix
 
 [^1]: It really is.
-
-[^2]: To be exact, you can perfectly create interactive charts natively
+[^2]:
+    To be exact, you can perfectly create interactive charts natively
     in Matplotlib. It requires to use its interactive mode and GUI
     backends to allow actions like zooming and panning in desktop
     windows. For instance, this differs from Plotly or Altair, which

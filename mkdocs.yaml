@@ -28,11 +28,12 @@ plugins:
 nav:
   - Home: index.md
   - Guides:
+      - Customization: guides/customization/index.md
       - Add your own CSS: guides/css/index.md
       - Add your own JavaScript: guides/javascript/index.md
       - Troubleshooting: guides/troubleshooting/index.md
       - Advanced: guides/advanced/index.md
-  - Reference:
+  - API Reference:
       - MagicPlot: reference/magic-plot.md
       - CSS: reference/css.md
       - JavaScript: reference/javascript.md

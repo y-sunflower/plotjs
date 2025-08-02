@@ -83,3 +83,30 @@ We now do:
 ```
 
 <iframe width="800" height="600" src="css-2.html" style="border:none;"></iframe>
+
+## Elements to select
+
+In order to apply CSS or [JavaScript](../javascript/index.md), you need to select elements from the DOM[^1]. You can find most of them using the [inspector](../troubleshooting/index.md) of your browser. All the common ones are defined below:
+
+#### Plot elements
+
+- `.point`: all points from a scatter plot
+- `.line`: all lines from a line chart
+- `.area`: all areas from an area chart
+- `.bar`: all bars from a bar chart
+- `.plot-element`: all previous elements (points, lines, areas and bars)
+
+For all of those previous elements, you can add `.hovered` or `.not-hovered` (e.g, `.point.not-hovered`) to, respectively, select currently hovered and not hovered elements.
+
+#### Misc
+
+- `.tooltip`: the tooltip displayed when hovering elements
+- `svg`: the entire SVG containing the chart
+
+???+ question
+
+    Something's missing? Please [tell me](https://github.com/y-sunflower/plotjs/issues) about it by opening a new issue!
+
+## Appendix
+
+[^1]: The DOM (Document Object Model) is a tree-like structure that represents all the elements of a web page, allowing JavaScript to read, change, and interact with them. Think of it as a live map of the webpage that your code can explore and update in real time.
