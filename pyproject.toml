@@ -1,7 +1,7 @@
 [project]
 name = "plotjs"
 description = "Turn static matplotlib charts into interactive web visualizations"
-version = "0.0.2"
+version = "0.0.3"
 license = "MIT"
 license-files = ["LICENSE"]
 keywords = ["matplotlib", "interactive", "javascript", "web", "css", "d3", "mpld3", "plotnine"]
@@ -13,7 +13,7 @@ requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
-    "Development Status :: 3 - Alpha"
+    "Development Status :: 4 - Beta"
 ]
 dependencies = [
     "jinja2>=3.0.0",
