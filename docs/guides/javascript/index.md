@@ -1,8 +1,8 @@
-Under the hood, JavaScript is what is used to make the charts interactive. But `plotjs` allows anyone to add some more JavaScript for a finer control of what is happening and basically do whatever you want!
+Under the hood, JavaScript is what is used to make the charts interactive. But `plotjs` allows anyone to add some more JavaScript for finer control of what is happening and basically do whatever you want!
 
 ## Basic example
 
-Try to click on one of the point in the chart!
+Try to click on one of the points in the chart!
 
 ```python
 import matplotlib.pyplot as plt
@@ -43,10 +43,10 @@ d3.selectAll(".point").on("click", () =>
 );
 ```
 
-Here what it does:
+Here’s what it does:
 
-- select all points (e.g, from the scatter plot)
-- sets that when clicking one of the point
+- selects all points (e.g., from the scatter plot)
+- sets that when clicking one of the points
 - it displays a message
 
 ## Loading JavaScript from file
@@ -61,7 +61,7 @@ MagicPlot(fig=fig).add_javascript(
 )
 ```
 
-This allows you to write JavaScript in a separate file so that you can have a code formatter (prettier, etc), code completion, syntax highlighting, and so on. This is what is recommended to do if you're writing a significant amount of code.
+This allows you to write JavaScript in a separate file so that you can have a code formatter (prettier, etc.), code completion, syntax highlighting, and so on. This is what is recommended to do if you're writing a significant amount of code.
 
 ## Advanced usage
 
@@ -140,9 +140,9 @@ In order to apply [CSS](../css/index.md) or JavaScript, you need to select eleme
 - `.line`: all lines from a line chart
 - `.area`: all areas from an area chart
 - `.bar`: all bars from a bar chart
-- `.plot-element`: all previous elements (points, lines, areas and bars)
+- `.plot-element`: all previous elements (points, lines, areas, and bars)
 
-For all of those previous elements, you can add `.hovered` or `.not-hovered` (e.g, `.point.not-hovered`) to, respectively, select currently hovered and not hovered elements.
+For all of those previous elements, you can add `.hovered` or `.not-hovered` (e.g., `.point.not-hovered`) to, respectively, select currently hovered and not-hovered elements.
 
 #### Misc
 

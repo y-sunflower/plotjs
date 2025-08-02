@@ -1,6 +1,6 @@
 import plotjs
 from plotjs import data, MagicPlot, css
-
+import os
 import matplotlib.pyplot as plt
 
 
@@ -65,12 +65,14 @@ def test_overall():
         )
         .add_css(custom_css)
         .add_javascript(custom_js)
-        .save("index2.html")
+        .save("temp.html")
     )
 
     assert isinstance(plot, MagicPlot)
     assert plot.additional_javascript == custom_js
     assert plot.additional_css == custom_css
+
+    os.remove("temp.html")
 
 
 def test_version():

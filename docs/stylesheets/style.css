@@ -39,3 +39,14 @@ footer.custom-footer {
 .footer-container p {
   font-size: 1rem;
 }
+
+.landing-page {
+  background: linear-gradient(to right, #fffaf0, #f0ffff);
+  padding: 2rem;
+  font-size: 1.1rem;
+}
+
+/* Example: hide sidebar only on landing page */
+.landing-page .md-sidebar {
+  display: none;
+}
