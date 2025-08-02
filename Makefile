@@ -6,6 +6,9 @@ examples:
 	uv run docs/guides/css/css.py
 	uv run docs/guides/javascript/javascript.py
 
+gallery:
+	quarto render docs/gallery/index.qmd
+
 coverage:
 	uv run coverage run --source=plotjs -m pytest
 	uv run coverage report -m

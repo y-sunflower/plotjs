@@ -20,18 +20,20 @@ ax.scatter(
     ec="black",
 )
 
-MagicPlot(fig=fig).add_tooltip(
-    labels=df["species"],
-).add_javascript(
-    """
+(
+    MagicPlot(fig=fig)
+    .add_tooltip(labels=df["species"])
+    .add_javascript(
+        """
 d3.selectAll(".point").on("click", () =>
   alert("I wish cookies were 0 calories...")
 );
 """
-).save("docs/guides/javascript/javascript.html")
+    )
+)
 ```
 
-<iframe width="800" height="600" src="javascript.html" style="border:none;"></iframe>
+<iframe width="800" height="600" src="../../iframes/javascript.html" style="border:none;"></iframe>
 
 Relevant code here is:
 
@@ -123,11 +125,10 @@ custom_css: str = """
     )
     .add_css(custom_css)
     .add_javascript(custom_js)
-    .save("docs/guides/javascript/javascript2.html")
 )
 ```
 
-<iframe width="800" height="600" src="javascript2.html" style="border:none;"></iframe>
+<iframe width="800" height="600" src="../../iframes/javascript2.html" style="border:none;"></iframe>
 
 ## Elements to select
 

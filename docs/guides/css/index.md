@@ -28,7 +28,7 @@ Now let's add this CSS to our plot to change the tooltip:
 )
 ```
 
-<iframe width="800" height="600" src="css.html" style="border:none;"></iframe>
+<iframe width="800" height="600" src="../../iframes/css.html" style="border:none;"></iframe>
 
 > Note that this does not require any indentation, contrary to Python. We can write CSS with a single line of code.
 
@@ -82,7 +82,7 @@ We now do:
 )
 ```
 
-<iframe width="800" height="600" src="css-2.html" style="border:none;"></iframe>
+<iframe width="800" height="600" src="../../iframes/css-2.html" style="border:none;"></iframe>
 
 ## Elements to select
 

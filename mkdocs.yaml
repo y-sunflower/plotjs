@@ -27,6 +27,7 @@ plugins:
 
 nav:
   - Home: index.md
+  - Gallery: gallery/index.md
   - Guides:
       - Customization: guides/customization/index.md
       - Add your own CSS: guides/css/index.md

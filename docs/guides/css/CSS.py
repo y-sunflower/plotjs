@@ -29,7 +29,7 @@ df["tooltip"] = (
     MagicPlot()
     .add_tooltip(labels=df["tooltip"])
     .add_css(".tooltip {background: red; color: blue;}")
-    .save("docs/guides/css/CSS.html")
+    .save("docs/iframes/CSS.html")
 )
 
 
@@ -52,5 +52,5 @@ df["tooltip"] = (
     MagicPlot()
     .add_tooltip(labels=df["tooltip"])
     .add_css(css.from_file("docs/static/style.css"))
-    .save("docs/guides/css/CSS-2.html")
+    .save("docs/iframes/CSS-2.html")
 )
