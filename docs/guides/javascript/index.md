@@ -20,18 +20,20 @@ ax.scatter(
     ec="black",
 )
 
-MagicPlot(fig=fig).add_tooltip(
-    labels=df["species"],
-).add_javascript(
-    """
+(
+    MagicPlot(fig=fig)
+    .add_tooltip(labels=df["species"])
+    .add_javascript(
+        """
 d3.selectAll(".point").on("click", () =>
   alert("I wish cookies were 0 calories...")
 );
 """
-).save("docs/guides/javascript/javascript.html")
+    )
+)
 ```
 
-<iframe width="800" height="600" src="javascript.html" style="border:none;"></iframe>
+<iframe width="800" height="600" src="../../iframes/javascript.html" style="border:none;"></iframe>
 
 Relevant code here is:
 
@@ -123,8 +125,34 @@ custom_css: str = """
     )
     .add_css(custom_css)
     .add_javascript(custom_js)
-    .save("docs/guides/javascript/javascript2.html")
 )
 ```
 
-<iframe width="800" height="600" src="javascript2.html" style="border:none;"></iframe>
+<iframe width="800" height="600" src="../../iframes/javascript2.html" style="border:none;"></iframe>
+
+## Elements to select
+
+In order to apply [CSS](../css/index.md) or JavaScript, you need to select elements from the DOM[^1]. You can find most of them using the [inspector](../troubleshooting/index.md) of your browser. All the common ones are defined below:
+
+#### Plot elements
+
+- `.point`: all points from a scatter plot
+- `.line`: all lines from a line chart
+- `.area`: all areas from an area chart
+- `.bar`: all bars from a bar chart
+- `.plot-element`: all previous elements (points, lines, areas and bars)
+
+For all of those previous elements, you can add `.hovered` or `.not-hovered` (e.g, `.point.not-hovered`) to, respectively, select currently hovered and not hovered elements.
+
+#### Misc
+
+- `.tooltip`: the tooltip displayed when hovering elements
+- `svg`: the entire SVG containing the chart
+
+???+ question
+
+    Something's missing? Please [tell me](https://github.com/y-sunflower/plotjs/issues) about it by opening a new issue!
+
+## Appendix
+
+[^1]: The DOM (Document Object Model) is a tree-like structure that represents all the elements of a web page, allowing JavaScript to read, change, and interact with them. Think of it as a live map of the webpage that your code can explore and update in real time.

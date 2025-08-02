@@ -13,15 +13,18 @@ ax.scatter(
     ec="black",
 )
 
-MagicPlot(fig=fig).add_tooltip(
-    labels=df["species"],
-).add_javascript(
-    """
+(
+    MagicPlot(fig=fig)
+    .add_tooltip(labels=df["species"])
+    .add_javascript(
+        """
 d3.selectAll(".point").on("click", () =>
   alert("I wish cookies were 0 calories...")
 );
 """
-).save("docs/guides/javascript/javascript.html")
+    )
+    .save("docs/iframes/javascript.html")
+)
 
 ###############################
 
@@ -81,5 +84,5 @@ custom_css: str = """
     )
     .add_css(custom_css)
     .add_javascript(custom_js)
-    .save("docs/guides/javascript/javascript2.html")
+    .save("docs/iframes/javascript2.html")
 )
