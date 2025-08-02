@@ -91,6 +91,8 @@ from plotjs import MagicPlot
 
 </iframe>
 
+### CSS
+
 Now, let's say we want to a *finer control* over the hover effects.
 
 That's easily possible with some basic CSS:
@@ -115,6 +117,8 @@ from plotjs import MagicPlot
 <iframe width="800" height="600" src="iframes/quickstart3.html" style="border:none;">
 
 </iframe>
+
+### Label customization
 
 Now let's setup **better labels** than the current ones.
 
@@ -165,7 +169,7 @@ from plotjs import MagicPlot, css
 Now that you understand the core components of `plotjs`, let's see how
 it looks with a line chart.
 
-It turns out that it's always the same thing:
+### Line chart
 
 ``` python
 import numpy as np
@@ -191,7 +195,7 @@ ax.plot(walk3, linewidth=8, color="#e9c46a")
 
 </iframe>
 
-How about a barplot?
+### Barplot
 
 ``` python
 import matplotlib.pyplot as plt
@@ -219,7 +223,7 @@ ax.barh(
 
 </iframe>
 
-Connect legend and plot elements:
+### Connect legend and plot elements:
 
 - Scatter plot
 
@@ -288,8 +292,42 @@ ax.legend()
 
 </iframe>
 
-This is just a basic overview of things you can do with `plotjs`. There
-is a lot more coming.
+### Multiple Axes
+
+``` python
+import matplotlib.pyplot as plt
+from plotjs import MagicPlot, data
+
+df = data.load_iris()
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+
+args = dict(
+    c=df["species"].astype("category").cat.codes,
+    s=300,
+    alpha=0.5,
+    ec="black",
+)
+ax1.scatter(df["sepal_width"], df["sepal_length"], **args)
+ax2.scatter(df["petal_width"], df["petal_length"], **args)
+
+(
+    MagicPlot(fig)
+    .add_tooltip(
+        groups=df["species"],
+        ax=ax1,  # left Axes
+    )
+    .add_tooltip(
+        labels=df["species"],
+        ax=ax2,  # right Axes
+    )
+    .save("iframes/quickstart9.html")
+)
+```
+
+<iframe width="800" height="400" src="iframes/quickstart9.html" style="border:none;">
+
+</iframe>
 
 ## Installation
 
