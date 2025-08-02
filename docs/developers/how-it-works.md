@@ -12,7 +12,7 @@ There are two ways to tackle this problem:
 The second option is **much simpler** (well, it depends), because we don't have to:
 
 - translate the figure to JSON (which can be painfully complex if you want to handle all edge cases and make it robust),
-- recreate the chart — browsers can display SVG perfectly.
+- recreate the chart (browsers can display SVG perfectly).
 
 But it means we don't have full control over how the plot is structured (from the browser's point of view). We need to find a way to parse this SVG.
 
@@ -113,7 +113,7 @@ For example, all `PathCollection` objects look like `<g id="PathCollection_1">`,
 
 For lines, they are represented by `Line2D`. In the SVG, they look like `<g id="line2d_1">`, `<g id="line2d_2">`, etc. With this, we can easily detect that there are lines in the chart.
 
-But there's a major issue here: not all `PathCollection` elements are relevant — same for `Line2D`, and so on.
+But there's a major issue here: not all `PathCollection` elements are relevant, same for `Line2D`, and so on.
 
 By "relevant," I mean those we want to add interactivity to. For example, what elements here are considered to be a `Line2D`?
 

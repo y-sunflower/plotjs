@@ -32,7 +32,7 @@ You can directly apply a CSS string to your plot:
 
 <iframe width="800" height="600" src="../../iframes/css.html" style="border:none;"></iframe>
 
-> CSS doesn’t require indentation—one-liners work fine.
+> CSS doesn’t require indentation: one-liners work fine.
 
 ## Using a Python dictionary
 
@@ -111,6 +111,10 @@ You can combine with `.hovered` or `.not-hovered`, e.g., `.point.hovered`.
 ???+ question
 
     Something missing? Please [open an issue](https://github.com/y-sunflower/plotjs/issues)!
+
+## Default CSS
+
+You can find the default CSS applied by plotjs [here](https://github.com/y-sunflower/plotjs/blob/main/plotjs/static/default.css)
 
 ## Appendix
 
