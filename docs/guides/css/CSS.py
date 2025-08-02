@@ -25,23 +25,32 @@ df["tooltip"] = (
     + df["species"].str.upper()
 )
 
-MagicPlot(
-    tooltip=df["tooltip"],
-).add_css(".tooltip {background: red; color: blue;}").save("docs/guides/css/CSS.html")
-
-
-MagicPlot(
-    tooltip=df["tooltip"],
-).add_css(
-    css.from_dict({".tooltip": {"background": "red", "color": "blue"}}),
+(
+    MagicPlot()
+    .add_tooltip(labels=df["tooltip"])
+    .add_css(".tooltip {background: red; color: blue;}")
+    .save("docs/guides/css/CSS.html")
 )
 
-MagicPlot(
-    tooltip=df["tooltip"],
-).add_css({".tooltip": {"color": "blue"}}).add_css({".tooltip": {"background": "red"}})
 
-MagicPlot(
-    tooltip=df["tooltip"],
-).add_css(
-    css.from_file("docs/static/style.css"),
-).save("docs/guides/css/CSS-2.html")
+(
+    MagicPlot()
+    .add_tooltip(labels=df["tooltip"])
+    .add_css(css.from_dict({".tooltip": {"background": "red", "color": "blue"}}))
+)
+
+(
+    MagicPlot()
+    .add_tooltip(
+        labels=df["tooltip"],
+    )
+    .add_css(css.from_dict({".tooltip": {"color": "blue"}}))
+    .add_css(css.from_dict({".tooltip": {"background": "red"}}))
+)
+
+(
+    MagicPlot()
+    .add_tooltip(labels=df["tooltip"])
+    .add_css(css.from_file("docs/static/style.css"))
+    .save("docs/guides/css/CSS-2.html")
+)

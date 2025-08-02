@@ -285,9 +285,19 @@ ax.legend()
 This is just a basic overview of things you can do with `plotjs`. There
 is a lot more coming.
 
-If you want to try it on your machine:
+## Installation
 
-    pip install git+https://github.com/y-sunflower/plotjs.git
+- From PyPI:
+
+``` bash
+pip install plotjs
+```
+
+- Latest dev version:
+
+``` bash
+pip install git+https://github.com/y-sunflower/plotjs.git
+```
 
 ## Dependencies
 

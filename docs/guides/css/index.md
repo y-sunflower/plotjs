@@ -21,12 +21,14 @@ Here we basically say _"To all objects of the class `tooltip`, set the `backgrou
 Now let's add this CSS to our plot to change the tooltip:
 
 ```python
-MagicPlot(
-   tooltip=df["tooltip"],
-).add_css(".tooltip {background: red; color: blue;}")
+(
+    MagicPlot()
+    .add_tooltip(labels=df["tooltip"])
+    .add_css(".tooltip {background: red; color: blue;}")
+)
 ```
 
-<iframe width="800" height="600" src="CSS.html" style="border:none;"></iframe>
+<iframe width="800" height="600" src="css.html" style="border:none;"></iframe>
 
 > Note that this does not require any indentation, contrary to Python. We can write CSS with a single line of code.
 
@@ -39,22 +41,23 @@ One option that you can use is to define your CSS via dictionnary. For this we n
 ```python
 from plotjs import css
 
-MagicPlot(
-    tooltip=df["tooltip"],
-).add_css(
-    css.from_dict({".tooltip": {"background": "red", "color": "blue"}}),
+(
+    MagicPlot()
+    .add_tooltip(labels=df["tooltip"])
+    .add_css(css.from_dict({".tooltip": {"background": "red", "color": "blue"}}))
 )
 ```
 
 Since `add_css()` returns the instance itself, you can do method chaining:
 
 ```python
-MagicPlot(
-    tooltip=df["tooltip"],
-).add_css(
-    {".tooltip": {"color": "blue"}}
-).add_css(
-    {".tooltip": {"background": "red"}}
+(
+    MagicPlot()
+    .add_tooltip(
+        labels=df["tooltip"],
+    )
+    .add_css(css.from_dict({".tooltip": {"color": "blue"}}))
+    .add_css(css.from_dict({".tooltip": {"background": "red"}}))
 )
 ```
 
@@ -72,9 +75,11 @@ Finally, if your CSS is in a CSS file, you can use `css.from_file()`. Assuming y
 We now do:
 
 ```python
-MagicPlot(
-    tooltip=df["tooltip"],
-).add_css(css.from_file("style.css"))
+(
+    MagicPlot()
+    .add_tooltip(labels=df["tooltip"])
+    .add_css(css.from_file("docs/static/style.css"))
+)
 ```
 
-<iframe width="800" height="600" src="CSS-2.html" style="border:none;"></iframe>
+<iframe width="800" height="600" src="css-2.html" style="border:none;"></iframe>
