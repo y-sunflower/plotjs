@@ -1,10 +1,15 @@
-# Bridge between static matplotlib and interactive storytelling
+# Turn static matplotlib charts into interactive web visualizations
 
 
-`plotjs` is a proof of concept to make matplotlib plots interactive (for
-the browser) with minimum user inputs.
+<img src="https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/image.png?raw=true" alt="plotjs logo" align="right" width="150px"/>
 
-The goal is also to give users a large customization power.
+`plotjs` is a Python package that transform matplotlib plots into
+interactive charts with minimum user inputs. You can:
+
+- control tooltip labels and grouping
+- add CSS
+- add JavaScript
+- and many more
 
 ???+ warning
 
@@ -63,8 +68,9 @@ MagicPlot(fig=fig).add_tooltip(
 
 </iframe>
 
-By default, `plotjs` will highlight the hovered point and fade other
-points.
+`plotjs` convert any matplotlib Figure to an HTML file that contains an
+interactive version of your plot. By default, it will highlight the
+hovered point and fade other points.
 
 What if we want to highlight all points from a specie for example?
 
@@ -84,6 +90,8 @@ from plotjs import MagicPlot
 <iframe width="800" height="600" src="iframes/quickstart2.html" style="border:none;">
 
 </iframe>
+
+### CSS
 
 Now, let's say we want to a *finer control* over the hover effects.
 
@@ -109,6 +117,8 @@ from plotjs import MagicPlot
 <iframe width="800" height="600" src="iframes/quickstart3.html" style="border:none;">
 
 </iframe>
+
+### Label customization
 
 Now let's setup **better labels** than the current ones.
 
@@ -159,7 +169,7 @@ from plotjs import MagicPlot, css
 Now that you understand the core components of `plotjs`, let's see how
 it looks with a line chart.
 
-It turns out that it's always the same thing:
+### Line chart
 
 ``` python
 import numpy as np
@@ -185,7 +195,7 @@ ax.plot(walk3, linewidth=8, color="#e9c46a")
 
 </iframe>
 
-How about a barplot?
+### Barplot
 
 ``` python
 import matplotlib.pyplot as plt
@@ -213,7 +223,7 @@ ax.barh(
 
 </iframe>
 
-Connect legend and plot elements:
+### Connect legend and plot elements:
 
 - Scatter plot
 
@@ -282,8 +292,42 @@ ax.legend()
 
 </iframe>
 
-This is just a basic overview of things you can do with `plotjs`. There
-is a lot more coming.
+### Multiple Axes
+
+``` python
+import matplotlib.pyplot as plt
+from plotjs import MagicPlot, data
+
+df = data.load_iris()
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+
+args = dict(
+    c=df["species"].astype("category").cat.codes,
+    s=300,
+    alpha=0.5,
+    ec="black",
+)
+ax1.scatter(df["sepal_width"], df["sepal_length"], **args)
+ax2.scatter(df["petal_width"], df["petal_length"], **args)
+
+(
+    MagicPlot(fig)
+    .add_tooltip(
+        groups=df["species"],
+        ax=ax1,  # left Axes
+    )
+    .add_tooltip(
+        labels=df["species"],
+        ax=ax2,  # right Axes
+    )
+    .save("iframes/quickstart9.html")
+)
+```
+
+<iframe width="800" height="400" src="iframes/quickstart9.html" style="border:none;">
+
+</iframe>
 
 ## Installation
 

@@ -1,42 +1,42 @@
-With `plotjs`, you can add your own CSS for advanced plot customization. Let's see how it works.
+With `plotjs`, you can add your own CSS for advanced plot customization. Here's how it works.
 
-## Understanding CSS
+## What is CSS?
 
-CSS requires 2 things:
+CSS has two main components:
 
-- a selector: which elements should receive the style
-- a list of key-value pairs, where keys are the attribute we want to set and value the value for this attribute.
+- **Selectors**: which elements the style applies to
+- **Rules**: a set of `key: value` pairs defining the style
 
-A minimalist CSS code would be:
+A basic CSS rule looks like this:
 
-```CSS
+```css
 .tooltip {
-   background: red;
-   color: blue;
+  background: red;
+  color: blue;
 }
 ```
 
-Here we basically say _"To all objects of the class `tooltip`, set the `background` to `red` and the text `color` to `blue`."_
+This means: _"For all elements with class `tooltip`, set the background to red and the text color to blue."_
 
-Now let's add this CSS to our plot to change the tooltip:
+## Applying CSS to a plot
+
+You can directly apply a CSS string to your plot:
 
 ```python
 (
     MagicPlot()
     .add_tooltip(labels=df["tooltip"])
-    .add_css(".tooltip {background: red; color: blue;}")
+    .add_css(".tooltip { background: red; color: blue; }")
 )
 ```
 
 <iframe width="800" height="600" src="../../iframes/css.html" style="border:none;"></iframe>
 
-> Note that this does not require any indentation, contrary to Python. We can write CSS with a single line of code.
+> CSS doesn’t require indentation: one-liners work fine.
 
-## Pass CSS as a Python dictionnary
+## Using a Python dictionary
 
-Being able to pass CSS inside a string is convenient, but not very readable when you want to pass a lot of CSS.
-
-One option that you can use is to define your CSS via dictionnary. For this we need to import the css module from `plotjs`.
+For better readability and reusability, you can define CSS as a dictionary using `plotjs.css.from_dict()`:
 
 ```python
 from plotjs import css
@@ -44,37 +44,42 @@ from plotjs import css
 (
     MagicPlot()
     .add_tooltip(labels=df["tooltip"])
-    .add_css(css.from_dict({".tooltip": {"background": "red", "color": "blue"}}))
+    .add_css(css.from_dict({
+        ".tooltip": {
+            "background": "red",
+            "color": "blue"
+        }
+    }))
 )
 ```
 
-Since `add_css()` returns the instance itself, you can do method chaining:
+Method chaining also works if you want to split styles:
 
 ```python
 (
     MagicPlot()
-    .add_tooltip(
-        labels=df["tooltip"],
-    )
+    .add_tooltip(labels=df["tooltip"])
     .add_css(css.from_dict({".tooltip": {"color": "blue"}}))
     .add_css(css.from_dict({".tooltip": {"background": "red"}}))
 )
 ```
 
-## Pass a CSS file
+## Loading CSS from a file
 
-Finally, if your CSS is in a CSS file, you can use `css.from_file()`. Assuming your CSS file looks like this:
+If your CSS is stored in a `.css` file like:
 
-```CSS
+```css
 .tooltip {
   background: pink;
   color: yellow;
 }
 ```
 
-We now do:
+You can load it with:
 
 ```python
+from plotjs import css
+
 (
     MagicPlot()
     .add_tooltip(labels=df["tooltip"])
@@ -84,29 +89,33 @@ We now do:
 
 <iframe width="800" height="600" src="../../iframes/css-2.html" style="border:none;"></iframe>
 
-## Elements to select
+## Selectable elements
 
-In order to apply CSS or [JavaScript](../javascript/index.md), you need to select elements from the DOM[^1]. You can find most of them using the [inspector](../troubleshooting/index.md) of your browser. All the common ones are defined below:
+To style or add interactivity, you need to select elements using the DOM[^1]. These are the most common selectors:
 
-#### Plot elements
+### Plot elements
 
-- `.point`: all points from a scatter plot
-- `.line`: all lines from a line chart
-- `.area`: all areas from an area chart
-- `.bar`: all bars from a bar chart
-- `.plot-element`: all previous elements (points, lines, areas and bars)
+- `.point`: scatter plot points
+- `.line`: line chart lines
+- `.area`: area chart fills
+- `.bar`: bar chart bars
+- `.plot-element`: all of the above
 
-For all of those previous elements, you can add `.hovered` or `.not-hovered` (e.g, `.point.not-hovered`) to, respectively, select currently hovered and not hovered elements.
+You can combine with `.hovered` or `.not-hovered`, e.g., `.point.hovered`.
 
-#### Misc
+### Misc
 
-- `.tooltip`: the tooltip displayed when hovering elements
-- `svg`: the entire SVG containing the chart
+- `.tooltip`: tooltip shown on hover
+- `svg`: the entire SVG element
 
 ???+ question
 
-    Something's missing? Please [tell me](https://github.com/y-sunflower/plotjs/issues) about it by opening a new issue!
+    Something missing? Please [open an issue](https://github.com/y-sunflower/plotjs/issues)!
+
+## Default CSS
+
+You can find the default CSS applied by plotjs [here](https://github.com/y-sunflower/plotjs/blob/main/plotjs/static/default.css)
 
 ## Appendix
 
-[^1]: The DOM (Document Object Model) is a tree-like structure that represents all the elements of a web page, allowing JavaScript to read, change, and interact with them. Think of it as a live map of the webpage that your code can explore and update in real time.
+[^1]: The DOM (Document Object Model) is like a tree structure representing your webpage. JavaScript and CSS use it to select, modify, and interact with elements dynamically.

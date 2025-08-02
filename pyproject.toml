@@ -1,6 +1,6 @@
 [project]
 name = "plotjs"
-description = "Bridge between static matplotlib and interactive storytelling"
+description = "Turn static matplotlib charts into interactive web visualizations"
 version = "0.0.2"
 license = "MIT"
 license-files = ["LICENSE"]

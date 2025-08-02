@@ -12,7 +12,6 @@ import os
 import io
 import uuid
 from typing import Text
-import warnings
 
 from .utils import _vector_to_list
 
@@ -51,19 +50,11 @@ class MagicPlot:
         buf.seek(0)
         self.svg_content = buf.getvalue()
 
-        axes: list[Axes] = fig.get_axes()
-        if len(axes) == 0:
+        self.axes: list[Axes] = fig.get_axes()
+        if len(self.axes) == 0:
             raise ValueError(
                 "No Axes found in Figure. Make sure your graph is not empty."
             )
-        elif len(axes) > 1:
-            warnings.warn(
-                "Figure with multiple Axes is not supported yet.", category=UserWarning
-            )
-        self._ax: Axes = axes[0]
-        self._legend_handles, self._legend_handles_labels = (
-            self._ax.get_legend_handles_labels()
-        )
 
         self.additional_css = ""
         self.additional_javascript = ""
@@ -79,6 +70,7 @@ class MagicPlot:
         groups: list | tuple | np.ndarray | SeriesT | None = None,
         tooltip_x_shift: int = 10,
         tooltip_y_shift: int = -10,
+        ax: Axes | None = None,
     ) -> "MagicPlot":
         """
         Add a tooltip to the interactive plot. You can set either
@@ -96,6 +88,7 @@ class MagicPlot:
                 the cursor, on the x axis.
             tooltip_y_shift: Number of pixels to shift the tooltip from
                 the cursor, on the y axis.
+            ax: A matplotlib Axes. If `None` (default), uses first Axes.
 
         Returns:
             self: Returns the instance to allow method chaining.
@@ -117,6 +110,12 @@ class MagicPlot:
         self._tooltip_x_shift = tooltip_x_shift
         self._tooltip_y_shift = tooltip_y_shift
 
+        if ax is None:
+            ax: Axes = self.axes[0]
+        self._legend_handles, self._legend_handles_labels = (
+            ax.get_legend_handles_labels()
+        )
+
         if labels is None:
             self._tooltip_labels = []
         else:
@@ -127,6 +126,17 @@ class MagicPlot:
         else:
             self._tooltip_groups = _vector_to_list(groups)
             self._tooltip_groups.extend(self._legend_handles_labels)
+
+        if not hasattr(self, "axes_tooltip"):
+            self.axes_tooltip: dict = dict()
+        axe_idx: int = self.axes.index(ax) + 1
+        axe_tooltip: dict[str, dict] = {
+            f"axes_{axe_idx}": {
+                "tooltip_labels": self._tooltip_labels,
+                "tooltip_groups": self._tooltip_groups,
+            }
+        }
+        self.axes_tooltip.update(axe_tooltip)
 
         return self
 
@@ -139,6 +149,7 @@ class MagicPlot:
             "tooltip_groups": self._tooltip_groups,
             "tooltip_x_shift": self._tooltip_x_shift,
             "tooltip_y_shift": self._tooltip_y_shift,
+            "axes": self.axes_tooltip,
         }
 
     def _set_html(self):

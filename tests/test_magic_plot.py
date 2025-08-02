@@ -11,9 +11,3 @@ def test_magic_plot_messages():
         ValueError, match="No Axes found in Figure. Make sure your graph is not empty."
     ):
         MagicPlot(fig=fig)
-
-    fig, axs = plt.subplots(ncols=2)
-    with pytest.warns(
-        UserWarning, match="Figure with multiple Axes is not supported yet."
-    ):
-        MagicPlot(fig=fig)
