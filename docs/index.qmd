@@ -69,7 +69,7 @@ MagicPlot(fig=fig).add_tooltip(
 
 <iframe width="800" height="600" src="iframes/quickstart.html" style="border:none;"></iframe>
 
-By default, `plotjs` will highlight the hovered point and fade other points.
+`plotjs` convert any matplotlib Figure to an HTML file that contains an interactive version of your plot. By default, it will highlight the hovered point and fade other points.
 
 What if we want to highlight all points from a specie for example?
 
