@@ -1,7 +1,5 @@
 .PHONY: all examples coverage
 
-all: examples coverage
-
 examples:
 	quarto render docs/index.qmd
 	uv run docs/guides/advanced/advanced.py
@@ -14,3 +12,6 @@ coverage:
 	uv run coverage xml
 	uv run genbadge coverage -i coverage.xml
 	rm coverage.xml
+
+test:
+	uv run pytest
