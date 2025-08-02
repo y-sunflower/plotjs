@@ -5,6 +5,8 @@ from: markdown-smart
 
 This page contains all the `plotjs` examples from this website.
 
+**TODO: make this page less ugly and add more diverse examples.**
+
 ```{python}
 # | echo: false
 # | output: asis
@@ -21,7 +23,7 @@ def chunks(lst, n):
 
 
 for pair in chunks(html_paths, 2):
-    print('<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">')
+    print('<div style="display: flex;">')
     for html_path in pair:
         iframe = f'<iframe width="100%" height="300" src="{html_path}" style="flex: 1; border: none;"></iframe>'
         print(iframe)

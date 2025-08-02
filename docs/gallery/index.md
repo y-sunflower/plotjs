@@ -2,7 +2,9 @@
 
 This page contains all the `plotjs` examples from this website.
 
-<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+**TODO: make this page less ugly and add more diverse examples.**
+
+<div style="display: flex;">
 
 <iframe width="100%" height="300" src="../iframes/quickstart8.html" style="flex: 1; border: none;">
 
@@ -14,7 +16,7 @@ This page contains all the `plotjs` examples from this website.
 
 </div>
 
-<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+<div style="display: flex;">
 
 <iframe width="100%" height="300" src="../iframes/quickstart4.html" style="flex: 1; border: none;">
 
@@ -26,7 +28,7 @@ This page contains all the `plotjs` examples from this website.
 
 </div>
 
-<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+<div style="display: flex;">
 
 <iframe width="100%" height="300" src="../iframes/CSS.html" style="flex: 1; border: none;">
 
@@ -38,7 +40,7 @@ This page contains all the `plotjs` examples from this website.
 
 </div>
 
-<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+<div style="display: flex;">
 
 <iframe width="100%" height="300" src="../iframes/javascript.html" style="flex: 1; border: none;">
 
@@ -50,7 +52,7 @@ This page contains all the `plotjs` examples from this website.
 
 </div>
 
-<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+<div style="display: flex;">
 
 <iframe width="100%" height="300" src="../iframes/javascript2.html" style="flex: 1; border: none;">
 
@@ -62,7 +64,7 @@ This page contains all the `plotjs` examples from this website.
 
 </div>
 
-<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+<div style="display: flex;">
 
 <iframe width="100%" height="300" src="../iframes/quickstart6.html" style="flex: 1; border: none;">
 
