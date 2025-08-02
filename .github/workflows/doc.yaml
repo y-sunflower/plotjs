@@ -35,6 +35,11 @@ jobs:
       - name: Install the project
         run: uv sync --all-groups
 
+      - name: Install the project
+        run: |
+          chmod +x ./scripts/coverage.sh
+          ./scripts/coverage.sh
+
       - name: Deploy MkDocs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

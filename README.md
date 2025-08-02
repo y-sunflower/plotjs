@@ -1,3 +1,5 @@
+![](./coverage-badge.svg)
+
 # `plotjs`: bridge between static matplotlib and interactive storytelling
 
 `plotjs` is a proof of concept, inspired by [mpld3](https://github.com/mpld3/mpld3), to make matplotlib plots interactive (for the browser) with minimum user inputs.
