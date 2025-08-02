@@ -1,10 +1,15 @@
-# Bridge between static matplotlib and interactive storytelling
+# Turn static matplotlib charts into interactive web visualizations
 
 
-`plotjs` is a proof of concept to make matplotlib plots interactive (for
-the browser) with minimum user inputs.
+<img src="https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/image.png?raw=true" alt="plotjs logo" align="right" width="150px"/>
 
-The goal is also to give users a large customization power.
+`plotjs` is a Python package that transform matplotlib plots into
+interactive charts with minimum user inputs. You can:
+
+- control tooltip labels and grouping
+- add CSS
+- add JavaScript
+- and many more
 
 ???+ warning
 
