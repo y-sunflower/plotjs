@@ -329,6 +329,10 @@ ax2.scatter(df["petal_width"], df["petal_length"], **args)
 
 </iframe>
 
+> Right now all Axes are 100% independent. But it's planned to support
+> "connecting" Axes. See [this
+> issue](https://github.com/y-sunflower/plotjs/issues/29).
+
 ## Installation
 
 - From PyPI:
@@ -349,6 +353,48 @@ pip install git+https://github.com/y-sunflower/plotjs.git
 - [matplotlib](https://matplotlib.org/),
   [jinja2](https://jinja.palletsprojects.com/en/stable/) and
   [narwhals](https://narwhals-dev.github.io/narwhals/)
+
+## Important limitation
+
+### Plotting order
+
+Due to the way `plotjs` currently works, you need to make sure the order
+you plot elements and the order of the `labels`/`groups` arguments is
+the same. For instance, the following leads to weird results because we
+plot the points by the specie order but `labels` and `groups` follow the
+order in the dataframe. See [this
+issue](https://github.com/y-sunflower/plotjs/issues/32).
+
+``` py
+import matplotlib.pyplot as plt
+from plotjs import data
+from plotjs import MagicPlot
+
+df = data.load_iris().sample(150) # randomize the dataset
+
+fig, ax = plt.subplots()
+for specie in df["species"].unique():
+    specie_df = df[df["species"] == specie]
+    ax.scatter(
+        specie_df["sepal_length"],
+        specie_df["sepal_width"],
+        s=200,
+        ec="black",
+    )
+
+MagicPlot(fig=fig).add_tooltip(
+    labels=df["species"],
+    groups=df["species"],
+).save("_iframes/quickstart10.html")
+```
+
+<iframe width="800" height="600" src="_iframes/quickstart10.html" style="border:none;">
+
+</iframe>
+
+One (easy) way to fix this is to sort `labels`/`groups` argument by the
+same order you created your plot. In this previous case, this would mean
+to sort them by the `species` column.
 
 ## Appendix
 
