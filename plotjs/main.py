@@ -68,8 +68,8 @@ class MagicPlot:
         *,
         labels: list | tuple | np.ndarray | SeriesT | None = None,
         groups: list | tuple | np.ndarray | SeriesT | None = None,
-        tooltip_x_shift: int = 10,
-        tooltip_y_shift: int = -10,
+        tooltip_x_shift: int = 0,
+        tooltip_y_shift: int = 0,
         ax: Axes | None = None,
     ) -> "MagicPlot":
         """

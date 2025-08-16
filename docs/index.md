@@ -388,7 +388,7 @@ MagicPlot(fig=fig).add_tooltip(
 ).save("_iframes/quickstart10.html")
 ```
 
-<iframe width="800" height="600" src="_iframes/quickstart10.html" style="border:none;">
+<iframe width="800" height="600" src="iframes/quickstart10.html" style="border:none;">
 
 </iframe>
 

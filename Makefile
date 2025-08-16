@@ -1,4 +1,4 @@
-.PHONY: all examples coverage
+.PHONY: all examples gallery
 
 examples:
 	quarto render docs/index.qmd

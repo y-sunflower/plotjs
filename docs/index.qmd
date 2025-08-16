@@ -360,7 +360,7 @@ MagicPlot(fig=fig).add_tooltip(
 ).save("_iframes/quickstart10.html")
 ```
 
-<iframe width="800" height="600" src="_iframes/quickstart10.html" style="border:none;"></iframe>
+<iframe width="800" height="600" src="iframes/quickstart10.html" style="border:none;"></iframe>
 
 One (easy) way to fix this is to sort `labels`/`groups` argument by the same order you created your plot. In this previous case, this would mean to sort them by the `species` column.
 
