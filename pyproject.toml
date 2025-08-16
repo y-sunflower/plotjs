@@ -1,7 +1,7 @@
 [project]
 name = "plotjs"
 description = "Turn static matplotlib charts into interactive web visualizations"
-version = "0.0.3"
+version = "0.0.4"
 license = "MIT"
 license-files = ["LICENSE"]
 keywords = ["matplotlib", "interactive", "javascript", "web", "css", "d3", "mpld3", "plotnine"]
