@@ -30,7 +30,7 @@ You can directly apply a CSS string to your plot:
 )
 ```
 
-<iframe width="800" height="600" src="../../iframes/css.html" style="border:none;"></iframe>
+<iframe width="800" height="600" src="../../iframes/CSS.html" style="border:none;"></iframe>
 
 > CSS doesn’t require indentation: one-liners work fine.
 
@@ -87,7 +87,7 @@ from plotjs import css
 )
 ```
 
-<iframe width="800" height="600" src="../../iframes/css-2.html" style="border:none;"></iframe>
+<iframe width="800" height="600" src="../../iframes/CSS-2.html" style="border:none;"></iframe>
 
 ## Selectable elements
 
