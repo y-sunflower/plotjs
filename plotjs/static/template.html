@@ -100,12 +100,9 @@
         hover_nearest
       ) {
         const self = this;
-
-        if (hover_nearest) {
-          const axesGroup = svg.select(`g#${axes_class}`);
-          console.log(axesGroup);
-          axesGroup
-            .on("mousemove", function (event) {
+        const axesGroup = svg.select(`g#${axes_class}`);
+        const getHoveredIndex = hover_nearest
+          ? (event) => {
               const [mouseX, mouseY] = d3.pointer(event);
               const allElements = axesGroup.selectAll(".plot-element");
               const nearestElem = self.nearest_element_from_mouse(
@@ -113,67 +110,54 @@
                 mouseY,
                 allElements
               );
+              return nearestElem
+                ? allElements.nodes().indexOf(nearestElem)
+                : null;
+            }
+          : (event) => plot_element.nodes().indexOf(event.currentTarget);
 
-              allElements
-                .classed("hovered", false)
-                .classed("not-hovered", false);
+        const mousemoveHandler = (event) => {
+          const hoveredIndex = getHoveredIndex(event);
+          const allElements = axesGroup.selectAll(".plot-element");
 
-              if (nearestElem) {
-                const nodes = allElements.nodes();
-                const i = nodes.indexOf(nearestElem);
-                const group = tooltip_groups[i];
+          allElements.classed("hovered", false).classed("not-hovered", false);
 
-                allElements
-                  .filter((_, j) => tooltip_groups[j] === group)
-                  .classed("hovered", true);
+          if (hoveredIndex !== null) {
+            const hoveredGroup = tooltip_groups[hoveredIndex];
 
-                allElements
-                  .filter((_, j) => tooltip_groups[j] !== group)
-                  .classed("not-hovered", true);
+            allElements
+              .filter((_, j) => tooltip_groups[j] === hoveredGroup)
+              .classed("hovered", true);
 
-                self.tooltip
-                  .style("display", show_tooltip)
-                  .style("left", event.pageX + self.tooltip_x_shift + "px")
-                  .style("top", event.pageY + self.tooltip_y_shift + "px")
-                  .html(tooltip_labels[i]);
-              } else {
-                tooltip.style("display", "none");
-              }
-            })
-            .on("mouseout", function () {
-              axesGroup
-                .selectAll(".plot-element")
-                .classed("hovered", false)
-                .classed("not-hovered", false);
-              self.tooltip.style("display", "none");
-            });
+            allElements
+              .filter((_, j) => tooltip_groups[j] !== hoveredGroup)
+              .classed("not-hovered", true);
+
+            self.tooltip
+              .style("display", show_tooltip)
+              .style("left", event.pageX + self.tooltip_x_shift + "px")
+              .style("top", event.pageY + self.tooltip_y_shift + "px")
+              .html(tooltip_labels[hoveredIndex]);
+          } else {
+            self.tooltip.style("display", "none");
+          }
+        };
+
+        if (hover_nearest) {
+          axesGroup.on("mousemove", mousemoveHandler).on("mouseout", () => {
+            axesGroup
+              .selectAll(".plot-element")
+              .classed("hovered", false)
+              .classed("not-hovered", false);
+            self.tooltip.style("display", "none");
+          });
         } else {
-          plot_element
-            .on("mouseover", function (event, d) {
-              const nodes = plot_element.nodes();
-              let i = nodes.indexOf(this);
-
-              const hovered_group = tooltip_groups[i];
-              plot_element.classed("not-hovered", true);
-              plot_element
-                .filter((_, j) => {
-                  return tooltip_groups[j] === hovered_group;
-                })
-                .classed("not-hovered", false)
-                .classed("hovered", true);
-
-              self.tooltip
-                .style("display", show_tooltip)
-                .style("left", event.pageX + self.tooltip_x_shift + "px")
-                .style("top", event.pageY + self.tooltip_y_shift + "px")
-                .html(tooltip_labels[i]);
-            })
-            .on("mouseout", function () {
-              plot_element
-                .classed("not-hovered", false)
-                .classed("hovered", false);
-              self.tooltip.style("display", "none");
-            });
+          plot_element.on("mouseover", mousemoveHandler).on("mouseout", () => {
+            plot_element
+              .classed("hovered", false)
+              .classed("not-hovered", false);
+            self.tooltip.style("display", "none");
+          });
         }
       }
     }
