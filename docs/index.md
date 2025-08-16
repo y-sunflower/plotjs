@@ -59,7 +59,7 @@ Introducting ✨plotjs✨
 ``` python
 from plotjs import MagicPlot
 
-MagicPlot(fig=fig).add_tooltip(
+MagicPlot(fig=fig, seed=0).add_tooltip(
     labels=df["species"],
 ).save("iframes/quickstart.html")
 ```

@@ -10,6 +10,7 @@ from matplotlib.axes import Axes
 
 import os
 import io
+import random
 import uuid
 from typing import Text
 
@@ -29,6 +30,7 @@ class MagicPlot:
     def __init__(
         self,
         fig: Figure | None = None,
+        seed: int | None = None,
         **savefig_kws: dict,
     ):
         """
@@ -37,6 +39,7 @@ class MagicPlot:
 
         Args:
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
+            seed: Optional seed to make the output fully reproducible.
             savefig_kws: Additional keyword arguments passed to `plt.savefig()`.
         """
         if fig is None:
@@ -58,6 +61,12 @@ class MagicPlot:
 
         with open(CSS_PATH) as f:
             self._default_css = f.read()
+
+        if seed is not None:
+            rnd = random.Random(seed)
+            self._uuid = uuid.UUID(int=rnd.getrandbits(128))
+        else:
+            self._uuid = uuid.uuid4()
 
     def add_tooltip(
         self,
@@ -151,7 +160,7 @@ class MagicPlot:
     def _set_html(self):
         self._set_plot_data_json()
         self.html: Text = self.template.render(
-            uuid=str(uuid.uuid4()),
+            uuid=str(self._uuid),
             default_css=self._default_css,
             additional_css=self.additional_css,
             additional_javascript=self.additional_javascript,
@@ -236,6 +245,9 @@ class MagicPlot:
         Args:
             file_path: Where to save the HTML file. If the ".html"
                 extension is missing, it's added.
+
+        Returns:
+            The instance itself to allow method chaining.
 
         Examples:
             ```python
