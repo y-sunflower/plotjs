@@ -10,6 +10,7 @@ from matplotlib.axes import Axes
 
 import os
 import io
+import random
 import uuid
 from typing import Text
 
@@ -29,6 +30,7 @@ class MagicPlot:
     def __init__(
         self,
         fig: Figure | None = None,
+        seed: int | None = None,
         **savefig_kws: dict,
     ):
         """
@@ -37,6 +39,7 @@ class MagicPlot:
 
         Args:
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
+            seed: Optional seed to make the output more reproducible.
             savefig_kws: Additional keyword arguments passed to `plt.savefig()`.
         """
         if fig is None:
@@ -54,10 +57,17 @@ class MagicPlot:
 
         self.additional_css = ""
         self.additional_javascript = ""
+        self._hover_nearest = False
         self.template = env.get_template("template.html")
 
         with open(CSS_PATH) as f:
             self._default_css = f.read()
+
+        if seed is not None:
+            rnd = random.Random(seed)
+            self._uuid = uuid.UUID(int=rnd.getrandbits(128))
+        else:
+            self._uuid = uuid.uuid4()
 
     def add_tooltip(
         self,
@@ -66,6 +76,7 @@ class MagicPlot:
         groups: list | tuple | np.ndarray | SeriesT | None = None,
         tooltip_x_shift: int = 0,
         tooltip_y_shift: int = 0,
+        hover_nearest: bool = False,
         ax: Axes | None = None,
     ) -> "MagicPlot":
         """
@@ -84,6 +95,7 @@ class MagicPlot:
                 the cursor, on the x axis.
             tooltip_y_shift: Number of pixels to shift the tooltip from
                 the cursor, on the y axis.
+            hover_nearest: When `True`, hover the nearest plot element.
             ax: A matplotlib Axes. If `None` (default), uses first Axes.
 
         Returns:
@@ -100,6 +112,13 @@ class MagicPlot:
             MagicPlot(...).add_tooltip(
                 labels=["S&P500", "CAC40", "Sunflower"],
                 columns=["S&P500", "CAC40", "Sunflower"],
+            )
+            ```
+
+            ```python
+            MagicPlot(...).add_tooltip(
+                labels=["S&P500", "CAC40", "Sunflower"],
+                hover_nearest=True,
             )
             ```
         """
@@ -130,6 +149,7 @@ class MagicPlot:
             f"axes_{axe_idx}": {
                 "tooltip_labels": self._tooltip_labels,
                 "tooltip_groups": self._tooltip_groups,
+                "hover_nearest": "true" if hover_nearest else "false",  # js boolean
             }
         }
         self.axes_tooltip.update(axe_tooltip)
@@ -145,13 +165,14 @@ class MagicPlot:
             "tooltip_groups": self._tooltip_groups,
             "tooltip_x_shift": self._tooltip_x_shift,
             "tooltip_y_shift": self._tooltip_y_shift,
+            "hover_nearest": self._hover_nearest,
             "axes": self.axes_tooltip,
         }
 
     def _set_html(self):
         self._set_plot_data_json()
         self.html: Text = self.template.render(
-            uuid=str(uuid.uuid4()),
+            uuid=str(self._uuid),
             default_css=self._default_css,
             additional_css=self.additional_css,
             additional_javascript=self.additional_javascript,
@@ -236,6 +257,9 @@ class MagicPlot:
         Args:
             file_path: Where to save the HTML file. If the ".html"
                 extension is missing, it's added.
+
+        Returns:
+            The instance itself to allow method chaining.
 
         Examples:
             ```python
