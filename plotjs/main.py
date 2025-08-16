@@ -39,7 +39,7 @@ class MagicPlot:
 
         Args:
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
-            seed: Optional seed to make the output fully reproducible.
+            seed: Optional seed to make the output more reproducible.
             savefig_kws: Additional keyword arguments passed to `plt.savefig()`.
         """
         if fig is None:
@@ -57,6 +57,7 @@ class MagicPlot:
 
         self.additional_css = ""
         self.additional_javascript = ""
+        self._hover_nearest = False
         self.template = env.get_template("template.html")
 
         with open(CSS_PATH) as f:
@@ -75,6 +76,7 @@ class MagicPlot:
         groups: list | tuple | np.ndarray | SeriesT | None = None,
         tooltip_x_shift: int = 0,
         tooltip_y_shift: int = 0,
+        hover_nearest: bool = False,
         ax: Axes | None = None,
     ) -> "MagicPlot":
         """
@@ -93,6 +95,7 @@ class MagicPlot:
                 the cursor, on the x axis.
             tooltip_y_shift: Number of pixels to shift the tooltip from
                 the cursor, on the y axis.
+            hover_nearest: When `True`, hover the nearest plot element.
             ax: A matplotlib Axes. If `None` (default), uses first Axes.
 
         Returns:
@@ -114,6 +117,7 @@ class MagicPlot:
         """
         self._tooltip_x_shift = tooltip_x_shift
         self._tooltip_y_shift = tooltip_y_shift
+        self._hover_nearest = hover_nearest
 
         if ax is None:
             ax: Axes = self.axes[0]
@@ -154,6 +158,7 @@ class MagicPlot:
             "tooltip_groups": self._tooltip_groups,
             "tooltip_x_shift": self._tooltip_x_shift,
             "tooltip_y_shift": self._tooltip_y_shift,
+            "hover_nearest": self._hover_nearest,
             "axes": self.axes_tooltip,
         }
 
