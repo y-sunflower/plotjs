@@ -15,18 +15,11 @@
 <script>
   (function () {
     class PlotSVGParser {
-      constructor(
-        svg,
-        tooltip,
-        tooltip_x_shift,
-        tooltip_y_shift,
-        hover_nearest
-      ) {
+      constructor(svg, tooltip, tooltip_x_shift, tooltip_y_shift) {
         this.svg = svg;
         this.tooltip = tooltip;
         this.tooltip_x_shift = tooltip_x_shift;
         this.tooltip_y_shift = tooltip_y_shift;
-        this.hover_nearest = hover_nearest;
       }
 
       find_bars(svg, axes_class) {
@@ -100,24 +93,27 @@
 
       setHoverEffect(
         plot_element,
+        axes_class,
         tooltip_labels,
         tooltip_groups,
-        show_tooltip
+        show_tooltip,
+        hover_nearest
       ) {
         const self = this;
 
-        if (self.hover_nearest) {
-          svg
+        if (hover_nearest) {
+          const axesGroup = svg.select(`g#${axes_class}`);
+          console.log(axesGroup);
+          axesGroup
             .on("mousemove", function (event) {
               const [mouseX, mouseY] = d3.pointer(event);
-              const allElements = svg.selectAll(".plot-element");
+              const allElements = axesGroup.selectAll(".plot-element");
               const nearestElem = self.nearest_element_from_mouse(
                 mouseX,
                 mouseY,
                 allElements
               );
 
-              // Reset all elements first
               allElements
                 .classed("hovered", false)
                 .classed("not-hovered", false);
@@ -127,12 +123,10 @@
                 const i = nodes.indexOf(nearestElem);
                 const group = tooltip_groups[i];
 
-                // Only mark elements of the nearest group as hovered
                 allElements
                   .filter((_, j) => tooltip_groups[j] === group)
                   .classed("hovered", true);
 
-                // Everything else is not-hovered
                 allElements
                   .filter((_, j) => tooltip_groups[j] !== group)
                   .classed("not-hovered", true);
@@ -147,7 +141,7 @@
               }
             })
             .on("mouseout", function () {
-              svg
+              axesGroup
                 .selectAll(".plot-element")
                 .classed("hovered", false)
                 .classed("not-hovered", false);
@@ -192,15 +186,13 @@
     const plot_data = JSON.parse(`{{ plot_data_json | tojson | safe }}`);
     const tooltip_x_shift = plot_data["tooltip_x_shift"];
     const tooltip_y_shift = -plot_data["tooltip_y_shift"];
-    const hover_nearest = -plot_data["hover_nearest"];
     const axes = plot_data["axes"];
 
     const plotParser = new PlotSVGParser(
       svg,
       tooltip,
       tooltip_x_shift,
-      tooltip_y_shift,
-      hover_nearest
+      tooltip_y_shift
     );
 
     // Process each axes that has tooltip configuration
@@ -209,9 +201,9 @@
         const axe_data = axes[axes_class];
         const tooltip_labels = axe_data["tooltip_labels"];
         const tooltip_groups = axe_data["tooltip_groups"];
+        const hover_nearest = axe_data["hover_nearest"] === "true";
         const show_tooltip = tooltip_labels.length === 0 ? "none" : "block";
 
-        // Find plot elements within this specific axes
         const lines = plotParser.find_lines(svg, axes_class);
         const bars = plotParser.find_bars(svg, axes_class);
         const points = plotParser.find_points(svg, axes_class, tooltip_groups);
@@ -219,27 +211,35 @@
 
         plotParser.setHoverEffect(
           points,
+          axes_class,
           tooltip_labels,
           tooltip_groups,
-          show_tooltip
+          show_tooltip,
+          hover_nearest
         );
         plotParser.setHoverEffect(
           lines,
+          axes_class,
           tooltip_labels,
           tooltip_groups,
-          show_tooltip
+          show_tooltip,
+          hover_nearest
         );
         plotParser.setHoverEffect(
           bars,
+          axes_class,
           tooltip_labels,
           tooltip_groups,
-          show_tooltip
+          show_tooltip,
+          hover_nearest
         );
         plotParser.setHoverEffect(
           areas,
+          axes_class,
           tooltip_labels,
           tooltip_groups,
-          show_tooltip
+          show_tooltip,
+          hover_nearest
         );
       }
     }

@@ -117,7 +117,6 @@ class MagicPlot:
         """
         self._tooltip_x_shift = tooltip_x_shift
         self._tooltip_y_shift = tooltip_y_shift
-        self._hover_nearest = hover_nearest
 
         if ax is None:
             ax: Axes = self.axes[0]
@@ -143,6 +142,7 @@ class MagicPlot:
             f"axes_{axe_idx}": {
                 "tooltip_labels": self._tooltip_labels,
                 "tooltip_groups": self._tooltip_groups,
+                "hover_nearest": "true" if hover_nearest else "false",  # js boolean
             }
         }
         self.axes_tooltip.update(axe_tooltip)

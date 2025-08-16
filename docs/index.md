@@ -186,7 +186,7 @@ ax.plot(walk3, linewidth=8, color="#e9c46a")
 
 (
     MagicPlot(fig=fig)
-    .add_tooltip(labels=["S&P500", "CAC40", "Bitcoin"])
+    .add_tooltip(labels=["S&P500", "CAC40", "Bitcoin"], hover_nearest=True)
     .save("iframes/quickstart5.html")
 )
 ```
