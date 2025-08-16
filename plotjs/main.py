@@ -114,6 +114,13 @@ class MagicPlot:
                 columns=["S&P500", "CAC40", "Sunflower"],
             )
             ```
+
+            ```python
+            MagicPlot(...).add_tooltip(
+                labels=["S&P500", "CAC40", "Sunflower"],
+                hover_nearest=True,
+            )
+            ```
         """
         self._tooltip_x_shift = tooltip_x_shift
         self._tooltip_y_shift = tooltip_y_shift

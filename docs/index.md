@@ -186,7 +186,7 @@ ax.plot(walk3, linewidth=8, color="#e9c46a")
 
 (
     MagicPlot(fig=fig)
-    .add_tooltip(labels=["S&P500", "CAC40", "Bitcoin"], hover_nearest=True)
+    .add_tooltip(labels=["S&P500", "CAC40", "Bitcoin"])
     .save("iframes/quickstart5.html")
 )
 ```
@@ -332,6 +332,88 @@ ax2.scatter(df["petal_width"], df["petal_length"], **args)
 > Right now all Axes are 100% independent. But it's planned to support
 > "connecting" Axes. See [this
 > issue](https://github.com/y-sunflower/plotjs/issues/29).
+
+### Hover nearest element
+
+`plotjs` has a great option to even more easily activate hover effects:
+the `hover_nearest` argument in `add_tooltip()`.
+
+In short, if set to `True`, `plotjs` will hover the closest plot element
+it can found!
+
+``` python
+import matplotlib.pyplot as plt
+from plotjs import data
+from plotjs import MagicPlot
+
+df = data.load_iris()
+
+fig, ax = plt.subplots()
+for specie in df["species"].unique():
+    specie_df = df[df["species"] == specie]
+    ax.scatter(
+        specie_df["sepal_length"],
+        specie_df["sepal_width"],
+        s=200,
+        ec="black",
+    )
+
+MagicPlot(fig=fig).add_tooltip(
+    labels=df["species"],
+    groups=df["species"],
+    hover_nearest=True,
+).save("iframes/quickstart10.html")
+```
+
+<iframe width="800" height="600" src="iframes/quickstart10.html" style="border:none;">
+
+</iframe>
+
+And it works with multiple Axes too:
+
+``` python
+import matplotlib.pyplot as plt
+from plotjs import MagicPlot, data
+
+df = data.load_iris()
+
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(10, 4))
+args = dict(
+    x=df["petal_width"],
+    y=df["petal_length"],
+    c=df["species"].astype("category").cat.codes,
+    s=300,
+    ec="black",
+)
+ax1.scatter(**args)
+ax2.scatter(**args)
+ax3.scatter(**args)
+
+(
+    MagicPlot(fig)
+    .add_tooltip(
+        groups=df["species"],
+        hover_nearest=True,
+        ax=ax1,
+    )
+    .add_tooltip(
+        labels=df["species"],
+        hover_nearest=True,
+        ax=ax2,
+    )
+    .add_tooltip(
+        labels=df["species"],
+        groups=df["species"],
+        hover_nearest=True,
+        ax=ax3,
+    )
+    .save("iframes/quickstart11.html")
+)
+```
+
+<iframe width="800" height="400" src="iframes/quickstart11.html" style="border:none;">
+
+</iframe>
 
 ## Installation
 
