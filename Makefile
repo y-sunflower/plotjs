@@ -17,4 +17,5 @@ coverage:
 	rm coverage.xml
 
 test:
-	uv run pytest
+	uv run pytest    # run python tests
+	npm test         # run javascript tests

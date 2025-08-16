@@ -41,7 +41,7 @@ def test_css_from_dict(input, output):
 
 
 def test_css_from_file():
-    css_content = css.from_file("tests/static/style.css")
+    css_content = css.from_file("tests/test-python/static/style.css")
     css_expected = """svg {
   width: 100%;
   height: auto;
@@ -73,7 +73,7 @@ def test_is_css_like(input, output):
 
 
 def test_javascript_from_file():
-    js_content = javascript.from_file("tests/static/script.js")
-    with open("tests/static/script.js") as f:
+    js_content = javascript.from_file("tests/test-python/static/script.js")
+    with open("tests/test-python/static/script.js") as f:
         js_content_expected = f.read()
     assert js_content == js_content_expected

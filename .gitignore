@@ -32,3 +32,5 @@ sandbox/
 scripts/release.sh
 
 /.quarto/
+
+node_modules

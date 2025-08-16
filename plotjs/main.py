@@ -15,11 +15,7 @@ from typing import Text
 
 from .utils import _vector_to_list
 
-if os.getcwd() == "/Users/josephbarbier/Desktop/plotjs":
-    # for debugging
-    TEMPLATE_DIR = f"{os.getcwd()}/plotjs/static"
-else:
-    TEMPLATE_DIR: str = Path(__file__).parent / "static"
+TEMPLATE_DIR: str = Path(__file__).parent / "static"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
 
 env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
