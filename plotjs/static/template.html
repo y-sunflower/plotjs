@@ -131,10 +131,10 @@
                   .filter((_, j) => tooltip_groups[j] !== group)
                   .classed("not-hovered", true);
 
-                tooltip
-                  .style("display", "block")
-                  .style("left", event.pageX + tooltip_x_shift + "px")
-                  .style("top", event.pageY + tooltip_y_shift + "px")
+                self.tooltip
+                  .style("display", show_tooltip)
+                  .style("left", event.pageX + self.tooltip_x_shift + "px")
+                  .style("top", event.pageY + self.tooltip_y_shift + "px")
                   .html(tooltip_labels[i]);
               } else {
                 tooltip.style("display", "none");
@@ -145,7 +145,7 @@
                 .selectAll(".plot-element")
                 .classed("hovered", false)
                 .classed("not-hovered", false);
-              tooltip.style("display", "none");
+              self.tooltip.style("display", "none");
             });
         } else {
           plot_element
