@@ -1,7 +1,7 @@
 import { test, expect } from "vitest";
 import * as d3 from "d3-selection";
 import { JSDOM } from "jsdom";
-import PlotSVGParser from "../plotjs/template/plotparser";
+import PlotSVGParser from "../plotjs/static/plotparser";
 
 test("findBars should select only patches with clip-path", () => {
   const dom = new JSDOM(`<svg>
