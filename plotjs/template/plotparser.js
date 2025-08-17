@@ -25,7 +25,6 @@ export default class PlotSVGParser {
   }
 
   find_points(svg, axes_class, tooltip_groups) {
-    const self = this;
     // select all <use> in #PathCollection within the specific axes
     const points = svg.selectAll(`g#${axes_class} g[id^="PathCollection"] use`);
 

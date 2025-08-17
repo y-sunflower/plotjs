@@ -14,7 +14,7 @@ def from_file(javascript_file: str) -> str:
         ```python
         from plotjs import javascript
 
-        javascript.from_file("path/to/style.js")
+        javascript.from_file("path/to/script.js")
         ```
     """
     with open(javascript_file, "r") as f:

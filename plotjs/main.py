@@ -10,14 +10,17 @@ from matplotlib.axes import Axes
 
 import os
 import io
+import re
 import random
 import uuid
 from typing import Text
 
 from .utils import _vector_to_list
 
-TEMPLATE_DIR: str = Path(__file__).parent / "static"
+MAIN_DIR: str = Path(__file__).parent
+TEMPLATE_DIR: str = MAIN_DIR / "template"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
+JS_PARSER_PATH: str = os.path.join(TEMPLATE_DIR, "plotparser.js")
 
 env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 
@@ -62,6 +65,14 @@ class MagicPlot:
 
         with open(CSS_PATH) as f:
             self._default_css = f.read()
+
+        with open(JS_PARSER_PATH) as f:
+            content = f.read()
+        match = re.search(r"class PlotSVGParser.*", content, re.DOTALL)
+        if match:
+            self._js_parser = match.group(0)
+        else:
+            raise ValueError("Could not find 'class PlotSVGParser' in the file")
 
         if seed is not None:
             rnd = random.Random(seed)
@@ -174,6 +185,7 @@ class MagicPlot:
         self.html: Text = self.template.render(
             uuid=str(self._uuid),
             default_css=self._default_css,
+            js_parser=self._js_parser,
             additional_css=self.additional_css,
             additional_javascript=self.additional_javascript,
             svg=self.svg_content,
