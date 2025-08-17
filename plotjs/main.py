@@ -17,7 +17,7 @@ from typing import Text
 from .utils import _vector_to_list, _get_and_sanitize_js
 
 MAIN_DIR: str = Path(__file__).parent
-TEMPLATE_DIR: str = MAIN_DIR / "template"
+TEMPLATE_DIR: str = MAIN_DIR / "static"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
 JS_PARSER_PATH: str = os.path.join(TEMPLATE_DIR, "plotparser.js")
 
