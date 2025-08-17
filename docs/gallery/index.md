@@ -70,25 +70,29 @@ This page contains all the `plotjs` examples from this website.
 
 </iframe>
 
-<iframe width="100%" height="300" src="../iframes/javascript2.html" style="flex: 1; border: none;">
+<iframe width="100%" height="300" src="../iframes/quickstart11.html" style="flex: 1; border: none;">
 
 </iframe>
 
 </div>
 
 <div style="display: flex;">
+
+<iframe width="100%" height="300" src="../iframes/javascript2.html" style="flex: 1; border: none;">
+
+</iframe>
 
 <iframe width="100%" height="300" src="../iframes/CSS-2.html" style="flex: 1; border: none;">
 
 </iframe>
 
-<iframe width="100%" height="300" src="../iframes/quickstart6.html" style="flex: 1; border: none;">
-
-</iframe>
-
 </div>
 
 <div style="display: flex;">
+
+<iframe width="100%" height="300" src="../iframes/quickstart6.html" style="flex: 1; border: none;">
+
+</iframe>
 
 <iframe width="100%" height="300" src="../iframes/quickstart7.html" style="flex: 1; border: none;">
 
