@@ -1,91 +1,103 @@
 <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ document_title | safe }}</title>
+    <link rel="icon" href="{{ favicon_path | safe }}" type="image/x-icon" />
+    <style>
+      {{ default_css | safe }}
+      {{ additional_css | safe }}
+    </style>
+  </head>
+  <body>
+    {% set chart_id = "plot-container-" + uuid %}
 
-{% set chart_id = "plot-container-" + uuid %}
+    <div id="{{ chart_id }}">
+      {{ svg | safe }}
+      <div class="tooltip" id="tooltip-{{ uuid }}"></div>
+    </div>
 
-<div id="{{ chart_id }}">
-  <style>
-    {{ default_css | safe }}
-    {{ additional_css | safe }}
-  </style>
-  {{ svg | safe }}
-  <div class="tooltip" id="tooltip-{{ uuid }}"></div>
-</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+    <script type="module">
+      (function () {
+        // prettier-ignore
+        {{ js_parser | safe }}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-<script type="module">
-  (function () {
-    // prettier-ignore
-    {{ js_parser | safe }}
+        const container = document.getElementById("{{ chart_id }}");
 
-    const container = document.getElementById("{{ chart_id }}");
+        const tooltip = d3.select("#tooltip-{{ uuid }}");
+        const svg = d3.select(container).select("svg");
 
-    const tooltip = d3.select("#tooltip-{{ uuid }}");
-    const svg = d3.select(container).select("svg");
+        const plot_data = JSON.parse(`{{ plot_data_json | tojson | safe }}`);
+        const tooltip_x_shift = plot_data["tooltip_x_shift"];
+        const tooltip_y_shift = -plot_data["tooltip_y_shift"];
+        const axes = plot_data["axes"];
 
-    const plot_data = JSON.parse(`{{ plot_data_json | tojson | safe }}`);
-    const tooltip_x_shift = plot_data["tooltip_x_shift"];
-    const tooltip_y_shift = -plot_data["tooltip_y_shift"];
-    const axes = plot_data["axes"];
-
-    const plotParser = new PlotSVGParser(
-      svg,
-      tooltip,
-      tooltip_x_shift,
-      tooltip_y_shift
-    );
-
-    // Process each axes that has tooltip configuration
-    for (const axes_class in axes) {
-      if (axes.hasOwnProperty(axes_class)) {
-        const axe_data = axes[axes_class];
-        const tooltip_labels = axe_data["tooltip_labels"];
-        const tooltip_groups = axe_data["tooltip_groups"];
-        const hover_nearest = axe_data["hover_nearest"] === "true";
-        const show_tooltip = tooltip_labels.length === 0 ? "none" : "block";
-
-        const lines = plotParser.findLines(svg, axes_class);
-        const bars = plotParser.findBars(svg, axes_class);
-        const points = plotParser.findPoints(svg, axes_class, tooltip_groups);
-        const areas = plotParser.findAreas(svg, axes_class);
-
-        plotParser.setHoverEffect(
-          points,
-          axes_class,
-          tooltip_labels,
-          tooltip_groups,
-          show_tooltip,
-          hover_nearest
+        const plotParser = new PlotSVGParser(
+          svg,
+          tooltip,
+          tooltip_x_shift,
+          tooltip_y_shift
         );
-        plotParser.setHoverEffect(
-          lines,
-          axes_class,
-          tooltip_labels,
-          tooltip_groups,
-          show_tooltip,
-          hover_nearest
-        );
-        plotParser.setHoverEffect(
-          bars,
-          axes_class,
-          tooltip_labels,
-          tooltip_groups,
-          show_tooltip,
-          hover_nearest
-        );
-        plotParser.setHoverEffect(
-          areas,
-          axes_class,
-          tooltip_labels,
-          tooltip_groups,
-          show_tooltip,
-          hover_nearest
-        );
-      }
-    }
-  })();
-</script>
 
-<script>
-  // prettier-ignore
-  {{ additional_javascript | safe }}
-</script>
+        // Process each axes that has tooltip configuration
+        for (const axes_class in axes) {
+          if (axes.hasOwnProperty(axes_class)) {
+            const axe_data = axes[axes_class];
+            const tooltip_labels = axe_data["tooltip_labels"];
+            const tooltip_groups = axe_data["tooltip_groups"];
+            const hover_nearest = axe_data["hover_nearest"] === "true";
+            const show_tooltip = tooltip_labels.length === 0 ? "none" : "block";
+
+            const lines = plotParser.findLines(svg, axes_class);
+            const bars = plotParser.findBars(svg, axes_class);
+            const points = plotParser.findPoints(
+              svg,
+              axes_class,
+              tooltip_groups
+            );
+            const areas = plotParser.findAreas(svg, axes_class);
+
+            plotParser.setHoverEffect(
+              points,
+              axes_class,
+              tooltip_labels,
+              tooltip_groups,
+              show_tooltip,
+              hover_nearest
+            );
+            plotParser.setHoverEffect(
+              lines,
+              axes_class,
+              tooltip_labels,
+              tooltip_groups,
+              show_tooltip,
+              hover_nearest
+            );
+            plotParser.setHoverEffect(
+              bars,
+              axes_class,
+              tooltip_labels,
+              tooltip_groups,
+              show_tooltip,
+              hover_nearest
+            );
+            plotParser.setHoverEffect(
+              areas,
+              axes_class,
+              tooltip_labels,
+              tooltip_groups,
+              show_tooltip,
+              hover_nearest
+            );
+          }
+        }
+      })();
+    </script>
+
+    <script>
+      // prettier-ignore
+      {{ additional_javascript | safe }}
+    </script>
+  </body>
+</html>
