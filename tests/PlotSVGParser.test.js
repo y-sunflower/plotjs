@@ -3,7 +3,7 @@ import * as d3 from "d3-selection";
 import { JSDOM } from "jsdom";
 import PlotSVGParser from "../plotjs/template/plotparser";
 
-test("find_bars should select only patches with clip-path", () => {
+test("findBars should select only patches with clip-path", () => {
   const dom = new JSDOM(`<svg>
     <g id="axes_1">
       <g id="patch_1">
@@ -17,7 +17,7 @@ test("find_bars should select only patches with clip-path", () => {
   const svg = d3.select(dom.window.document.querySelector("svg"));
   const parser = new PlotSVGParser(svg, null, 0, 0);
 
-  const bars = parser.find_bars(svg, "axes_1");
+  const bars = parser.findBars(svg, "axes_1");
 
   expect(bars.size()).toBe(1);
   bars.each(function () {
@@ -25,7 +25,7 @@ test("find_bars should select only patches with clip-path", () => {
   });
 });
 
-test("find_points should set data-group and class", () => {
+test("findPoints should set data-group and class", () => {
   const dom = new JSDOM(`<svg>
     <g id="axes_1">
       <g id="PathCollection_1">
@@ -37,7 +37,7 @@ test("find_points should set data-group and class", () => {
   const svg = d3.select(dom.window.document.querySelector("svg"));
   const parser = new PlotSVGParser(svg, null, 0, 0);
 
-  const points = parser.find_points(svg, "axes_1", ["A", "B"]);
+  const points = parser.findPoints(svg, "axes_1", ["A", "B"]);
   expect(points.size()).toBe(2);
 
   const nodes = points.nodes();
@@ -65,7 +65,7 @@ test("setHoverEffect should toggle hovered class and tooltip", () => {
   const tooltip = d3.select(document.querySelector("#tooltip"));
   const parser = new PlotSVGParser(svg, tooltip, 10, 20);
 
-  const points = parser.find_points(svg, "axes_1", ["G1"]);
+  const points = parser.findPoints(svg, "axes_1", ["G1"]);
 
   // Pass all required args: (points, axes_class, tooltip_labels, tooltip_groups, show_tooltip, hover_nearest)
   parser.setHoverEffect(points, "axes_1", ["Label1"], ["G1"], "block", false);

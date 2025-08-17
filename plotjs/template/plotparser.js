@@ -8,7 +8,7 @@ export default class PlotSVGParser {
     this.tooltip_y_shift = tooltip_y_shift;
   }
 
-  find_bars(svg, axes_class) {
+  findBars(svg, axes_class) {
     // select all #patch within the specific axes
     const bars = svg
       .selectAll(`g#${axes_class} g[id^="patch"]`)
@@ -24,7 +24,7 @@ export default class PlotSVGParser {
     return bars;
   }
 
-  find_points(svg, axes_class, tooltip_groups) {
+  findPoints(svg, axes_class, tooltip_groups) {
     // select all <use> in #PathCollection within the specific axes
     const points = svg.selectAll(`g#${axes_class} g[id^="PathCollection"] use`);
 
@@ -35,7 +35,7 @@ export default class PlotSVGParser {
     return points;
   }
 
-  find_lines(svg, axes_class) {
+  findLines(svg, axes_class) {
     // select all <path> of Line2D elements within the specific axes
     const lines = svg
       .selectAll(`g#${axes_class} g[id^="line2d"] path`)
@@ -47,7 +47,7 @@ export default class PlotSVGParser {
     return lines;
   }
 
-  find_areas(svg, axes_class) {
+  findAreas(svg, axes_class) {
     // select all <path> of FillBetweenPolyCollection elements within the specific axes
     const areas = svg.selectAll(
       `g#${axes_class} g[id^="FillBetweenPolyCollection"] path`
@@ -56,7 +56,7 @@ export default class PlotSVGParser {
     return areas;
   }
 
-  nearest_element_from_mouse(mouseX, mouseY, elements) {
+  nearestElementFromMouse(mouseX, mouseY, elements) {
     let nearestElem = null;
     let minDist = Infinity;
 
@@ -88,7 +88,7 @@ export default class PlotSVGParser {
       ? (event) => {
           const [mouseX, mouseY] = d3.pointer(event);
           const allElements = axesGroup.selectAll(".plot-element");
-          const nearestElem = self.nearest_element_from_mouse(
+          const nearestElem = self.nearestElementFromMouse(
             mouseX,
             mouseY,
             allElements
