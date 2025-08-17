@@ -1,4 +1,4 @@
-name: Tests (Python + JS)
+name: Tests Python
 
 on:
   pull_request:
@@ -24,8 +24,5 @@ jobs:
       - name: Install the project
         run: uv sync --all-groups
 
-      - name: Install npm dependencies
-        run: npm install
-
       - name: Run tests
-        run: make test
+        run: uv run pytest

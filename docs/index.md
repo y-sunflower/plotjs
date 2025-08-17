@@ -59,7 +59,7 @@ Introducting ✨plotjs✨
 ``` python
 from plotjs import MagicPlot
 
-MagicPlot(fig=fig, seed=0).add_tooltip(
+MagicPlot(fig=fig).add_tooltip(
     labels=df["species"],
 ).save("iframes/quickstart.html")
 ```
@@ -452,7 +452,7 @@ import matplotlib.pyplot as plt
 from plotjs import data
 from plotjs import MagicPlot
 
-df = data.load_iris().sample(150) # randomize the dataset
+df = data.load_iris().sample(150)      # randomize the dataset
 
 fig, ax = plt.subplots()
 for specie in df["species"].unique():
@@ -467,10 +467,10 @@ for specie in df["species"].unique():
 MagicPlot(fig=fig).add_tooltip(
     labels=df["species"],
     groups=df["species"],
-).save("_iframes/quickstart10.html")
+).save("iframes/bug.html")
 ```
 
-<iframe width="800" height="600" src="iframes/quickstart10.html" style="border:none;">
+<iframe width="800" height="600" src="iframes/bug.html" style="border:none;">
 
 </iframe>
 

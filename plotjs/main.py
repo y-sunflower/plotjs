@@ -14,10 +14,12 @@ import random
 import uuid
 from typing import Text
 
-from .utils import _vector_to_list
+from .utils import _vector_to_list, _get_and_sanitize_js
 
-TEMPLATE_DIR: str = Path(__file__).parent / "static"
+MAIN_DIR: str = Path(__file__).parent
+TEMPLATE_DIR: str = MAIN_DIR / "static"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
+JS_PARSER_PATH: str = os.path.join(TEMPLATE_DIR, "plotparser.js")
 
 env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 
@@ -50,10 +52,6 @@ class MagicPlot:
         self.svg_content = buf.getvalue()
 
         self.axes: list[Axes] = fig.get_axes()
-        if len(self.axes) == 0:
-            raise ValueError(
-                "No Axes found in Figure. Make sure your graph is not empty."
-            )
 
         self.additional_css = ""
         self.additional_javascript = ""
@@ -62,6 +60,11 @@ class MagicPlot:
 
         with open(CSS_PATH) as f:
             self._default_css = f.read()
+
+        self._js_parser = _get_and_sanitize_js(
+            file_path=JS_PARSER_PATH,
+            after_pattern=r"class PlotSVGParser.*",
+        )
 
         if seed is not None:
             rnd = random.Random(seed)
@@ -174,10 +177,13 @@ class MagicPlot:
         self.html: Text = self.template.render(
             uuid=str(self._uuid),
             default_css=self._default_css,
+            js_parser=self._js_parser,
             additional_css=self.additional_css,
             additional_javascript=self.additional_javascript,
             svg=self.svg_content,
             plot_data_json=self.plot_data_json,
+            favicon_path=self._favicon_path,
+            document_title=self._document_title,
         )
 
     def add_css(self, css_content: str) -> "MagicPlot":
@@ -250,13 +256,22 @@ class MagicPlot:
         self.additional_javascript += javascript_content
         return self
 
-    def save(self, file_path: str) -> "MagicPlot":
+    def save(
+        self,
+        file_path: str,
+        favicon_path: str = "https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/favicon.ico?raw=true",
+        document_title: str = "plotjs",
+    ) -> "MagicPlot":
         """
         Save the interactive matplotlib plots to an HTML file.
 
         Args:
             file_path: Where to save the HTML file. If the ".html"
                 extension is missing, it's added.
+            favicon_path: Path to a favicon file, remote or local.
+                The default is the logo of plotjs.
+            document_title: String used for the page title (the <title>
+                tag inside the <head>).
 
         Returns:
             The instance itself to allow method chaining.
@@ -270,7 +285,11 @@ class MagicPlot:
             MagicPlot(...).save("path/to/my_chart.html")
             ```
         """
+        self._favicon_path = favicon_path
+        self._document_title = document_title
+
         self._set_html()
+
         if not file_path.endswith(".html"):
             file_path += ".html"
         with open(file_path, "w") as f:

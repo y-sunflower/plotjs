@@ -16,6 +16,10 @@ coverage:
 	uv run genbadge coverage -i coverage.xml
 	rm coverage.xml
 
+preview:
+	uv run mkdocs serve & \
+	sleep 1 && open http://127.0.0.1:8000/plotjs/
+
 test:
 	uv run pytest    # run python tests
 	npm test         # run javascript tests
