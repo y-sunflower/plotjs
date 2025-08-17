@@ -413,7 +413,7 @@ pip install git+https://github.com/y-sunflower/plotjs.git
 
 Due to the way `plotjs` currently works, you need to make sure the order you plot elements and the order of the `labels`/`groups` arguments is the same. For instance, the following leads to weird results because we plot the points by the specie order but `labels` and `groups` follow the order in the dataframe. See [this issue](https://github.com/y-sunflower/plotjs/issues/32).
 
-```py
+```{python}
 import matplotlib.pyplot as plt
 from plotjs import data
 from plotjs import MagicPlot

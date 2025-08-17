@@ -447,7 +447,7 @@ plot the points by the specie order but `labels` and `groups` follow the
 order in the dataframe. See [this
 issue](https://github.com/y-sunflower/plotjs/issues/32).
 
-``` py
+``` python
 import matplotlib.pyplot as plt
 from plotjs import data
 from plotjs import MagicPlot
