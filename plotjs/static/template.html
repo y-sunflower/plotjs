@@ -100,7 +100,7 @@
         hover_nearest
       ) {
         const self = this;
-        const axesGroup = svg.select(`g#${axes_class}`);
+        const axesGroup = this.svg.select(`g#${axes_class}`);
         const getHoveredIndex = hover_nearest
           ? (event) => {
               const [mouseX, mouseY] = d3.pointer(event);
