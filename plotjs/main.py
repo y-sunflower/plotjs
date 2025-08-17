@@ -10,12 +10,11 @@ from matplotlib.axes import Axes
 
 import os
 import io
-import re
 import random
 import uuid
 from typing import Text
 
-from .utils import _vector_to_list
+from .utils import _vector_to_list, _get_and_sanitize_js
 
 MAIN_DIR: str = Path(__file__).parent
 TEMPLATE_DIR: str = MAIN_DIR / "template"
@@ -66,13 +65,10 @@ class MagicPlot:
         with open(CSS_PATH) as f:
             self._default_css = f.read()
 
-        with open(JS_PARSER_PATH) as f:
-            content = f.read()
-        match = re.search(r"class PlotSVGParser.*", content, re.DOTALL)
-        if match:
-            self._js_parser = match.group(0)
-        else:
-            raise ValueError("Could not find 'class PlotSVGParser' in the file")
+        self._js_parser = _get_and_sanitize_js(
+            file_path=JS_PARSER_PATH,
+            after_pattern=r"class PlotSVGParser.*",
+        )
 
         if seed is not None:
             rnd = random.Random(seed)

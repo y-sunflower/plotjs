@@ -62,7 +62,7 @@ Wouldn't it be cool if we could, for example, have hover effects? Like, if I put
 ```{python}
 from plotjs import MagicPlot
 
-MagicPlot(fig=fig, seed=0).add_tooltip(
+MagicPlot(fig=fig).add_tooltip(
     labels=df["species"],
 ).save("iframes/quickstart.html")
 ```
