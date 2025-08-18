@@ -173,7 +173,8 @@ it looks with a line chart.
 
 ``` python
 import numpy as np
-from plotjs import MagicPlot, css
+import matplotlib.pyplot as plt
+from plotjs import MagicPlot
 
 walk1 = np.cumsum(np.random.choice([-1, 1], size=500))
 walk2 = np.cumsum(np.random.choice([-1, 1], size=500))
@@ -417,7 +418,7 @@ ax3.scatter(**args)
 
 ## Installation
 
-- From PyPI:
+- From PyPI (recommended):
 
 ``` bash
 pip install plotjs

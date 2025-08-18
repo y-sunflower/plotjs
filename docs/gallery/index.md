@@ -78,7 +78,19 @@ This page contains all the `plotjs` examples from this website.
 
 <div style="display: flex;">
 
+<iframe width="100%" height="300" src="../iframes/random-walk-1.html" style="flex: 1; border: none;">
+
+</iframe>
+
 <iframe width="100%" height="300" src="../iframes/javascript2.html" style="flex: 1; border: none;">
+
+</iframe>
+
+</div>
+
+<div style="display: flex;">
+
+<iframe width="100%" height="300" src="../iframes/bug.html" style="flex: 1; border: none;">
 
 </iframe>
 

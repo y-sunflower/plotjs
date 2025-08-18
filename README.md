@@ -19,7 +19,7 @@
 
 ## Installation
 
-From PyPI:
+From PyPI (recommended):
 
 ```
 pip install plotjs

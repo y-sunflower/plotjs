@@ -311,7 +311,7 @@ class MagicPlot:
             "axes": self.axes_tooltip,
         }
 
-    def _set_html(self, favicon_path: str, document_title: str) -> None:
+    def _set_html(self) -> None:
         self._set_plot_data_json()
         self.html: str = self.template.render(
             uuid=str(self._uuid),

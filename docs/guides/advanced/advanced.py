@@ -195,19 +195,82 @@ MagicPlot(fig, bbox_inches="tight").add_css(
 #####################################################
 
 
-(
-    MagicPlot(fig)
-    .add_css(
-        css.from_dict(
-            {
-                ".tooltip": {
-                    "width": "180px",
-                    "text-align": "center",
-                    "font-size": "1.2em",
-                    "background": "#000814",
-                }
-            }
-        )
-    )
-    .add_tooltip(labels=columns)
+size = 10000
+
+labels = ["S&P500", "CAC40", "Bitcoin", "Livret A", "Default"]
+groups = ["safe", "safe", "safe", "not safe", "not safe"]
+
+fig, axs = plt.subplots(figsize=(10, 10), nrows=2)
+axs[0].plot(
+    np.cumsum(np.random.choice([-1, 1], size=size)),
+    linewidth=5,
+    color="#264653",
+    label=labels[0],
 )
+axs[0].plot(
+    np.cumsum(np.random.choice([-1, 1], size=size)),
+    linewidth=5,
+    color="#2a9d8f",
+    label=labels[1],
+)
+axs[0].plot(
+    np.cumsum(np.random.choice([-1, 1], size=size)),
+    linewidth=5,
+    color="#e9c46a",
+    label=labels[2],
+)
+axs[0].plot(
+    np.cumsum(np.random.choice([-1, 1], size=size)),
+    linewidth=5,
+    color="#0077b6",
+    label=labels[3],
+)
+axs[0].plot(
+    np.cumsum(np.random.choice([-1, 1], size=size)),
+    linewidth=5,
+    color="#14213d",
+    label=labels[4],
+)
+axs[0].legend()
+
+axs[1].plot(
+    np.cumsum(np.random.choice([-1, 1], size=size)),
+    linewidth=5,
+    color="#264653",
+    label=labels[0],
+)
+axs[1].plot(
+    np.cumsum(np.random.choice([-1, 1], size=size)),
+    linewidth=5,
+    color="#2a9d8f",
+    label=labels[1],
+)
+axs[1].plot(
+    np.cumsum(np.random.choice([-1, 1], size=size)),
+    linewidth=5,
+    color="#e9c46a",
+    label=labels[2],
+)
+axs[1].plot(
+    np.cumsum(np.random.choice([-1, 1], size=size)),
+    linewidth=5,
+    color="#0077b6",
+    label=labels[3],
+)
+axs[1].plot(
+    np.cumsum(np.random.choice([-1, 1], size=size)),
+    linewidth=5,
+    color="#14213d",
+    label=labels[4],
+)
+axs[1].legend()
+
+
+(
+    MagicPlot(fig=fig)
+    .add_tooltip(labels=labels, groups=labels, ax=axs[0])
+    .add_tooltip(labels=labels, groups=labels, ax=axs[1])
+    .save("docs/iframes/random-walk-1.html")
+)
+
+##########################################
