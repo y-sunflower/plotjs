@@ -4,6 +4,12 @@ repo_url: https://github.com/y-sunflower/plotjs
 
 theme:
   name: material
+  font:
+    text: Inter
+    code: Jetbrains Mono
+  palette:
+    primary: white
+  logo: https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/image.png?raw=true
   custom_dir: overrides
   favicon: https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/favicon.ico?raw=true
   features:

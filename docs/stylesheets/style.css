@@ -1,30 +1,13 @@
-:root {
-  --primary-color: #5a189a;
-}
-
 h2,
 h3,
 h4 {
   margin-top: 3em !important;
 }
 
-.md-header {
-  background-color: var(--primary-color);
-}
-
-.md-tabs {
-  background-color: var(--primary-color);
-}
-
-@media (max-width: 768px) {
-  .md-nav--primary .md-nav__title[for="__drawer"] {
-    background-color: var(--primary-color);
-  }
-}
-
 footer.custom-footer {
-  background-color: var(--primary-color);
-  color: #f1f1f1;
+  box-shadow: 0 0 1rem #0000003e, 0 0.2rem 0.4rem #0003;
+  transition: transform 0.25s cubic-bezier(0.1, 0.7, 0.1, 1), box-shadow 0.25s;
+  color: #000000ff;
   padding: 20px 20px;
   text-align: center;
   margin-top: 50px;
@@ -37,16 +20,5 @@ footer.custom-footer {
 }
 
 .footer-container p {
-  font-size: 1rem;
-}
-
-.landing-page {
-  background: linear-gradient(to right, #fffaf0, #f0ffff);
-  padding: 2rem;
-  font-size: 1.1rem;
-}
-
-/* Example: hide sidebar only on landing page */
-.landing-page .md-sidebar {
-  display: none;
+  font-size: 0.7rem;
 }
