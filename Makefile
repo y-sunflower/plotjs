@@ -17,8 +17,7 @@ coverage:
 	rm coverage.xml
 
 preview:
-	uv run mkdocs serve & \
-	sleep 1 && open http://127.0.0.1:8000/plotjs/
+	uv run mkdocs serve
 
 test:
 	uv run pytest    # run python tests

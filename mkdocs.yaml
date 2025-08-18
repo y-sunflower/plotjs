@@ -32,6 +32,7 @@ nav:
   - Guides:
       - Add your own CSS: guides/css/index.md
       - Add your own JavaScript: guides/javascript/index.md
+      - Embed graphs in different environments: guides/embed-graphs/index.md
       - Troubleshooting: guides/troubleshooting/index.md
       - Advanced: guides/advanced/index.md
   - API Reference:

@@ -12,7 +12,6 @@ import os
 import io
 import random
 import uuid
-from typing import Text
 
 from .utils import _vector_to_list, _get_and_sanitize_js
 
@@ -159,33 +158,6 @@ class MagicPlot:
 
         return self
 
-    def _set_plot_data_json(self):
-        if not hasattr(self, "_tooltip_labels"):
-            self.add_tooltip()
-
-        self.plot_data_json = {
-            "tooltip_labels": self._tooltip_labels,
-            "tooltip_groups": self._tooltip_groups,
-            "tooltip_x_shift": self._tooltip_x_shift,
-            "tooltip_y_shift": self._tooltip_y_shift,
-            "hover_nearest": self._hover_nearest,
-            "axes": self.axes_tooltip,
-        }
-
-    def _set_html(self):
-        self._set_plot_data_json()
-        self.html: Text = self.template.render(
-            uuid=str(self._uuid),
-            default_css=self._default_css,
-            js_parser=self._js_parser,
-            additional_css=self.additional_css,
-            additional_javascript=self.additional_javascript,
-            svg=self.svg_content,
-            plot_data_json=self.plot_data_json,
-            favicon_path=self._favicon_path,
-            document_title=self._document_title,
-        )
-
     def add_css(self, css_content: str) -> "MagicPlot":
         """
         Add CSS to the final HTML output. This function allows you to override
@@ -270,8 +242,8 @@ class MagicPlot:
                 extension is missing, it's added.
             favicon_path: Path to a favicon file, remote or local.
                 The default is the logo of plotjs.
-            document_title: String used for the page title (the <title>
-                tag inside the <head>).
+            document_title: String used for the page title (the title
+                tag inside the head of the html document).
 
         Returns:
             The instance itself to allow method chaining.
@@ -296,3 +268,59 @@ class MagicPlot:
             f.write(self.html)
 
         return self
+
+    def as_html(self) -> str:
+        """
+        Retrieve the interactive plot as an HTML string.
+        This can be useful to display the plot in
+        environment such as marimo, or do advanced customization.
+
+        Returns:
+            A string with all the HTML of the plot.
+
+        Examples:
+            ```python
+            import marimo as mo
+            from plotjs import MagicPlot, data
+
+            df = data.load_iris()
+
+            html_plot = (
+                MagicPlot(fig=fig)
+                .add_tooltip(labels=df["species"])
+                .as_html()
+            )
+
+            # display in marimo
+            mo.iframe(html_plot)
+            ```
+        """
+        self._set_html()
+        return self.html
+
+    def _set_plot_data_json(self) -> None:
+        if not hasattr(self, "_tooltip_labels"):
+            self.add_tooltip()
+
+        self.plot_data_json = {
+            "tooltip_labels": self._tooltip_labels,
+            "tooltip_groups": self._tooltip_groups,
+            "tooltip_x_shift": self._tooltip_x_shift,
+            "tooltip_y_shift": self._tooltip_y_shift,
+            "hover_nearest": self._hover_nearest,
+            "axes": self.axes_tooltip,
+        }
+
+    def _set_html(self, favicon_path: str, document_title: str) -> None:
+        self._set_plot_data_json()
+        self.html: str = self.template.render(
+            uuid=str(self._uuid),
+            default_css=self._default_css,
+            js_parser=self._js_parser,
+            additional_css=self.additional_css,
+            additional_javascript=self.additional_javascript,
+            svg=self.svg_content,
+            plot_data_json=self.plot_data_json,
+            favicon_path=self._favicon_path,
+            document_title=self._document_title,
+        )
