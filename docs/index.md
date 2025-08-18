@@ -109,7 +109,7 @@ from plotjs import MagicPlot
         labels=df["species"],
         groups=df["species"],
     )
-    .add_css(".hovered{opacity: 0.8 !important; fill: blue !important;}")
+    .add_css(".hovered{fill: blue !important;}")
     .save("iframes/quickstart3.html")
 )
 ```
@@ -475,7 +475,7 @@ MagicPlot(fig=fig).add_tooltip(
 
 </iframe>
 
-One (easy) way to fix this is to sort `labels`/`groups` argument by the
+One easy way to fix this is to sort `labels`/`groups` argument by the
 same order you created your plot. In this previous case, this would mean
 to sort them by the `species` column.
 
