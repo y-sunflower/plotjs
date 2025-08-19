@@ -94,3 +94,13 @@ def test_get_and_sanitize_js():
         after_pattern=r"const.*",
     )
     assert js_content == 'const aVariable = "hello";\n'
+
+
+def test_get_and_sanitize_js_error():
+    after_pattern = r"hey.*"
+    with pytest.raises(
+        ValueError, match=f"Could not find '{after_pattern}' in the file"
+    ):
+        _get_and_sanitize_js(
+            "tests/test-python/static/script2.js", after_pattern=after_pattern
+        )
