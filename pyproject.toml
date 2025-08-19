@@ -44,7 +44,6 @@ dev = [
     "coverage>=7.9.1",
     "genbadge[coverage]>=1.1.2",
     "pandas>=2.3.1",
-    "mkdocs-matplotlib>=0.10.1",
     "pypalettes>=0.1.4",
     "pyfonts>=1.0.0",
     "morethemes>=0.4.0",
