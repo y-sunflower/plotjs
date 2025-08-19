@@ -6,7 +6,7 @@ Try to click on one of the points in the chart!
 
 ```python
 import matplotlib.pyplot as plt
-from plotjs import data, MagicPlot
+from plotjs import data, PlotJS
 
 df = data.load_iris()
 
@@ -21,7 +21,7 @@ ax.scatter(
 )
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(labels=df["species"])
     .add_javascript(
         """
@@ -56,7 +56,7 @@ Here’s what it does:
 ```python
 from plotjs import javascript
 
-MagicPlot(fig=fig).add_javascript(
+PlotJS(fig=fig).add_javascript(
     javascript.from_file("my_script.js"),
 )
 ```
@@ -67,7 +67,7 @@ This allows you to write JavaScript in a separate file so that you can have a co
 
 ```python
 import matplotlib.pyplot as plt
-from plotjs import MagicPlot, data
+from plotjs import PlotJS, data
 
 df = data.load_iris()
 
@@ -118,7 +118,7 @@ custom_css: str = """
 """
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(
         labels=df["species"],
         groups=df["species"],

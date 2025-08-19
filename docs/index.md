@@ -1,6 +1,5 @@
 # Turn static matplotlib charts into interactive web visualizations
 
-
 <img src="https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/image.png?raw=true" alt="plotjs logo" align="right" width="150px"/>
 
 `plotjs` is a Python package that transform matplotlib plots into
@@ -24,7 +23,7 @@ altair, for example.
 
 For instance, a chart made with matplotlib looks like this:
 
-``` python
+```python
 import matplotlib.pyplot as plt
 from plotjs import data
 
@@ -52,14 +51,15 @@ if I put my mouse on a point, it displays something?
 <center>
 
 Introducting ✨plotjs✨
+
 </center>
 
 </i>
 
-``` python
-from plotjs import MagicPlot
+```python
+from plotjs import PlotJS
 
-MagicPlot(fig=fig).add_tooltip(
+PlotJS(fig=fig).add_tooltip(
     labels=df["species"],
 ).save("iframes/quickstart.html")
 ```
@@ -74,11 +74,11 @@ hovered point and fade other points.
 
 What if we want to highlight all points from a specie for example?
 
-``` python
-from plotjs import MagicPlot
+```python
+from plotjs import PlotJS
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(
         labels=df["species"],
         groups=df["species"],
@@ -93,18 +93,18 @@ from plotjs import MagicPlot
 
 ### CSS
 
-Now, let's say we want to a *finer control* over the hover effects.
+Now, let's say we want to a _finer control_ over the hover effects.
 
 That's easily possible with some basic CSS:
 
 - we select `.hovered` to control CSS for the hovered points
 - we select `.not-hovered` to control CSS for the un-hovered points
 
-``` python
-from plotjs import MagicPlot
+```python
+from plotjs import PlotJS
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(
         labels=df["species"],
         groups=df["species"],
@@ -126,7 +126,7 @@ The `tooltip` argument just requires an iterable, and will use this for
 the labels. That means we can do pretty much whatever we want. For
 instance, with pandas, we can do:
 
-``` python
+```python
 custom_tooltip = df.apply(
     lambda row: f"Sepal length = {row['sepal_length']}<br>"
     f"Sepal width = {row['sepal_width']}<br>"
@@ -137,11 +137,11 @@ custom_tooltip = df.apply(
 
 Then we use this as the new tooltip:
 
-``` python
-from plotjs import MagicPlot, css
+```python
+from plotjs import PlotJS, css
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(
         labels=custom_tooltip,
         groups=df["species"],
@@ -171,10 +171,10 @@ it looks with a line chart.
 
 ### Line chart
 
-``` python
+```python
 import numpy as np
 import matplotlib.pyplot as plt
-from plotjs import MagicPlot
+from plotjs import PlotJS
 
 walk1 = np.cumsum(np.random.choice([-1, 1], size=500))
 walk2 = np.cumsum(np.random.choice([-1, 1], size=500))
@@ -186,7 +186,7 @@ ax.plot(walk2, linewidth=8, color="#2a9d8f")
 ax.plot(walk3, linewidth=8, color="#e9c46a")
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(labels=["S&P500", "CAC40", "Bitcoin"])
     .save("iframes/quickstart5.html")
 )
@@ -198,9 +198,9 @@ ax.plot(walk3, linewidth=8, color="#e9c46a")
 
 ### Barplot
 
-``` python
+```python
 import matplotlib.pyplot as plt
-from plotjs import MagicPlot, css
+from plotjs import PlotJS, css
 
 fig, ax = plt.subplots()
 ax.barh(
@@ -211,7 +211,7 @@ ax.barh(
 )
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(
         labels=["Fries", "Cake", "Apple", "Cheese", "Broccoli"],
         groups=["Good", "Good", "Bad", "Good", "Bad"],
@@ -228,9 +228,9 @@ ax.barh(
 
 - Scatter plot
 
-``` python
+```python
 import matplotlib.pyplot as plt
-from plotjs import MagicPlot
+from plotjs import PlotJS
 
 fig, ax = plt.subplots()
 for specie in df["species"].unique():
@@ -245,7 +245,7 @@ for specie in df["species"].unique():
 ax.legend()
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(
         groups=df["species"],
     )
@@ -259,10 +259,10 @@ ax.legend()
 
 - Line chart
 
-``` python
+```python
 import matplotlib.pyplot as plt
 import numpy as np
-from plotjs import MagicPlot
+from plotjs import PlotJS
 
 np.random.seed(0)
 
@@ -280,7 +280,7 @@ ax.plot(walk3, linewidth=8, color="#e9c46a", label=labels[2])
 ax.legend()
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(
         labels=labels,
         groups=labels,
@@ -295,9 +295,9 @@ ax.legend()
 
 ### Multiple Axes
 
-``` python
+```python
 import matplotlib.pyplot as plt
-from plotjs import MagicPlot, data
+from plotjs import PlotJS, data
 
 df = data.load_iris()
 
@@ -313,7 +313,7 @@ ax1.scatter(df["sepal_width"], df["sepal_length"], **args)
 ax2.scatter(df["petal_width"], df["petal_length"], **args)
 
 (
-    MagicPlot(fig)
+    PlotJS(fig)
     .add_tooltip(
         groups=df["species"],
         ax=ax1,  # left Axes
@@ -342,10 +342,10 @@ the `hover_nearest` argument in `add_tooltip()`.
 In short, if set to `True`, `plotjs` will hover the closest plot element
 it can found!
 
-``` python
+```python
 import matplotlib.pyplot as plt
 from plotjs import data
-from plotjs import MagicPlot
+from plotjs import PlotJS
 
 df = data.load_iris()
 
@@ -359,7 +359,7 @@ for specie in df["species"].unique():
         ec="black",
     )
 
-MagicPlot(fig=fig).add_tooltip(
+PlotJS(fig=fig).add_tooltip(
     labels=df["species"],
     groups=df["species"],
     hover_nearest=True,
@@ -372,9 +372,9 @@ MagicPlot(fig=fig).add_tooltip(
 
 And it works with multiple Axes too:
 
-``` python
+```python
 import matplotlib.pyplot as plt
-from plotjs import MagicPlot, data
+from plotjs import PlotJS, data
 
 df = data.load_iris()
 
@@ -391,7 +391,7 @@ ax2.scatter(**args)
 ax3.scatter(**args)
 
 (
-    MagicPlot(fig)
+    PlotJS(fig)
     .add_tooltip(
         groups=df["species"],
         hover_nearest=True,
@@ -420,13 +420,13 @@ ax3.scatter(**args)
 
 - From PyPI (recommended):
 
-``` bash
+```bash
 pip install plotjs
 ```
 
 - Latest dev version:
 
-``` bash
+```bash
 pip install git+https://github.com/y-sunflower/plotjs.git
 ```
 
@@ -448,10 +448,10 @@ plot the points by the specie order but `labels` and `groups` follow the
 order in the dataframe. See [this
 issue](https://github.com/y-sunflower/plotjs/issues/32).
 
-``` python
+```python
 import matplotlib.pyplot as plt
 from plotjs import data
-from plotjs import MagicPlot
+from plotjs import PlotJS
 
 df = data.load_iris().sample(150)      # randomize the dataset
 
@@ -465,7 +465,7 @@ for specie in df["species"].unique():
         ec="black",
     )
 
-MagicPlot(fig=fig).add_tooltip(
+PlotJS(fig=fig).add_tooltip(
     labels=df["species"],
     groups=df["species"],
 ).save("iframes/bug.html")
@@ -482,8 +482,8 @@ to sort them by the `species` column.
 ## Appendix
 
 [^1]: It really is.
-
-[^2]: To be exact, you can perfectly create interactive charts natively
+[^2]:
+    To be exact, you can perfectly create interactive charts natively
     in Matplotlib. It requires to use its interactive mode and GUI
     backends to allow actions like zooming and panning in desktop
     windows. For instance, this differs from Plotly or Altair, which

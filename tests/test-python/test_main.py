@@ -1,5 +1,5 @@
 import plotjs
-from plotjs import data, MagicPlot, css
+from plotjs import data, PlotJS, css
 import os
 import matplotlib.pyplot as plt
 
@@ -57,7 +57,7 @@ def test_overall():
         }
     )
 
-    plot = MagicPlot(fig=fig)
+    plot = PlotJS(fig=fig)
     (
         plot.add_tooltip(
             labels=df["species"],
@@ -68,7 +68,7 @@ def test_overall():
         .save("temp.html")
     )
 
-    assert isinstance(plot, MagicPlot)
+    assert isinstance(plot, PlotJS)
     assert plot.additional_javascript == custom_js
     assert plot.additional_css == custom_css
 

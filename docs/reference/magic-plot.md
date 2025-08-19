@@ -1,1 +1,1 @@
-::: plotjs.main.MagicPlot
+::: plotjs.main.PlotJS

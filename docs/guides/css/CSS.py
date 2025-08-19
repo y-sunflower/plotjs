@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from plotjs import MagicPlot, data, css
+from plotjs import PlotJS, data, css
 
 df = data.load_iris()
 
@@ -26,7 +26,7 @@ df["tooltip"] = (
 )
 
 (
-    MagicPlot()
+    PlotJS()
     .add_tooltip(labels=df["tooltip"])
     .add_css(".tooltip {background: red; color: blue;}")
     .save("docs/iframes/CSS.html")
@@ -34,13 +34,13 @@ df["tooltip"] = (
 
 
 (
-    MagicPlot()
+    PlotJS()
     .add_tooltip(labels=df["tooltip"])
     .add_css(css.from_dict({".tooltip": {"background": "red", "color": "blue"}}))
 )
 
 (
-    MagicPlot()
+    PlotJS()
     .add_tooltip(
         labels=df["tooltip"],
     )
@@ -49,7 +49,7 @@ df["tooltip"] = (
 )
 
 (
-    MagicPlot()
+    PlotJS()
     .add_tooltip(labels=df["tooltip"])
     .add_css(css.from_file("docs/static/style.css"))
     .save("docs/iframes/CSS-2.html")

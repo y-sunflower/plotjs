@@ -1,4 +1,4 @@
-from plotjs import MagicPlot, css
+from plotjs import PlotJS, css
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -179,7 +179,7 @@ ax_arrow(
 )
 plt.savefig("debug.svg")
 
-MagicPlot(fig, bbox_inches="tight").add_css(
+PlotJS(fig, bbox_inches="tight").add_css(
     css.from_dict(
         {
             ".tooltip": {
@@ -267,7 +267,7 @@ axs[1].legend()
 
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(labels=labels, groups=labels, ax=axs[0])
     .add_tooltip(labels=labels, groups=labels, ax=axs[1])
     .save("docs/iframes/random-walk-1.html")

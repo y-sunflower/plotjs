@@ -24,7 +24,7 @@ You can directly apply a CSS string to your plot:
 
 ```python
 (
-    MagicPlot()
+    PlotJS()
     .add_tooltip(labels=df["tooltip"])
     .add_css(".tooltip { background: red; color: blue; }")
 )
@@ -42,7 +42,7 @@ For better readability and reusability, you can define CSS as a dictionary using
 from plotjs import css
 
 (
-    MagicPlot()
+    PlotJS()
     .add_tooltip(labels=df["tooltip"])
     .add_css(css.from_dict({
         ".tooltip": {
@@ -57,7 +57,7 @@ Method chaining also works if you want to split styles:
 
 ```python
 (
-    MagicPlot()
+    PlotJS()
     .add_tooltip(labels=df["tooltip"])
     .add_css(css.from_dict({".tooltip": {"color": "blue"}}))
     .add_css(css.from_dict({".tooltip": {"background": "red"}}))
@@ -81,7 +81,7 @@ You can load it with:
 from plotjs import css
 
 (
-    MagicPlot()
+    PlotJS()
     .add_tooltip(labels=df["tooltip"])
     .add_css(css.from_file("docs/static/style.css"))
 )

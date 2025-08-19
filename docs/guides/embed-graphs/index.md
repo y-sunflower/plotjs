@@ -11,7 +11,7 @@ title: Plotjs in a Quarto document
 
 ```python
 import matplotlib.pyplot as plt
-from plotjs import MagicPlot, data
+from plotjs import PlotJS, data
 
 df = data.load_iris()
 
@@ -26,7 +26,7 @@ ax.scatter(
 )
 
 (
-   MagicPlot(fig=fig)
+   PlotJS(fig=fig)
    .add_tooltip(labels=df["species"])
    .save("plot.html")
 )
@@ -42,7 +42,7 @@ In [marimo](https://marimo.io/), you'll also want to create an iframe, but using
 ```python
 import marimo as mo
 import matplotlib.pyplot as plt
-from plotjs import MagicPlot, data
+from plotjs import PlotJS, data
 
 df = data.load_iris()
 
@@ -57,7 +57,7 @@ ax.scatter(
 )
 
 html_plot = (
-   MagicPlot(fig=fig)
+   PlotJS(fig=fig)
    .add_tooltip(labels=df["species"])
    .as_html()
 )

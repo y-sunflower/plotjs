@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from plotjs import data, MagicPlot
+from plotjs import data, PlotJS
 
 df = data.load_iris()
 
@@ -14,7 +14,7 @@ ax.scatter(
 )
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(labels=df["species"])
     .add_javascript(
         """
@@ -77,7 +77,7 @@ custom_css: str = """
 """
 
 (
-    MagicPlot(fig=fig)
+    PlotJS(fig=fig)
     .add_tooltip(
         labels=df["species"],
         groups=df["species"],

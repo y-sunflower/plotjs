@@ -1,4 +1,4 @@
-from plotjs import MagicPlot, data
+from plotjs import PlotJS, data
 import matplotlib.pyplot as plt
 
 
@@ -9,7 +9,7 @@ def test_add_css_method_chaining():
     ax.scatter(df["sepal_width"], df["sepal_length"])
 
     mp = (
-        MagicPlot(fig=fig)
+        PlotJS(fig=fig)
         .add_css(".tooltip{font-size: 2em;color: red;}")
         .add_css(".point.hovered{opacity: 0.4;}")
     )
@@ -44,7 +44,7 @@ d3.selectAll(".line").on("click", () =>
 );
 """
 
-    mp = MagicPlot(fig=fig).add_javascript(first_js).add_javascript(second_js)
+    mp = PlotJS(fig=fig).add_javascript(first_js).add_javascript(second_js)
 
     assert mp.additional_javascript == first_js + second_js
 
@@ -59,7 +59,7 @@ def test_multiple_axes_handling():
     axs[3].scatter(df["petal_length"], df["sepal_length"])
 
     mp = (
-        MagicPlot(fig=fig)
+        PlotJS(fig=fig)
         .add_tooltip(labels=df["species"], ax=axs[0])
         .add_tooltip(groups=df["species"], ax=axs[1])
         .add_tooltip(labels=df["species"], ax=axs[2], hover_nearest=True)

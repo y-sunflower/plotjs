@@ -23,7 +23,7 @@ JS_PARSER_PATH: str = os.path.join(TEMPLATE_DIR, "plotparser.js")
 env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 
 
-class MagicPlot:
+class PlotJS:
     """
     Class to convert static matplotlib plots to interactive charts.
 
@@ -39,7 +39,7 @@ class MagicPlot:
         **savefig_kws: dict,
     ):
         """
-        Initiate an `MagicPlot` instance to convert matplotlib
+        Initiate an `PlotJS` instance to convert matplotlib
         figures to interactive charts.
 
         Args:
@@ -84,7 +84,7 @@ class MagicPlot:
         tooltip_y_shift: int = 0,
         hover_nearest: bool = False,
         ax: Axes | None = None,
-    ) -> "MagicPlot":
+    ) -> "PlotJS":
         """
         Add a tooltip to the interactive plot. You can set either
         just `labels`, just `groups`, both or none.
@@ -109,20 +109,20 @@ class MagicPlot:
 
         Examples:
             ```python
-            MagicPlot(...).add_tooltip(
+            PlotJS(...).add_tooltip(
                 labels=["S&P500", "CAC40", "Sunflower"],
             )
             ```
 
             ```python
-            MagicPlot(...).add_tooltip(
+            PlotJS(...).add_tooltip(
                 labels=["S&P500", "CAC40", "Sunflower"],
                 columns=["S&P500", "CAC40", "Sunflower"],
             )
             ```
 
             ```python
-            MagicPlot(...).add_tooltip(
+            PlotJS(...).add_tooltip(
                 labels=["S&P500", "CAC40", "Sunflower"],
                 hover_nearest=True,
             )
@@ -162,7 +162,7 @@ class MagicPlot:
 
         return self
 
-    def add_css(self, css_content: str) -> "MagicPlot":
+    def add_css(self, css_content: str) -> "PlotJS":
         """
         Add CSS to the final HTML output. This function allows you to override
         default styles or add custom CSS rules.
@@ -177,25 +177,25 @@ class MagicPlot:
 
         Examples:
             ```python
-            MagicPlot(...).add_css('.tooltip {"color": "red";}')
+            PlotJS(...).add_css('.tooltip {"color": "red";}')
             ```
 
             ```python
             from plotjs import css
 
-            MagicPlot(...).add_css(css.from_file("path/to/style.css"))
+            PlotJS(...).add_css(css.from_file("path/to/style.css"))
             ```
 
             ```python
             from plotjs import css
 
-            MagicPlot(...).add_css(css.from_dict({".tooltip": {"color": "red";}}))
+            PlotJS(...).add_css(css.from_dict({".tooltip": {"color": "red";}}))
             ```
 
             ```python
             from plotjs import css
 
-            MagicPlot(...).add_css(
+            PlotJS(...).add_css(
                 css.from_dict({".tooltip": {"color": "red";}}),
             ).add_css(
                 css.from_dict({".tooltip": {"background": "blue";}}),
@@ -205,7 +205,7 @@ class MagicPlot:
         self.additional_css += css_content
         return self
 
-    def add_javascript(self, javascript_content: str) -> "MagicPlot":
+    def add_javascript(self, javascript_content: str) -> "PlotJS":
         """
         Add custom JavaScript to the final HTML output. This function allows
         users to enhance interactivity, define custom behaviors, or extend
@@ -219,14 +219,14 @@ class MagicPlot:
 
         Examples:
             ```python
-            MagicPlot(...).add_javascript("console.log('Custom JS loaded!');")
+            PlotJS(...).add_javascript("console.log('Custom JS loaded!');")
             ```
 
             ```python
             from plotjs import javascript
 
             custom_js = javascript.from_file("script.js")
-            MagicPlot(...).add_javascript(custom_js)
+            PlotJS(...).add_javascript(custom_js)
             ```
         """
         self.additional_javascript += javascript_content
@@ -237,7 +237,7 @@ class MagicPlot:
         file_path: str,
         favicon_path: str = "https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/favicon.ico?raw=true",
         document_title: str = "plotjs",
-    ) -> "MagicPlot":
+    ) -> "PlotJS":
         """
         Save the interactive matplotlib plots to an HTML file.
 
@@ -254,11 +254,11 @@ class MagicPlot:
 
         Examples:
             ```python
-            MagicPlot(...).save("index.html")
+            PlotJS(...).save("index.html")
             ```
 
             ```python
-            MagicPlot(...).save("path/to/my_chart.html")
+            PlotJS(...).save("path/to/my_chart.html")
             ```
         """
         self._favicon_path = favicon_path
@@ -285,12 +285,12 @@ class MagicPlot:
         Examples:
             ```python
             import marimo as mo
-            from plotjs import MagicPlot, data
+            from plotjs import PlotJS, data
 
             df = data.load_iris()
 
             html_plot = (
-                MagicPlot(fig=fig)
+                PlotJS(fig=fig)
                 .add_tooltip(labels=df["species"])
                 .as_html()
             )
