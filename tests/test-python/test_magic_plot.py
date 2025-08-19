@@ -47,3 +47,99 @@ d3.selectAll(".line").on("click", () =>
     mp = MagicPlot(fig=fig).add_javascript(first_js).add_javascript(second_js)
 
     assert mp.additional_javascript == first_js + second_js
+
+
+def test_multiple_axes_handling():
+    df = data.load_iris().head(10)
+
+    fig, axs = plt.subplots(ncols=4)
+    axs[0].scatter(df["sepal_width"], df["sepal_length"])
+    axs[1].scatter(df["petal_width"], df["petal_length"])
+    axs[2].scatter(df["petal_width"], df["sepal_length"])
+    axs[3].scatter(df["petal_length"], df["sepal_length"])
+
+    mp = (
+        MagicPlot(fig=fig)
+        .add_tooltip(labels=df["species"], ax=axs[0])
+        .add_tooltip(groups=df["species"], ax=axs[1])
+        .add_tooltip(labels=df["species"], ax=axs[2], hover_nearest=True)
+        .add_tooltip(labels=df["species"], groups=df["species"], ax=axs[3])
+    )
+
+    mp._axes_tooltip == {
+        "axes_1": {
+            "tooltip_labels": [
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+            ],
+            "tooltip_groups": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            "hover_nearest": "false",
+        },
+        "axes_2": {
+            "tooltip_labels": [],
+            "tooltip_groups": [
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+            ],
+            "hover_nearest": "false",
+        },
+        "axes_3": {
+            "tooltip_labels": [
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+            ],
+            "tooltip_groups": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            "hover_nearest": "true",
+        },
+        "axes_4": {
+            "tooltip_labels": [
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+            ],
+            "tooltip_groups": [
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+                "setosa",
+            ],
+            "hover_nearest": "false",
+        },
+    }
