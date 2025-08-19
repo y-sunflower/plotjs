@@ -47,7 +47,8 @@ nav:
       - JavaScript: reference/javascript.md
       - Datasets: reference/datasets.md
   - For developers:
-      - How it works: developers/how-it-works.md
+      - Overview: developers/overview.md
+      - Parsing matplotlib's SVG: developers/parsing-matplotlib-svg.md
       - Contributing: developers/contributing.md
 
 extra_css:
