@@ -22,7 +22,6 @@ theme:
 
 plugins:
   - search
-  - mkdocs_matplotlib
   - mkdocstrings:
       default_handler: python
       handlers:
