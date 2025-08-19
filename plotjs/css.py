@@ -62,7 +62,7 @@ def from_file(css_file: str) -> str:
         css: str = f.read()
 
     if not is_css_like(css):
-        warnings.warn(f"CSS may be invalid: {css}")
+        warnings.warn(f"CSS may be invalid: {css}", category=UserWarning)
     return css
 
 

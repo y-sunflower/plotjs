@@ -26,6 +26,10 @@ env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
 class MagicPlot:
     """
     Class to convert static matplotlib plots to interactive charts.
+
+    Attributes:
+        - additional_css: All the CSS added via `add_css()`
+        - additional_javascript: All the JavaScript added via `add_javascript()`
     """
 
     def __init__(
@@ -48,14 +52,14 @@ class MagicPlot:
         buf: io.StringIO = io.StringIO()
         fig.savefig(buf, format="svg", **savefig_kws)
         buf.seek(0)
-        self.svg_content = buf.getvalue()
+        self._svg_content = buf.getvalue()
 
-        self.axes: list[Axes] = fig.get_axes()
+        self._axes: list[Axes] = fig.get_axes()
 
         self.additional_css = ""
         self.additional_javascript = ""
         self._hover_nearest = False
-        self.template = env.get_template("template.html")
+        self._template = env.get_template("template.html")
 
         with open(CSS_PATH) as f:
             self._default_css = f.read()
@@ -128,7 +132,7 @@ class MagicPlot:
         self._tooltip_y_shift = tooltip_y_shift
 
         if ax is None:
-            ax: Axes = self.axes[0]
+            ax: Axes = self._axes[0]
         self._legend_handles, self._legend_handles_labels = (
             ax.get_legend_handles_labels()
         )
@@ -144,9 +148,9 @@ class MagicPlot:
             self._tooltip_groups = _vector_to_list(groups)
             self._tooltip_groups.extend(self._legend_handles_labels)
 
-        if not hasattr(self, "axes_tooltip"):
-            self.axes_tooltip: dict = dict()
-        axe_idx: int = self.axes.index(ax) + 1
+        if not hasattr(self, "_axes_tooltip"):
+            self._axes_tooltip: dict = dict()
+        axe_idx: int = self._axes.index(ax) + 1
         axe_tooltip: dict[str, dict] = {
             f"axes_{axe_idx}": {
                 "tooltip_labels": self._tooltip_labels,
@@ -154,7 +158,7 @@ class MagicPlot:
                 "hover_nearest": "true" if hover_nearest else "false",  # js boolean
             }
         }
-        self.axes_tooltip.update(axe_tooltip)
+        self._axes_tooltip.update(axe_tooltip)
 
         return self
 
@@ -308,18 +312,18 @@ class MagicPlot:
             "tooltip_x_shift": self._tooltip_x_shift,
             "tooltip_y_shift": self._tooltip_y_shift,
             "hover_nearest": self._hover_nearest,
-            "axes": self.axes_tooltip,
+            "axes": self._axes_tooltip,
         }
 
     def _set_html(self) -> None:
         self._set_plot_data_json()
-        self.html: str = self.template.render(
+        self.html: str = self._template.render(
             uuid=str(self._uuid),
             default_css=self._default_css,
             js_parser=self._js_parser,
             additional_css=self.additional_css,
             additional_javascript=self.additional_javascript,
-            svg=self.svg_content,
+            svg=self._svg_content,
             plot_data_json=self.plot_data_json,
             favicon_path=self._favicon_path,
             document_title=self._document_title,

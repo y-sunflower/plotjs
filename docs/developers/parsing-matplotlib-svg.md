@@ -21,7 +21,7 @@ But it means we don't have full control over how the plot is structured (from th
 For the moment, we just take the user's matplotlib figure and save it as SVG. This is just:
 
 ```python
-fig.savefig("plot.svg")
+plt.savefig("plot.svg")
 ```
 
 Now, let's say the figure contains a scatter plot and we want to add a tooltip: when someone hovers their mouse over a point, it displays a label.

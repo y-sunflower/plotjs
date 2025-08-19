@@ -2,16 +2,22 @@
 
 The best way to help the development is to:
 
-- list the bugs you found by opening [GitHub issues](https://github.com/y-sunflower/plotjs/issues){target="_blank"}
-- list the features you'd like to see by opening [GitHub issues](https://github.com/y-sunflower/plotjs/issues){target="_blank"}
+- list the bugs you found by opening [GitHub issues](https://github.com/y-sunflower/plotjs/issues){target="\_blank"}
+- list the features you'd like to see by opening [GitHub issues](https://github.com/y-sunflower/plotjs/issues){target="\_blank"}
 
 ## Setting up your environment
+
+You need to have the following installed on your machine:
+
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ### Install for development
 
 - Fork the repository to your own GitHub account.
 
-- Clone your forked repository to your local machine (ensure you have [Git installed](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)):
+- Clone your forked repository to your local machine:
 
 ```bash
 git clone https://github.com/github_user_name/plotjs.git
@@ -25,12 +31,18 @@ git remote add upstream https://github.com/y-sunflower/plotjs.git
 git checkout -b my-feature
 ```
 
-- Set up your Python environment (ensure you have [uv installed](https://docs.astral.sh/uv/getting-started/installation/)):
+- Set up your Python environment:
 
 ```bash
 uv sync --all-groups --dev
 uv run pre-commit install
 uv pip install -e .
+```
+
+- Install npm dependencies:
+
+```bash
+npm install
 ```
 
 ## Code
@@ -42,13 +54,13 @@ You can now make changes to the package and start coding!
 - Test that everything works correctly by running:
 
 ```bash
-uv run pytest
+make test
 ```
 
 ### Preview documentation locally
 
 ```bash
-uv run mkdocs serve
+make preview
 ```
 
 ## Push changes
