@@ -236,7 +236,7 @@ class PlotJS:
         self,
         file_path: str,
         favicon_path: str = "https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/favicon.ico?raw=true",
-        document_title: str = "plotjs",
+        document_title: str = "Made with plotjs",
     ) -> "PlotJS":
         """
         Save the interactive matplotlib plots to an HTML file.

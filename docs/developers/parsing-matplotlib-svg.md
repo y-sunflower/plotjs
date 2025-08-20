@@ -156,3 +156,7 @@ The idea is basically:
 This gives us a `lines` variable that only contains the lines of interest!
 
 The logic is the same for other plot elements: bars, points, polygons, etc.
+
+<br>
+
+You can find the **reference page** of the parser [here](./svg-parser-reference.md)

@@ -48,6 +48,7 @@ nav:
   - For developers:
       - Overview: developers/overview.md
       - Parsing matplotlib's SVG: developers/parsing-matplotlib-svg.md
+      - SVG parser reference: developers/svg-parser-reference.md
       - Contributing: developers/contributing.md
 
 extra_css:
