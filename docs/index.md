@@ -1,5 +1,6 @@
 # Turn static matplotlib charts into interactive web visualizations
 
+
 <img src="https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/image.png?raw=true" alt="plotjs logo" align="right" width="150px"/>
 
 `plotjs` is a Python package that transform matplotlib plots into
@@ -23,7 +24,7 @@ altair, for example.
 
 For instance, a chart made with matplotlib looks like this:
 
-```python
+``` python
 import matplotlib.pyplot as plt
 from plotjs import data
 
@@ -51,12 +52,11 @@ if I put my mouse on a point, it displays something?
 <center>
 
 Introducting ✨plotjs✨
-
 </center>
 
 </i>
 
-```python
+``` python
 from plotjs import PlotJS
 
 PlotJS(fig=fig).add_tooltip(
@@ -74,7 +74,7 @@ hovered point and fade other points.
 
 What if we want to highlight all points from a specie for example?
 
-```python
+``` python
 from plotjs import PlotJS
 
 (
@@ -93,14 +93,14 @@ from plotjs import PlotJS
 
 ### CSS
 
-Now, let's say we want to a _finer control_ over the hover effects.
+Now, let's say we want to a *finer control* over the hover effects.
 
 That's easily possible with some basic CSS:
 
 - we select `.hovered` to control CSS for the hovered points
 - we select `.not-hovered` to control CSS for the un-hovered points
 
-```python
+``` python
 from plotjs import PlotJS
 
 (
@@ -126,7 +126,7 @@ The `tooltip` argument just requires an iterable, and will use this for
 the labels. That means we can do pretty much whatever we want. For
 instance, with pandas, we can do:
 
-```python
+``` python
 custom_tooltip = df.apply(
     lambda row: f"Sepal length = {row['sepal_length']}<br>"
     f"Sepal width = {row['sepal_width']}<br>"
@@ -137,7 +137,7 @@ custom_tooltip = df.apply(
 
 Then we use this as the new tooltip:
 
-```python
+``` python
 from plotjs import PlotJS, css
 
 (
@@ -171,7 +171,7 @@ it looks with a line chart.
 
 ### Line chart
 
-```python
+``` python
 import numpy as np
 import matplotlib.pyplot as plt
 from plotjs import PlotJS
@@ -198,7 +198,7 @@ ax.plot(walk3, linewidth=8, color="#e9c46a")
 
 ### Barplot
 
-```python
+``` python
 import matplotlib.pyplot as plt
 from plotjs import PlotJS, css
 
@@ -228,7 +228,7 @@ ax.barh(
 
 - Scatter plot
 
-```python
+``` python
 import matplotlib.pyplot as plt
 from plotjs import PlotJS
 
@@ -259,7 +259,7 @@ ax.legend()
 
 - Line chart
 
-```python
+``` python
 import matplotlib.pyplot as plt
 import numpy as np
 from plotjs import PlotJS
@@ -295,7 +295,7 @@ ax.legend()
 
 ### Multiple Axes
 
-```python
+``` python
 import matplotlib.pyplot as plt
 from plotjs import PlotJS, data
 
@@ -342,7 +342,7 @@ the `hover_nearest` argument in `add_tooltip()`.
 In short, if set to `True`, `plotjs` will hover the closest plot element
 it can found!
 
-```python
+``` python
 import matplotlib.pyplot as plt
 from plotjs import data
 from plotjs import PlotJS
@@ -372,7 +372,7 @@ PlotJS(fig=fig).add_tooltip(
 
 And it works with multiple Axes too:
 
-```python
+``` python
 import matplotlib.pyplot as plt
 from plotjs import PlotJS, data
 
@@ -420,13 +420,13 @@ ax3.scatter(**args)
 
 - From PyPI (recommended):
 
-```bash
+``` bash
 pip install plotjs
 ```
 
 - Latest dev version:
 
-```bash
+``` bash
 pip install git+https://github.com/y-sunflower/plotjs.git
 ```
 
@@ -448,12 +448,12 @@ plot the points by the specie order but `labels` and `groups` follow the
 order in the dataframe. See [this
 issue](https://github.com/y-sunflower/plotjs/issues/32).
 
-```python
+``` python
 import matplotlib.pyplot as plt
 from plotjs import data
 from plotjs import PlotJS
 
-df = data.load_iris().sample(150)      # randomize the dataset
+df = data.load_iris().sample(150)  # randomize the dataset
 
 fig, ax = plt.subplots()
 for specie in df["species"].unique():
@@ -475,15 +475,51 @@ PlotJS(fig=fig).add_tooltip(
 
 </iframe>
 
-One easy way to fix this is to sort `labels`/`groups` argument by the
+One way to fix this is to **not use** (or avoid) `for` loops when
+plotting.
+
+=== "Don't do this"
+
+    ```py
+    for specie in df["species"].unique():
+        specie_df = df[df["species"] == specie]
+        ax.scatter(
+            specie_df["sepal_length"],
+            specie_df["sepal_width"],
+            s=200,
+            ec="black",
+        )
+    ```
+
+    > You can use `for` loops, assuming you sort your dataframe (see point below).
+
+=== "Do this instead"
+
+    ```py
+    ax.scatter(
+        df["sepal_length"],
+        df["sepal_width"],
+        c=df["species"].astype("category").cat.codes,
+        s=200,
+        ec="black",
+    )
+    ```
+
+    > Here the order of your dataframe does not matter.
+
+Another way to fix this is to sort `labels`/`groups` argument by the
 same order you created your plot. In this previous case, this would mean
-to sort them by the `species` column.
+to sort them by the `species` column. Before plotting, you do:
+
+``` py
+df = df.sort_values("species")
+```
 
 ## Appendix
 
 [^1]: It really is.
-[^2]:
-    To be exact, you can perfectly create interactive charts natively
+
+[^2]: To be exact, you can perfectly create interactive charts natively
     in Matplotlib. It requires to use its interactive mode and GUI
     backends to allow actions like zooming and panning in desktop
     windows. For instance, this differs from Plotly or Altair, which

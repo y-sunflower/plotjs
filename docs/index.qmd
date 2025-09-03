@@ -439,10 +439,45 @@ PlotJS(fig=fig).add_tooltip(
 
 <iframe width="800" height="600" src="iframes/bug.html" style="border:none;"></iframe>
 
-One easy way to fix this is to sort `labels`/`groups` argument by the same order you created your plot. In this previous case, this would mean to sort them by the `species` column.
+One way to fix this is to **not use** (or avoid) `for` loops when plotting.
+
+=== "Don't do this"
+
+    ```py
+    for specie in df["species"].unique():
+        specie_df = df[df["species"] == specie]
+        ax.scatter(
+            specie_df["sepal_length"],
+            specie_df["sepal_width"],
+            s=200,
+            ec="black",
+        )
+    ```
+
+    > You can use `for` loops, assuming you sort your dataframe (see point below).
+
+=== "Do this instead"
+
+    ```py
+    ax.scatter(
+        df["sepal_length"],
+        df["sepal_width"],
+        c=df["species"].astype("category").cat.codes,
+        s=200,
+        ec="black",
+    )
+    ```
+
+    > Here the order of your dataframe does not matter.
+
+Another way to fix this is to sort `labels`/`groups` argument by the same order you created your plot. In this previous case, this would mean to sort them by the `species` column. Before plotting, you do:
+
+```py
+df = df.sort_values("species")
+```
 
 
 ## Appendix
 
 [^1]: It really is.
-[^2]: To be exact, you can perfectly create interactive charts natively in Matplotlib. It requires to use its interactive mode and GUI backends to allow actions like zooming and panning in desktop windows. For instance, this differs from Plotly or Altair, which offer richer, browser-based interactivity like tooltips and filtering. Matplotlib’s interactivity is more limited and environment-dependent, while Plotly and Altair provide higher-level, web-friendly features.
+[^2]: To be fair, you can perfectly create interactive charts natively in Matplotlib. It requires to use its interactive mode and GUI backends to allow actions like zooming and panning in desktop windows. For instance, this differs from Plotly or Altair, which offer richer, browser-based interactivity like tooltips and filtering. Matplotlib’s interactivity is more limited and environment-dependent, while Plotly and Altair provide higher-level, web-friendly features.
