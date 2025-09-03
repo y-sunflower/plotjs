@@ -48,6 +48,8 @@ export default class PlotSVGParser {
       });
 
     bars.attr("class", "bar plot-element");
+
+    console.log(`Found ${bars.size()} "bar" element`);
     return bars;
   }
 
@@ -76,7 +78,7 @@ export default class PlotSVGParser {
     });
     points.attr("class", "point plot-element");
 
-    console.log(points);
+    console.log(`Found ${points.size()} "point" element`);
     return points;
   }
 
@@ -97,6 +99,8 @@ export default class PlotSVGParser {
       });
 
     lines.attr("class", "line plot-element");
+
+    console.log(`Found ${lines.size()} "line" element`);
     return lines;
   }
 
@@ -113,12 +117,15 @@ export default class PlotSVGParser {
       `g#${axes_class} g[id^="FillBetweenPolyCollection"] path`
     );
     areas.attr("class", "area plot-element");
+
+    console.log(`Found ${areas.size()} "area" element`);
     return areas;
   }
 
   /**
    * Compute the nearest element to the mouse cursor from a set of elements.
    * Uses bounding box centers for distance.
+   * This function is used when the `hover_nearest` argument is true.
    *
    * @param {number} mouseX - X coordinate of the mouse relative to SVG.
    * @param {number} mouseY - Y coordinate of the mouse relative to SVG.
