@@ -59,9 +59,12 @@ Introducting ✨plotjs✨
 ``` python
 from plotjs import PlotJS
 
-PlotJS(fig=fig).add_tooltip(
-    labels=df["species"],
-).save("iframes/quickstart.html")
+# fmt: off
+(
+    PlotJS(fig=fig)                     # create a PlotJS instance
+    .add_tooltip(labels=df["species"])  # add a tooltip (specie name)
+    .save("iframes/quickstart.html")    # save to an HTML file
+)
 ```
 
 <iframe width="800" height="600" src="iframes/quickstart.html" style="border:none;">
@@ -117,6 +120,8 @@ from plotjs import PlotJS
 <iframe width="800" height="600" src="iframes/quickstart3.html" style="border:none;">
 
 </iframe>
+
+> Learn more about [CSS customization](./guides/css/index.md)
 
 ### Label customization
 
@@ -519,7 +524,7 @@ df = df.sort_values("species")
 
 [^1]: It really is.
 
-[^2]: To be exact, you can perfectly create interactive charts natively
+[^2]: To be fair, you can perfectly create interactive charts natively
     in Matplotlib. It requires to use its interactive mode and GUI
     backends to allow actions like zooming and panning in desktop
     windows. For instance, this differs from Plotly or Altair, which

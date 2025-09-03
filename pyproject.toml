@@ -67,3 +67,6 @@ Repository = "https://github.com/y-sunflower/plotjs"
 [tool.ty.src]
 include = ["plotjs"]
 exclude = ["tests", "sandbox"]
+
+[tool.ruff]
+extend-exclude = ["docs/index.qmd"]

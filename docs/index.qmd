@@ -62,9 +62,12 @@ Wouldn't it be cool if we could, for example, have hover effects? Like, if I put
 ```{python}
 from plotjs import PlotJS
 
-PlotJS(fig=fig).add_tooltip(
-    labels=df["species"],
-).save("iframes/quickstart.html")
+# fmt: off
+(
+    PlotJS(fig=fig)                     # create a PlotJS instance
+    .add_tooltip(labels=df["species"])  # add a tooltip (specie name)
+    .save("iframes/quickstart.html")    # save to an HTML file
+)
 ```
 
 <iframe width="800" height="600" src="iframes/quickstart.html" style="border:none;"></iframe>
@@ -112,6 +115,8 @@ from plotjs import PlotJS
 ```
 
 <iframe width="800" height="600" src="iframes/quickstart3.html" style="border:none;"></iframe>
+
+> Learn more about [CSS customization](./guides/css/index.md)
 
 ### Label customization
 
