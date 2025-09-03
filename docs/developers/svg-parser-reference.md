@@ -18,7 +18,8 @@ excluding axis grid lines.</p>
 </dd>
 <dt><a href="#nearestElementFromMouse">nearestElementFromMouse(mouseX, mouseY, elements)</a> ⇒ <code>Element</code> | <code>null</code></dt>
 <dd><p>Compute the nearest element to the mouse cursor from a set of elements.
-Uses bounding box centers for distance.</p>
+Uses bounding box centers for distance.
+This function is used when the <code>hover_nearest</code> argument is true.</p>
 </dd>
 <dt><a href="#setHoverEffect">setHoverEffect(plot_element, axes_class, tooltip_labels, tooltip_groups, show_tooltip, hover_nearest)</a></dt>
 <dd><p>Attach hover interaction and tooltip display to plot elements.
@@ -87,6 +88,7 @@ Find filled area elements (`FillBetweenPolyCollection` paths) inside a given axe
 ## nearestElementFromMouse(mouseX, mouseY, elements) ⇒ <code>Element</code> \| <code>null</code>
 Compute the nearest element to the mouse cursor from a set of elements.
 Uses bounding box centers for distance.
+This function is used when the `hover_nearest` argument is true.
 
 **Kind**: global function
 **Returns**: <code>Element</code> \| <code>null</code> - The nearest DOM element or `null`.

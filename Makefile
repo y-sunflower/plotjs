@@ -19,6 +19,9 @@ coverage:
 preview:
 	uv run mkdocs serve
 
+jsdoc:
+	npm run docs:js
+
 test:
 	uv run pytest    # run python tests
 	npm test         # run javascript tests
