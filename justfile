@@ -1,4 +1,6 @@
 call_recipe := just_executable() + " --justfile=" + justfile()
+alias d := doc
+alias t := test
 
 doc:
 	{{call_recipe}} examples
