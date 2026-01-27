@@ -50,7 +50,15 @@ class PlotJS:
         if fig is None:
             fig: Figure = plt.gcf()
         buf: io.StringIO = io.StringIO()
+
+        # temporary change svg hashsalt and id for reproductibility
+        # https://matplotlib.org/stable/users/explain/customizing.html#the-default-matplotlibrc-file
+        plt.rcParams["svg.hashsalt"] = "svg-hashsalt"
+        plt.rcParams["svg.id"] = "svg-id"
         fig.savefig(buf, format="svg", **savefig_kws)
+        plt.rcParams["svg.hashsalt"] = None
+        plt.rcParams["svg.id"] = None
+
         buf.seek(0)
         self._svg_content = buf.getvalue()
 
