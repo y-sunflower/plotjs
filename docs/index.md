@@ -143,7 +143,7 @@ custom_tooltip = df.apply(
 Then we use this as the new tooltip:
 
 ``` python
-from plotjs import PlotJS, css
+from plotjs import PlotJS
 
 (
     PlotJS(fig=fig)
@@ -152,16 +152,14 @@ from plotjs import PlotJS, css
         groups=df["species"],
     )
     .add_css(
-        css.from_dict(
-            {
-                ".tooltip": {
-                    "width": "200px",
-                    "text-align": "center",
-                    "opacity": "0.7",
-                    "font-size": "1.1em",
-                }
+        from_dict={
+            ".tooltip": {
+                "width": "200px",
+                "text-align": "center",
+                "opacity": "0.7",
+                "font-size": "1.1em",
             }
-        )
+        }
     )
     .save("iframes/quickstart4.html")
 )
@@ -205,7 +203,7 @@ ax.plot(walk3, linewidth=8, color="#e9c46a")
 
 ``` python
 import matplotlib.pyplot as plt
-from plotjs import PlotJS, css
+from plotjs import PlotJS
 
 fig, ax = plt.subplots()
 ax.barh(
@@ -519,6 +517,41 @@ to sort them by the `species` column. Before plotting, you do:
 ``` py
 df = df.sort_values("species")
 ```
+
+## Q&A
+
+!!! question
+
+    *Why not just use plotly/bokeh/altair/other?*
+
+There are many reasons to use or not use a specific visualization
+framework. If you already use one and it meets your needs, you probably
+don't need to change. The main reasons for `plotjs` are as follows:
+
+- Matplotlib is the leading framework in terms of usage. Even with
+  modern libraries, for reasons such as legacy and user habits,
+  matplotlib remains by far the most downloaded data visualization tool
+  in Python.
+- Many people are already familiar with matplotlib. And since `plotjs`
+  is designed to be very easy to use, users have virtually no additional
+  code to add to bring their graphs to life.
+
+<br>
+
+!!! question
+
+    *What is the difference between this and [mpld3](https://github.com/mpld3/mpld3)?*
+
+`mpld3` is an older project created with the goal of "bringing
+matplotlib to the browser". The maintainers currently do not have enough
+time to maintain the project, which means that many issues and feature
+requests are currently being ignored.
+
+The idea behind `plotjs` is to create a modern version of mpld3, with a
+very different API, internal logic, and default behaviors. I
+([Joseph](https://github.com/JosephBARBIERDARNAL)) personally find
+`mpld3` very impressive, but far too complicated to use, so I decided to
+create the alternative of my dreams.
 
 ## Appendix
 

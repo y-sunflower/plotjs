@@ -1,3 +1,6 @@
+index:
+	quarto render docs/index.qmd
+
 examples:
 	quarto render docs/index.qmd
 	uv run docs/guides/advanced/advanced.py
