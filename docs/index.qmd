@@ -136,7 +136,7 @@ custom_tooltip = df.apply(
 Then we use this as the new tooltip:
 
 ```{python}
-from plotjs import PlotJS, css
+from plotjs import PlotJS
 
 (
     PlotJS(fig=fig)
@@ -145,16 +145,14 @@ from plotjs import PlotJS, css
         groups=df["species"],
     )
     .add_css(
-        css.from_dict(
-            {
-                ".tooltip": {
-                    "width": "200px",
-                    "text-align": "center",
-                    "opacity": "0.7",
-                    "font-size": "1.1em",
-                }
+        from_dict={
+            ".tooltip": {
+                "width": "200px",
+                "text-align": "center",
+                "opacity": "0.7",
+                "font-size": "1.1em",
             }
-        )
+        }
     )
     .save("iframes/quickstart4.html")
 )
@@ -193,7 +191,7 @@ ax.plot(walk3, linewidth=8, color="#e9c46a")
 
 ```{python}
 import matplotlib.pyplot as plt
-from plotjs import PlotJS, css
+from plotjs import PlotJS
 
 fig, ax = plt.subplots()
 ax.barh(

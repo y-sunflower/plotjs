@@ -1,19 +1,19 @@
-import numpy as np
-from pathlib import Path
-from jinja2 import Environment, FileSystemLoader
-
-from narwhals.typing import SeriesT
-
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
-from matplotlib.axes import Axes
-
 import os
 import io
 import random
 import uuid
+from typing import Optional
 
-from .utils import _vector_to_list, _get_and_sanitize_js
+import numpy as np
+from pathlib import Path
+from jinja2 import Environment, FileSystemLoader
+from narwhals.typing import SeriesT
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.axes import Axes
+
+from plotjs.utils import _vector_to_list, _get_and_sanitize_js
+from plotjs import css, javascript
 
 MAIN_DIR: str = Path(__file__).parent
 TEMPLATE_DIR: str = MAIN_DIR / "static"
@@ -162,7 +162,13 @@ class PlotJS:
 
         return self
 
-    def add_css(self, css_content: str) -> "PlotJS":
+    def add_css(
+        self,
+        from_string: Optional[str] = None,
+        *,
+        from_dict: Optional[dict] = None,
+        from_file: Optional[str] = None,
+    ) -> "PlotJS":
         """
         Add CSS to the final HTML output. This function allows you to override
         default styles or add custom CSS rules.
@@ -170,7 +176,9 @@ class PlotJS:
         See the [CSS guide](../guides/css/index.md) for more info on how to work with CSS.
 
         Args:
-            css_content: CSS rules to apply, as a string.
+            from_string: CSS rules to apply, as a string.
+            from_dict: CSS rules to apply, as a dictionnary.
+            from_file: CSS rules to apply from a CSS file.
 
         Returns:
             self: Returns the instance to allow method chaining.
@@ -181,38 +189,49 @@ class PlotJS:
             ```
 
             ```python
-            from plotjs import css
 
-            PlotJS(...).add_css(css.from_file("path/to/style.css"))
+            PlotJS(...).add_css(from_file="path/to/styles.css")
             ```
 
             ```python
             from plotjs import css
 
-            PlotJS(...).add_css(css.from_dict({".tooltip": {"color": "red";}}))
+            PlotJS(...).add_css(from_dict={".tooltip": {"color": "red";}})
             ```
 
             ```python
             from plotjs import css
 
             PlotJS(...).add_css(
-                css.from_dict({".tooltip": {"color": "red";}}),
+                from_dict={".tooltip": {"color": "red";}},
             ).add_css(
-                css.from_dict({".tooltip": {"background": "blue";}}),
+                from_dict={".tooltip": {"background": "blue";}},
             )
             ```
         """
-        self.additional_css += css_content
+        if from_string:
+            self.additional_css += from_string
+        elif from_dict:
+            self.additional_css += css.from_dict(from_dict)
+        elif from_file:
+            self.additional_css += css.from_file(from_file)
+        else:
+            raise ValueError(
+                "Must provide at least one of: `from_string`, `from_dict`, `from_file`."
+            )
         return self
 
-    def add_javascript(self, javascript_content: str) -> "PlotJS":
+    def add_javascript(
+        self, from_string: Optional[str] = None, *, from_file: Optional[str] = None
+    ) -> "PlotJS":
         """
         Add custom JavaScript to the final HTML output. This function allows
         users to enhance interactivity, define custom behaviors, or extend
         the existing chart logic.
 
         Args:
-            javascript_content: JavaScript code to include, as a string.
+            from_string: JavaScript code to include, as a string.
+            from_file: JavaScript code to apply from a JS file.
 
         Returns:
             self: Returns the instance to allow method chaining.
@@ -229,7 +248,14 @@ class PlotJS:
             PlotJS(...).add_javascript(custom_js)
             ```
         """
-        self.additional_javascript += javascript_content
+        if from_string:
+            self.additional_javascript += from_string
+        elif from_file:
+            self.additional_javascript += javascript.from_file(from_file)
+        else:
+            raise ValueError(
+                "Must provide at least one of: `from_string`, `from_file`."
+            )
         return self
 
     def save(

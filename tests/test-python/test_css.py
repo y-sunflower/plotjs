@@ -1,5 +1,4 @@
-from plotjs import css, javascript
-from plotjs.utils import _get_and_sanitize_js
+from plotjs import css, PlotJS
 import pytest
 
 
@@ -50,7 +49,7 @@ def test_css_warnings():
 
 
 def test_css_from_file():
-    css_content = css.from_file("tests/test-python/static/style.css")
+    from_string = css.from_file("tests/test-python/static/style.css")
     css_expected = """svg {
   width: 100%;
   height: auto;
@@ -61,7 +60,7 @@ def test_css_from_file():
   transition: opacity 0.1s ease;
 }
 """
-    assert css_content == css_expected
+    assert from_string == css_expected
 
 
 @pytest.mark.parametrize(
@@ -81,26 +80,40 @@ def test_is_css_like(input, output):
     assert css.is_css_like(input) == output
 
 
-def test_javascript_from_file():
-    js_content = javascript.from_file("tests/test-python/static/script.js")
-    with open("tests/test-python/static/script.js") as f:
-        js_content_expected = f.read()
-    assert js_content == js_content_expected
+def test_plotjs_css_from_different_inputs():
+    plotjs = PlotJS()
 
+    plotjs.add_css(".tooltip{color:red;background:blue;}")
+    assert plotjs.additional_css == ".tooltip{color:red;background:blue;}"
 
-def test_get_and_sanitize_js():
-    js_content = _get_and_sanitize_js(
-        "tests/test-python/static/script2.js",
-        after_pattern=r"const.*",
+    plotjs.add_css(".tooltip{color:red;background:blue;}")
+    assert (
+        plotjs.additional_css
+        == ".tooltip{color:red;background:blue;}.tooltip{color:red;background:blue;}"
     )
-    assert js_content == 'const aVariable = "hello";\n'
 
+    plotjs = PlotJS()
+    plotjs.add_css(from_dict={".tooltip": {"color": "red", "background": "blue"}})
+    assert plotjs.additional_css == ".tooltip{color:red;background:blue;}"
 
-def test_get_and_sanitize_js_error():
-    after_pattern = r"hey.*"
-    with pytest.raises(
-        ValueError, match=f"Could not find '{after_pattern}' in the file"
-    ):
-        _get_and_sanitize_js(
-            "tests/test-python/static/script2.js", after_pattern=after_pattern
-        )
+    plotjs.add_css(".tooltip{color:red;background:blue;}")
+    assert (
+        plotjs.additional_css
+        == ".tooltip{color:red;background:blue;}.tooltip{color:red;background:blue;}"
+    )
+
+    plotjs = PlotJS()
+    plotjs.add_css(from_file="tests/test-python/static/style.css")
+    assert (
+        plotjs.additional_css
+        == """svg {
+  width: 100%;
+  height: auto;
+}
+
+.point {
+  opacity: 1;
+  transition: opacity 0.1s ease;
+}
+"""
+    )
