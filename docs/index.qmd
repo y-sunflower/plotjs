@@ -479,6 +479,27 @@ Another way to fix this is to sort `labels`/`groups` argument by the same order 
 df = df.sort_values("species")
 ```
 
+## Q&A
+
+!!! question
+
+    *Why not just use plotly/bokeh/altair/other?*
+
+There are many reasons to use or not use a specific visualization framework. If you already use one and it meets your needs, you probably don't need to change. The main reasons for `plotjs` are as follows:
+
+- Matplotlib is the leading framework in terms of usage. Even with modern libraries, for reasons such as legacy and user habits, matplotlib remains by far the most downloaded data visualization tool in Python.
+- Many people are already familiar with matplotlib. And since `plotjs` is designed to be very easy to use, users have virtually no additional code to add to bring their graphs to life.
+
+<br>
+
+!!! question
+
+    *What is the difference between this and [mpld3](https://github.com/mpld3/mpld3)?*
+
+`mpld3` is an older project created with the goal of "bringing matplotlib to the browser". The maintainers currently do not have enough time to maintain the project, which means that many issues and feature requests are currently being ignored.
+
+The idea behind `plotjs` is to create a modern version of mpld3, with a very different API, internal logic, and default behaviors. I ([Joseph](https://github.com/JosephBARBIERDARNAL)) personally find `mpld3` very impressive, but far too complicated to use, so I decided to create the alternative of my dreams.
+
 
 ## Appendix
 
