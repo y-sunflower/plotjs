@@ -34,3 +34,4 @@ scripts/release.sh
 /.quarto/
 
 node_modules
+bun.lockb

@@ -1,4 +1,4 @@
-import { test, expect } from "vitest";
+import { expect, test } from "bun:test";
 import * as d3 from "d3-selection";
 import { JSDOM } from "jsdom";
 import PlotSVGParser from "../../plotjs/static/plotparser.js";

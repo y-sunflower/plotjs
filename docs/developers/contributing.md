@@ -1,4 +1,4 @@
-`plotjs` is still in a very early stage, but contributions is still welcomed!
+`plotjs` is still in a very early stage, but contributions is welcome!
 
 The best way to help the development is to:
 
@@ -11,7 +11,8 @@ You need to have the following installed on your machine:
 
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [bun](https://bun.sh/docs/installation)
+- [just](https://github.com/casey/just) (optionnal but recommended)
 
 ### Install for development
 
@@ -39,10 +40,10 @@ uv run pre-commit install
 uv pip install -e .
 ```
 
-- Install npm dependencies:
+- Install JavaScript dependencies:
 
 ```bash
-npm install
+bun install
 ```
 
 ## Code
@@ -54,13 +55,25 @@ You can now make changes to the package and start coding!
 - Test that everything works correctly by running:
 
 ```bash
-make test
+just test
+```
+
+- Test Python code:
+
+```bash
+just test-python
+```
+
+- Test Javascript code:
+
+```bash
+just test-js
 ```
 
 ### Preview documentation locally
 
 ```bash
-make preview
+just preview
 ```
 
 ## Push changes

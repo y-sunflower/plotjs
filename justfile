@@ -1,5 +1,3 @@
-.PHONY: all examples gallery
-
 examples:
 	quarto render docs/index.qmd
 	uv run docs/guides/advanced/advanced.py
@@ -20,8 +18,14 @@ preview:
 	uv run mkdocs serve
 
 jsdoc:
-	npm run docs:js
+	bun run docs:js
 
 test:
-	uv run pytest    # run python tests
-	npm test         # run javascript tests
+	uv run pytest
+	bun test
+
+test-python:
+	uv run pytest
+
+test-js:
+	bun test
