@@ -9,7 +9,7 @@ PlotJS is a Python package that transforms static matplotlib charts into interac
 ## Quick Architecture
 
 ```
-Matplotlib Figure → SVG Export (Python) → HTML Template (Jinja2) → Interactive Browser (D3.js)
+Matplotlib Figure → SVG Export (Python) → HTML Template (Jinja2) → Interactive Browser
 ```
 
 ### Workflow:
@@ -53,7 +53,7 @@ Matplotlib Figure → SVG Export (Python) → HTML Template (Jinja2) → Interac
 **`template.html`** - Jinja2 template structure
 
 - Injects: `{{ svg }}`, `{{ default_css }}`, `{{ additional_css }}`, `{{ js_parser }}`, `{{ plot_data_json }}`
-- Creates tooltip container and D3-based event handling
+- Creates tooltip container and event handling
 
 **`plotparser.js`** - `PlotSVGParser` JavaScript class
 
@@ -155,10 +155,6 @@ docs/                        # Comprehensive documentation
 - matplotlib >= 3.10.0 (SVG export)
 - jinja2 >= 3.0.0 (HTML templating)
 - narwhals >= 2.0.0 (dataframe abstraction)
-
-**JavaScript (via CDN):**
-
-- d3 v7.9.0 (DOM manipulation via d3-selection)
 
 **Python Version:** Requires 3.10+
 

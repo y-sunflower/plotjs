@@ -33,11 +33,22 @@ def _vector_to_list(vector, name="labels and groups") -> list:
 
 
 def _get_and_sanitize_js(file_path, after_pattern):
+    """
+    Extract JavaScript code starting from a pattern and remove export statements.
+
+    Export statements (export, export default) are removed because the code
+    is injected inline into HTML within an IIFE, where exports are not valid.
+    The exports remain in the source file for testing purposes.
+    """
     with open(file_path) as f:
         content = f.read()
 
     match = re.search(after_pattern, content, re.DOTALL)
     if match:
-        return match.group(0)
+        js_code = match.group(0)
+        # Remove export statements since we're injecting inline
+        js_code = re.sub(r"^export\s+default\s+", "", js_code, flags=re.MULTILINE)
+        js_code = re.sub(r"^export\s+\{[^}]+\};?\s*$", "", js_code, flags=re.MULTILINE)
+        return js_code
     else:
         raise ValueError(f"Could not find '{after_pattern}' in the file")

@@ -19,18 +19,28 @@
 
     <script type="module">
       (function () {
+        console.log("PlotJS: Initializing interactive plot");
+
         // prettier-ignore
         {{ js_parser | safe }}
 
         const container = document.getElementById("{{ chart_id }}");
+        console.log(`PlotJS: Container found - ID: {{ chart_id }}`);
 
         const tooltip = container.querySelector("#tooltip-{{ uuid }}");
         const svg = container.querySelector("svg");
+        console.log(`PlotJS: SVG and tooltip elements loaded`);
 
         const plot_data = JSON.parse(`{{ plot_data_json | tojson | safe }}`);
         const tooltip_x_shift = plot_data["tooltip_x_shift"];
         const tooltip_y_shift = -plot_data["tooltip_y_shift"];
         const axes = plot_data["axes"];
+        console.log(
+          `PlotJS: Configuration - tooltip offset: (${tooltip_x_shift}, ${tooltip_y_shift})`,
+        );
+        console.log(
+          `PlotJS: Found ${Object.keys(axes).length} axes to process`,
+        );
 
         const plotParser = new PlotSVGParser(
           svg,
@@ -38,59 +48,102 @@
           tooltip_x_shift,
           tooltip_y_shift,
         );
+        console.log("PlotJS: Parser created successfully");
 
         // Process each axes that has tooltip configuration
         for (const axes_class in axes) {
           if (axes.hasOwnProperty(axes_class)) {
+            console.log(`PlotJS: Processing axes "${axes_class}"`);
+
             const axe_data = axes[axes_class];
             const tooltip_labels = axe_data["tooltip_labels"];
             const tooltip_groups = axe_data["tooltip_groups"];
             const hover_nearest = axe_data["hover_nearest"] === "true";
             const show_tooltip = tooltip_labels.length === 0 ? "none" : "block";
 
-            const lines = plotParser.findLines(svg, axes_class);
-            const bars = plotParser.findBars(svg, axes_class);
-            const points = plotParser.findPoints(
-              svg,
-              axes_class,
-              tooltip_groups,
+            console.log(`PlotJS:   - ${tooltip_labels.length} tooltip labels`);
+            console.log(`PlotJS:   - ${tooltip_groups.length} tooltip groups`);
+            console.log(`PlotJS:   - Hover nearest: ${hover_nearest}`);
+            console.log(
+              `PlotJS:   - Show tooltips: ${show_tooltip === "block"}`,
             );
-            const areas = plotParser.findAreas(svg, axes_class);
 
-            plotParser.setHoverEffect(
-              points,
+            const lines = plotParser.findLines(plotParser.svg, axes_class);
+            const bars = plotParser.findBars(plotParser.svg, axes_class);
+            const points = plotParser.findPoints(
+              plotParser.svg,
               axes_class,
-              tooltip_labels,
               tooltip_groups,
-              show_tooltip,
-              hover_nearest,
             );
-            plotParser.setHoverEffect(
-              lines,
-              axes_class,
-              tooltip_labels,
-              tooltip_groups,
-              show_tooltip,
-              hover_nearest,
+            const areas = plotParser.findAreas(plotParser.svg, axes_class);
+
+            const totalElements =
+              lines.size() + bars.size() + points.size() + areas.size();
+            console.log(
+              `PlotJS:   - Total elements: ${totalElements} (${lines.size()} lines, ${bars.size()} bars, ${points.size()} points, ${areas.size()} areas)`,
             );
-            plotParser.setHoverEffect(
-              bars,
-              axes_class,
-              tooltip_labels,
-              tooltip_groups,
-              show_tooltip,
-              hover_nearest,
-            );
-            plotParser.setHoverEffect(
-              areas,
-              axes_class,
-              tooltip_labels,
-              tooltip_groups,
-              show_tooltip,
-              hover_nearest,
-            );
+
+            if (points.size() > 0) {
+              plotParser.setHoverEffect(
+                points,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS:   - Hover effects attached to ${points.size()} points`,
+              );
+            }
+
+            if (lines.size() > 0) {
+              plotParser.setHoverEffect(
+                lines,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS:   - Hover effects attached to ${lines.size()} lines`,
+              );
+            }
+
+            if (bars.size() > 0) {
+              plotParser.setHoverEffect(
+                bars,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS:   - Hover effects attached to ${bars.size()} bars`,
+              );
+            }
+
+            if (areas.size() > 0) {
+              plotParser.setHoverEffect(
+                areas,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS:   - Hover effects attached to ${areas.size()} areas`,
+              );
+            }
+
+            console.log(`PlotJS: Finished processing axes "${axes_class}"`);
           }
         }
+
+        console.log("PlotJS: Initialization complete - plot is interactive");
       })();
     </script>
 

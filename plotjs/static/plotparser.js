@@ -360,5 +360,3 @@ export default class PlotSVGParser {
     }
   }
 }
-
-export { select };

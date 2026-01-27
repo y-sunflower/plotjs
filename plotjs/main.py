@@ -72,7 +72,7 @@ class PlotJS:
 
         self._js_parser = _get_and_sanitize_js(
             file_path=JS_PARSER_PATH,
-            after_pattern=r"class PlotSVGParser.*",
+            after_pattern=r"class Selection.*",
         )
 
         rnd = random.Random(22022001)
