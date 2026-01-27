@@ -5,7 +5,6 @@ dist/
 wheels/
 *.egg-info
 .env
-uv.lock
 
 .venv/
 venv/
@@ -29,9 +28,10 @@ sandbox/
 *.svg
 !coverage-badge.svg
 
-scripts/release.sh
+release.sh
 
 /.quarto/
 
 node_modules
 bun.lockb
+.claude/

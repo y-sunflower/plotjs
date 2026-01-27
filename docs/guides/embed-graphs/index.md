@@ -99,6 +99,6 @@ It can also be from a remote location:
 
 ## Jupyter
 
-It currently does not work in Jupyter environments such as Jupyter notebooks and Jupyter labs, and is not considered to be a high priority. Unless many people ask for it, it's not planned to be implemented in a near future.
+It currently does not work (well) in Jupyter environments such as Jupyter notebooks and Jupyter labs, and is not considered to be a high priority. Unless many people ask for it, it's not planned to be implemented in a near future.
 
 But if you want to implement it yourself, PRs welcome!

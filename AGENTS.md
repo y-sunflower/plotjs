@@ -26,8 +26,8 @@ Matplotlib Figure → SVG Export (Python) → HTML Template (Jinja2) → Interac
 
 - `__init__(fig, seed, **savefig_kws)` - Converts matplotlib figure to SVG
 - `add_tooltip(labels, groups, hover_nearest, ax)` - Configure hover tooltips
-- `add_css(css_content)` - Add custom CSS styling
-- `add_javascript(javascript_content)` - Add custom JavaScript
+- `add_css(from_string)` - Add custom CSS styling
+- `add_javascript(from_string)` - Add custom JavaScript
 - `save(file_path)` / `as_html()` - Export to file or return HTML string
 - Internal: `_set_plot_data_json()`, `_set_html()` - Prepare template data
 
