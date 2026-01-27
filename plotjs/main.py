@@ -35,7 +35,6 @@ class PlotJS:
     def __init__(
         self,
         fig: Figure | None = None,
-        seed: int | None = None,
         **savefig_kws: dict,
     ):
         """
@@ -44,7 +43,6 @@ class PlotJS:
 
         Args:
             fig: An optional matplotlib figure. If None, uses `plt.gcf()`.
-            seed: Optional seed to make the output more reproducible.
             savefig_kws: Additional keyword arguments passed to `plt.savefig()`.
         """
         if fig is None:
@@ -77,11 +75,8 @@ class PlotJS:
             after_pattern=r"class PlotSVGParser.*",
         )
 
-        if seed is not None:
-            rnd = random.Random(seed)
-            self._uuid = uuid.UUID(int=rnd.getrandbits(128))
-        else:
-            self._uuid = uuid.uuid4()
+        rnd = random.Random(22022001)
+        self._uuid = uuid.UUID(int=rnd.getrandbits(128))
 
     def add_tooltip(
         self,
