@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -17,7 +17,6 @@
       <div class="tooltip" id="tooltip-{{ uuid }}"></div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
     <script type="module">
       (function () {
         // prettier-ignore
@@ -25,8 +24,8 @@
 
         const container = document.getElementById("{{ chart_id }}");
 
-        const tooltip = d3.select("#tooltip-{{ uuid }}");
-        const svg = d3.select(container).select("svg");
+        const tooltip = container.querySelector("#tooltip-{{ uuid }}");
+        const svg = container.querySelector("svg");
 
         const plot_data = JSON.parse(`{{ plot_data_json | tojson | safe }}`);
         const tooltip_x_shift = plot_data["tooltip_x_shift"];
@@ -37,7 +36,7 @@
           svg,
           tooltip,
           tooltip_x_shift,
-          tooltip_y_shift
+          tooltip_y_shift,
         );
 
         // Process each axes that has tooltip configuration
@@ -54,7 +53,7 @@
             const points = plotParser.findPoints(
               svg,
               axes_class,
-              tooltip_groups
+              tooltip_groups,
             );
             const areas = plotParser.findAreas(svg, axes_class);
 
@@ -64,7 +63,7 @@
               tooltip_labels,
               tooltip_groups,
               show_tooltip,
-              hover_nearest
+              hover_nearest,
             );
             plotParser.setHoverEffect(
               lines,
@@ -72,7 +71,7 @@
               tooltip_labels,
               tooltip_groups,
               show_tooltip,
-              hover_nearest
+              hover_nearest,
             );
             plotParser.setHoverEffect(
               bars,
@@ -80,7 +79,7 @@
               tooltip_labels,
               tooltip_groups,
               show_tooltip,
-              hover_nearest
+              hover_nearest,
             );
             plotParser.setHoverEffect(
               areas,
@@ -88,7 +87,7 @@
               tooltip_labels,
               tooltip_groups,
               show_tooltip,
-              hover_nearest
+              hover_nearest,
             );
           }
         }

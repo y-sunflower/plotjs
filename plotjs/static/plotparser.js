@@ -1,4 +1,136 @@
-import * as d3 from "d3-selection";
+/**
+ * Lightweight Selection wrapper that mimics d3-selection's chainable API.
+ * Provides basic DOM manipulation methods for working with SVG elements.
+ */
+class Selection {
+  constructor(elements) {
+    this.elements = Array.isArray(elements) ? elements : [elements];
+  }
+
+  select(selector) {
+    const first = this.elements[0];
+    return first
+      ? new Selection(first.querySelector(selector))
+      : new Selection([]);
+  }
+
+  selectAll(selector) {
+    const matched = [];
+    this.elements.forEach((el) => {
+      if (el && el.querySelectorAll) {
+        matched.push(...el.querySelectorAll(selector));
+      }
+    });
+    return new Selection(matched);
+  }
+
+  attr(name, value) {
+    if (arguments.length === 1) {
+      return this.elements[0]?.getAttribute(name);
+    }
+    this.elements.forEach((el) => el?.setAttribute(name, value));
+    return this;
+  }
+
+  classed(name, add) {
+    if (arguments.length === 1) {
+      return this.elements[0]?.classList.contains(name);
+    }
+    this.elements.forEach((el) => {
+      if (add) el?.classList.add(name);
+      else el?.classList.remove(name);
+    });
+    return this;
+  }
+
+  style(name, value) {
+    if (arguments.length === 0) {
+      return this.elements[0]?.style[name];
+    }
+    this.elements.forEach((el) => {
+      if (el) el.style[name] = value;
+    });
+    return this;
+  }
+
+  html(content) {
+    if (arguments.length === 0) {
+      return this.elements[0]?.innerHTML;
+    }
+    this.elements.forEach((el) => {
+      if (el) el.innerHTML = content;
+    });
+    return this;
+  }
+
+  on(event, handler) {
+    this.elements.forEach((el) => {
+      if (el) el.addEventListener(event, handler);
+    });
+    return this;
+  }
+
+  filter(predicate) {
+    const filtered = this.elements.filter((el, i) =>
+      predicate.call(el, null, i),
+    );
+    return new Selection(filtered);
+  }
+
+  each(callback) {
+    this.elements.forEach((el, i) => {
+      callback.call(el, null, i);
+    });
+    return this;
+  }
+
+  nodes() {
+    return this.elements;
+  }
+
+  size() {
+    return this.elements.length;
+  }
+
+  empty() {
+    return this.elements.length === 0;
+  }
+}
+
+/**
+ * Create a Selection from a DOM element or selector string.
+ *
+ * @param {string|Element} selector - CSS selector string or DOM element
+ * @returns {Selection} New Selection instance
+ */
+function select(selector) {
+  const element =
+    typeof selector === "string" ? document.querySelector(selector) : selector;
+  return new Selection(element ? [element] : []);
+}
+
+/**
+ * Get mouse position relative to an SVG element.
+ *
+ * @param {MouseEvent} event - The mouse event
+ * @param {Element|Selection} svgElement - The SVG element or Selection
+ * @returns {number[]} [x, y] coordinates relative to the SVG
+ */
+function getPointerPosition(event, svgElement) {
+  const svg =
+    svgElement instanceof Selection ? svgElement.nodes()[0] : svgElement;
+
+  if (svg && svg.createSVGPoint) {
+    const point = svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    const transformed = point.matrixTransform(svg.getScreenCTM().inverse());
+    return [transformed.x, transformed.y];
+  }
+
+  const rect = svg.getBoundingClientRect();
+  return [event.clientX - rect.left, event.clientY - rect.top];
+}
 
 /**
  * Core utility for parsing and interacting with matplotlib-generated SVG outputs.
@@ -16,14 +148,14 @@ export default class PlotSVGParser {
   /**
    * Create a new parser bound to an SVG figure.
    *
-   * @param {d3.Selection} svg - D3 selection of the target SVG element (e.g. the entire plot).
-   * @param {d3.Selection} tooltip - D3 selection of the tooltip container (e.g. a div).
+   * @param {Element|Selection} svg - The target SVG element or Selection (e.g. the entire plot).
+   * @param {Element|Selection} tooltip - The tooltip container element or Selection (e.g. a div).
    * @param {number} tooltip_x_shift - Horizontal offset for tooltip positioning.
    * @param {number} tooltip_y_shift - Vertical offset for tooltip positioning.
    */
   constructor(svg, tooltip, tooltip_x_shift, tooltip_y_shift) {
-    this.svg = svg;
-    this.tooltip = tooltip;
+    this.svg = svg instanceof Selection ? svg : select(svg);
+    this.tooltip = tooltip instanceof Selection ? tooltip : select(tooltip);
     this.tooltip_x_shift = tooltip_x_shift;
     this.tooltip_y_shift = tooltip_y_shift;
   }
@@ -31,16 +163,16 @@ export default class PlotSVGParser {
   /**
    * Find bar elements (`patch` groups with clipping) inside a given axes.
    *
-   * @param {d3.Selection} svg - D3 selection of the SVG element.
+   * @param {Selection} svg - Selection of the SVG element.
    * @param {string} axes_class - ID of the axes group (e.g. "axes_1").
-   * @returns {d3.Selection} D3 selection of bar elements.
+   * @returns {Selection} Selection of bar elements.
    */
   findBars(svg, axes_class) {
     // select all #patch within the specific axes
     const bars = svg
       .selectAll(`g#${axes_class} g[id^="patch"]`)
       .filter(function () {
-        const path = d3.select(this).select("path");
+        const path = select(this).select("path");
         // that have a clip-path attribute
         const clip = path.attr("clip-path");
         // starting with "url("
@@ -58,14 +190,14 @@ export default class PlotSVGParser {
    * Handles both `<use>` and `<path>` fallback cases,
    * and assigns `data-group` attributes based on tooltip groups.
    *
-   * @param {d3.Selection} svg - D3 selection of the SVG element.
+   * @param {Selection} svg - Selection of the SVG element.
    * @param {string} axes_class - ID of the axes group (e.g. "axes_1").
    * @param {string[]} tooltip_groups - Group identifiers for tooltips, parallel to points.
-   * @returns {d3.Selection} D3 selection of point elements.
+   * @returns {Selection} Selection of point elements.
    */
   findPoints(svg, axes_class, tooltip_groups) {
     let points = svg.selectAll(
-      `g#${axes_class} g[id^="PathCollection"] g[clip-path] use`
+      `g#${axes_class} g[id^="PathCollection"] g[clip-path] use`,
     );
 
     if (points.empty()) {
@@ -74,7 +206,7 @@ export default class PlotSVGParser {
     }
 
     points.each(function (_, i) {
-      d3.select(this).attr("data-group", tooltip_groups[i]);
+      select(this).attr("data-group", tooltip_groups[i]);
     });
     points.attr("class", "point plot-element");
 
@@ -86,9 +218,9 @@ export default class PlotSVGParser {
    * Find line elements (`line2d` paths) inside a given axes,
    * excluding axis grid lines.
    *
-   * @param {d3.Selection} svg - D3 selection of the SVG element.
+   * @param {Selection} svg - Selection of the SVG element.
    * @param {string} axes_class - ID of the axes group.
-   * @returns {d3.Selection} D3 selection of line elements.
+   * @returns {Selection} Selection of line elements.
    */
   findLines(svg, axes_class) {
     // select all <path> of Line2D elements within the specific axes
@@ -107,14 +239,14 @@ export default class PlotSVGParser {
   /**
    * Find filled area elements (`FillBetweenPolyCollection` paths) inside a given axes.
    *
-   * @param {d3.Selection} svg - D3 selection of the SVG element.
+   * @param {Selection} svg - Selection of the SVG element.
    * @param {string} axes_class - ID of the axes group.
-   * @returns {d3.Selection} D3 selection of area elements.
+   * @returns {Selection} Selection of area elements.
    */
   findAreas(svg, axes_class) {
     // select all <path> of FillBetweenPolyCollection elements within the specific axes
     const areas = svg.selectAll(
-      `g#${axes_class} g[id^="FillBetweenPolyCollection"] path`
+      `g#${axes_class} g[id^="FillBetweenPolyCollection"] path`,
     );
     areas.attr("class", "area plot-element");
 
@@ -129,7 +261,7 @@ export default class PlotSVGParser {
    *
    * @param {number} mouseX - X coordinate of the mouse relative to SVG.
    * @param {number} mouseY - Y coordinate of the mouse relative to SVG.
-   * @param {d3.Selection} elements - Selection of candidate elements.
+   * @param {Selection} elements - Selection of candidate elements.
    * @returns {Element|null} The nearest DOM element or `null`.
    */
   nearestElementFromMouse(mouseX, mouseY, elements) {
@@ -154,7 +286,7 @@ export default class PlotSVGParser {
    * Attach hover interaction and tooltip display to plot elements.
    * Can highlight nearest element (if enabled) or hovered element directly.
    *
-   * @param {d3.Selection} plot_element - Selection of plot elements (points, lines, etc.).
+   * @param {Selection} plot_element - Selection of plot elements (points, lines, etc.).
    * @param {string} axes_class - ID of the axes group.
    * @param {string[]} tooltip_labels - Tooltip labels for each element.
    * @param {string[]} tooltip_groups - Group identifiers for each element.
@@ -167,18 +299,19 @@ export default class PlotSVGParser {
     tooltip_labels,
     tooltip_groups,
     show_tooltip,
-    hover_nearest
+    hover_nearest,
   ) {
     const self = this;
     const axesGroup = this.svg.select(`g#${axes_class}`);
     const getHoveredIndex = hover_nearest
       ? (event) => {
-          const [mouseX, mouseY] = d3.pointer(event);
+          const svgNode = self.svg.nodes()[0];
+          const [mouseX, mouseY] = getPointerPosition(event, svgNode);
           const allElements = axesGroup.selectAll(".plot-element");
           const nearestElem = self.nearestElementFromMouse(
             mouseX,
             mouseY,
-            allElements
+            allElements,
           );
           return nearestElem ? allElements.nodes().indexOf(nearestElem) : null;
         }
@@ -227,3 +360,5 @@ export default class PlotSVGParser {
     }
   }
 }
+
+export { select };

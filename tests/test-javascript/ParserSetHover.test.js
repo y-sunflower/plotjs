@@ -1,5 +1,4 @@
 import { expect, test } from "bun:test";
-import * as d3 from "d3-selection";
 import { JSDOM } from "jsdom";
 import PlotSVGParser from "../../plotjs/static/plotparser.js";
 
@@ -18,25 +17,32 @@ test("setHoverEffect should toggle hovered class and tooltip", () => {
   </body></html>`);
 
   const document = dom.window.document;
-  const svg = d3.select(document.querySelector("svg"));
-  const tooltip = d3.select(document.querySelector("#tooltip"));
+  const svg = document.querySelector("svg");
+  const tooltip = document.querySelector("#tooltip");
   const parser = new PlotSVGParser(svg, tooltip, 10, 20);
 
-  const points = parser.findPoints(svg, "axes_1", ["G1"]);
+  const points = parser.findPoints(parser.svg, "axes_1", ["G1"]);
 
-  // Pass all required args: (points, axes_class, tooltip_labels, tooltip_groups, show_tooltip, hover_nearest)
   parser.setHoverEffect(points, "axes_1", ["Label1"], ["G1"], "block", false);
 
-  // simulate mouseover
-  points.dispatch("mouseover", { bubbles: true, pageX: 100, pageY: 200 });
+  const pointElement = points.nodes()[0];
+  const event = new dom.window.MouseEvent("mouseover", {
+    bubbles: true,
+    clientX: 100,
+    clientY: 200,
+    pageX: 100,
+    pageY: 200,
+    currentTarget: pointElement,
+  });
+  pointElement.dispatchEvent(event);
 
   expect(points.classed("hovered")).toBe(true);
-  expect(tooltip.style("display")).toBe("block");
-  expect(tooltip.html()).toBe("Label1");
+  expect(tooltip.style.display).toBe("block");
+  expect(tooltip.innerHTML).toBe("Label1");
 
-  // simulate mouseout
-  points.dispatch("mouseout", { bubbles: true });
+  const outEvent = new dom.window.MouseEvent("mouseout", { bubbles: true });
+  pointElement.dispatchEvent(outEvent);
 
   expect(points.classed("hovered")).toBe(false);
-  expect(tooltip.style("display")).toBe("none");
+  expect(tooltip.style.display).toBe("none");
 });
