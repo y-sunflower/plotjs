@@ -196,9 +196,7 @@ export default class PlotSVGParser {
    * @returns {Selection} Selection of point elements.
    */
   findPoints(svg, axes_class, tooltip_groups) {
-    let points = svg.selectAll(
-      `g#${axes_class} g[id^="PathCollection"] g[clip-path] use`,
-    );
+    let points = svg.selectAll(`g#${axes_class} g[id^="PathCollection"] g use`);
 
     if (points.empty()) {
       // fallback: no <use> found → grab <path> instead

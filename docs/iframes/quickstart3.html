@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -61,7 +61,7 @@ svg {
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-01-27T14:43:35.495950</dc:date>
+    <dc:date>2026-01-27T18:30:03.409017</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -1034,22 +1034,165 @@ L 453.6 43.2
       <div class="tooltip" id="tooltip-c8c8d752-9dff-c04b-a2a4-e28a3c3d47d3"></div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
     <script type="module">
       (function () {
+        console.log("PlotJS: Initializing interactive plot");
+
         // prettier-ignore
-        class PlotSVGParser {
+        class Selection {
+  constructor(elements) {
+    this.elements = Array.isArray(elements) ? elements : [elements];
+  }
+
+  select(selector) {
+    const first = this.elements[0];
+    return first
+      ? new Selection(first.querySelector(selector))
+      : new Selection([]);
+  }
+
+  selectAll(selector) {
+    const matched = [];
+    this.elements.forEach((el) => {
+      if (el && el.querySelectorAll) {
+        matched.push(...el.querySelectorAll(selector));
+      }
+    });
+    return new Selection(matched);
+  }
+
+  attr(name, value) {
+    if (arguments.length === 1) {
+      return this.elements[0]?.getAttribute(name);
+    }
+    this.elements.forEach((el) => el?.setAttribute(name, value));
+    return this;
+  }
+
+  classed(name, add) {
+    if (arguments.length === 1) {
+      return this.elements[0]?.classList.contains(name);
+    }
+    this.elements.forEach((el) => {
+      if (add) el?.classList.add(name);
+      else el?.classList.remove(name);
+    });
+    return this;
+  }
+
+  style(name, value) {
+    if (arguments.length === 0) {
+      return this.elements[0]?.style[name];
+    }
+    this.elements.forEach((el) => {
+      if (el) el.style[name] = value;
+    });
+    return this;
+  }
+
+  html(content) {
+    if (arguments.length === 0) {
+      return this.elements[0]?.innerHTML;
+    }
+    this.elements.forEach((el) => {
+      if (el) el.innerHTML = content;
+    });
+    return this;
+  }
+
+  on(event, handler) {
+    this.elements.forEach((el) => {
+      if (el) el.addEventListener(event, handler);
+    });
+    return this;
+  }
+
+  filter(predicate) {
+    const filtered = this.elements.filter((el, i) =>
+      predicate.call(el, null, i),
+    );
+    return new Selection(filtered);
+  }
+
+  each(callback) {
+    this.elements.forEach((el, i) => {
+      callback.call(el, null, i);
+    });
+    return this;
+  }
+
+  nodes() {
+    return this.elements;
+  }
+
+  size() {
+    return this.elements.length;
+  }
+
+  empty() {
+    return this.elements.length === 0;
+  }
+}
+
+/**
+ * Create a Selection from a DOM element or selector string.
+ *
+ * @param {string|Element} selector - CSS selector string or DOM element
+ * @returns {Selection} New Selection instance
+ */
+function select(selector) {
+  const element =
+    typeof selector === "string" ? document.querySelector(selector) : selector;
+  return new Selection(element ? [element] : []);
+}
+
+/**
+ * Get mouse position relative to an SVG element.
+ *
+ * @param {MouseEvent} event - The mouse event
+ * @param {Element|Selection} svgElement - The SVG element or Selection
+ * @returns {number[]} [x, y] coordinates relative to the SVG
+ */
+function getPointerPosition(event, svgElement) {
+  const svg =
+    svgElement instanceof Selection ? svgElement.nodes()[0] : svgElement;
+
+  if (svg && svg.createSVGPoint) {
+    const point = svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    const transformed = point.matrixTransform(svg.getScreenCTM().inverse());
+    return [transformed.x, transformed.y];
+  }
+
+  const rect = svg.getBoundingClientRect();
+  return [event.clientX - rect.left, event.clientY - rect.top];
+}
+
+/**
+ * Core utility for parsing and interacting with matplotlib-generated SVG outputs.
+ * Provides methods to query common plot elements (bars, points, lines, areas),
+ * and to attach interactive hover tooltips.
+ *
+ * Example usage:
+ * ```js
+ * const parser = new PlotSVGParser(svg, tooltip, xShift, yShift);
+ * const points = parser.findPoints(svg, "axes_1", tooltipGroups);
+ * parser.setHoverEffect(points, "axes_1", tooltipLabels, tooltipGroups, "block", true);
+ * ```
+ */
+class PlotSVGParser {
   /**
    * Create a new parser bound to an SVG figure.
    *
-   * @param {d3.Selection} svg - D3 selection of the target SVG element (e.g. the entire plot).
-   * @param {d3.Selection} tooltip - D3 selection of the tooltip container (e.g. a div).
+   * @param {Element|Selection} svg - The target SVG element or Selection (e.g. the entire plot).
+   * @param {Element|Selection} tooltip - The tooltip container element or Selection (e.g. a div).
    * @param {number} tooltip_x_shift - Horizontal offset for tooltip positioning.
    * @param {number} tooltip_y_shift - Vertical offset for tooltip positioning.
    */
   constructor(svg, tooltip, tooltip_x_shift, tooltip_y_shift) {
-    this.svg = svg;
-    this.tooltip = tooltip;
+    this.svg = svg instanceof Selection ? svg : select(svg);
+    this.tooltip = tooltip instanceof Selection ? tooltip : select(tooltip);
     this.tooltip_x_shift = tooltip_x_shift;
     this.tooltip_y_shift = tooltip_y_shift;
   }
@@ -1057,16 +1200,16 @@ L 453.6 43.2
   /**
    * Find bar elements (`patch` groups with clipping) inside a given axes.
    *
-   * @param {d3.Selection} svg - D3 selection of the SVG element.
+   * @param {Selection} svg - Selection of the SVG element.
    * @param {string} axes_class - ID of the axes group (e.g. "axes_1").
-   * @returns {d3.Selection} D3 selection of bar elements.
+   * @returns {Selection} Selection of bar elements.
    */
   findBars(svg, axes_class) {
     // select all #patch within the specific axes
     const bars = svg
       .selectAll(`g#${axes_class} g[id^="patch"]`)
       .filter(function () {
-        const path = d3.select(this).select("path");
+        const path = select(this).select("path");
         // that have a clip-path attribute
         const clip = path.attr("clip-path");
         // starting with "url("
@@ -1084,15 +1227,13 @@ L 453.6 43.2
    * Handles both `<use>` and `<path>` fallback cases,
    * and assigns `data-group` attributes based on tooltip groups.
    *
-   * @param {d3.Selection} svg - D3 selection of the SVG element.
+   * @param {Selection} svg - Selection of the SVG element.
    * @param {string} axes_class - ID of the axes group (e.g. "axes_1").
    * @param {string[]} tooltip_groups - Group identifiers for tooltips, parallel to points.
-   * @returns {d3.Selection} D3 selection of point elements.
+   * @returns {Selection} Selection of point elements.
    */
   findPoints(svg, axes_class, tooltip_groups) {
-    let points = svg.selectAll(
-      `g#${axes_class} g[id^="PathCollection"] g[clip-path] use`
-    );
+    let points = svg.selectAll(`g#${axes_class} g[id^="PathCollection"] g use`);
 
     if (points.empty()) {
       // fallback: no <use> found → grab <path> instead
@@ -1100,7 +1241,7 @@ L 453.6 43.2
     }
 
     points.each(function (_, i) {
-      d3.select(this).attr("data-group", tooltip_groups[i]);
+      select(this).attr("data-group", tooltip_groups[i]);
     });
     points.attr("class", "point plot-element");
 
@@ -1112,9 +1253,9 @@ L 453.6 43.2
    * Find line elements (`line2d` paths) inside a given axes,
    * excluding axis grid lines.
    *
-   * @param {d3.Selection} svg - D3 selection of the SVG element.
+   * @param {Selection} svg - Selection of the SVG element.
    * @param {string} axes_class - ID of the axes group.
-   * @returns {d3.Selection} D3 selection of line elements.
+   * @returns {Selection} Selection of line elements.
    */
   findLines(svg, axes_class) {
     // select all <path> of Line2D elements within the specific axes
@@ -1133,14 +1274,14 @@ L 453.6 43.2
   /**
    * Find filled area elements (`FillBetweenPolyCollection` paths) inside a given axes.
    *
-   * @param {d3.Selection} svg - D3 selection of the SVG element.
+   * @param {Selection} svg - Selection of the SVG element.
    * @param {string} axes_class - ID of the axes group.
-   * @returns {d3.Selection} D3 selection of area elements.
+   * @returns {Selection} Selection of area elements.
    */
   findAreas(svg, axes_class) {
     // select all <path> of FillBetweenPolyCollection elements within the specific axes
     const areas = svg.selectAll(
-      `g#${axes_class} g[id^="FillBetweenPolyCollection"] path`
+      `g#${axes_class} g[id^="FillBetweenPolyCollection"] path`,
     );
     areas.attr("class", "area plot-element");
 
@@ -1155,7 +1296,7 @@ L 453.6 43.2
    *
    * @param {number} mouseX - X coordinate of the mouse relative to SVG.
    * @param {number} mouseY - Y coordinate of the mouse relative to SVG.
-   * @param {d3.Selection} elements - Selection of candidate elements.
+   * @param {Selection} elements - Selection of candidate elements.
    * @returns {Element|null} The nearest DOM element or `null`.
    */
   nearestElementFromMouse(mouseX, mouseY, elements) {
@@ -1180,7 +1321,7 @@ L 453.6 43.2
    * Attach hover interaction and tooltip display to plot elements.
    * Can highlight nearest element (if enabled) or hovered element directly.
    *
-   * @param {d3.Selection} plot_element - Selection of plot elements (points, lines, etc.).
+   * @param {Selection} plot_element - Selection of plot elements (points, lines, etc.).
    * @param {string} axes_class - ID of the axes group.
    * @param {string[]} tooltip_labels - Tooltip labels for each element.
    * @param {string[]} tooltip_groups - Group identifiers for each element.
@@ -1193,18 +1334,19 @@ L 453.6 43.2
     tooltip_labels,
     tooltip_groups,
     show_tooltip,
-    hover_nearest
+    hover_nearest,
   ) {
     const self = this;
     const axesGroup = this.svg.select(`g#${axes_class}`);
     const getHoveredIndex = hover_nearest
       ? (event) => {
-          const [mouseX, mouseY] = d3.pointer(event);
+          const svgNode = self.svg.nodes()[0];
+          const [mouseX, mouseY] = getPointerPosition(event, svgNode);
           const allElements = axesGroup.selectAll(".plot-element");
           const nearestElem = self.nearestElementFromMouse(
             mouseX,
             mouseY,
-            allElements
+            allElements,
           );
           return nearestElem ? allElements.nodes().indexOf(nearestElem) : null;
         }
@@ -1256,74 +1398,125 @@ L 453.6 43.2
 
 
         const container = document.getElementById("plot-container-c8c8d752-9dff-c04b-a2a4-e28a3c3d47d3");
+        console.log(`PlotJS: Container found - ID: plot-container-c8c8d752-9dff-c04b-a2a4-e28a3c3d47d3`);
 
-        const tooltip = d3.select("#tooltip-c8c8d752-9dff-c04b-a2a4-e28a3c3d47d3");
-        const svg = d3.select(container).select("svg");
+        const tooltip = container.querySelector("#tooltip-c8c8d752-9dff-c04b-a2a4-e28a3c3d47d3");
+        const svg = container.querySelector("svg");
+        console.log(`PlotJS: SVG and tooltip elements loaded`);
 
         const plot_data = JSON.parse(`{"axes": {"axes_1": {"hover_nearest": "false", "tooltip_groups": ["setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica"], "tooltip_labels": ["setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica"]}}, "hover_nearest": false, "tooltip_groups": ["setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica"], "tooltip_labels": ["setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica"], "tooltip_x_shift": 0, "tooltip_y_shift": 0}`);
         const tooltip_x_shift = plot_data["tooltip_x_shift"];
         const tooltip_y_shift = -plot_data["tooltip_y_shift"];
         const axes = plot_data["axes"];
+        console.log(
+          `PlotJS: Configuration - tooltip offset: (${tooltip_x_shift}, ${tooltip_y_shift})`,
+        );
+        console.log(
+          `PlotJS: Found ${Object.keys(axes).length} axes to process`,
+        );
 
         const plotParser = new PlotSVGParser(
           svg,
           tooltip,
           tooltip_x_shift,
-          tooltip_y_shift
+          tooltip_y_shift,
         );
+        console.log("PlotJS: Parser created successfully");
 
         // Process each axes that has tooltip configuration
         for (const axes_class in axes) {
           if (axes.hasOwnProperty(axes_class)) {
+            console.log(`PlotJS: Processing axes "${axes_class}"`);
+
             const axe_data = axes[axes_class];
             const tooltip_labels = axe_data["tooltip_labels"];
             const tooltip_groups = axe_data["tooltip_groups"];
             const hover_nearest = axe_data["hover_nearest"] === "true";
             const show_tooltip = tooltip_labels.length === 0 ? "none" : "block";
 
-            const lines = plotParser.findLines(svg, axes_class);
-            const bars = plotParser.findBars(svg, axes_class);
-            const points = plotParser.findPoints(
-              svg,
-              axes_class,
-              tooltip_groups
+            console.log(`PlotJS:   - ${tooltip_labels.length} tooltip labels`);
+            console.log(`PlotJS:   - ${tooltip_groups.length} tooltip groups`);
+            console.log(`PlotJS:   - Hover nearest: ${hover_nearest}`);
+            console.log(
+              `PlotJS:   - Show tooltips: ${show_tooltip === "block"}`,
             );
-            const areas = plotParser.findAreas(svg, axes_class);
 
-            plotParser.setHoverEffect(
-              points,
+            const lines = plotParser.findLines(plotParser.svg, axes_class);
+            const bars = plotParser.findBars(plotParser.svg, axes_class);
+            const points = plotParser.findPoints(
+              plotParser.svg,
               axes_class,
-              tooltip_labels,
               tooltip_groups,
-              show_tooltip,
-              hover_nearest
             );
-            plotParser.setHoverEffect(
-              lines,
-              axes_class,
-              tooltip_labels,
-              tooltip_groups,
-              show_tooltip,
-              hover_nearest
+            const areas = plotParser.findAreas(plotParser.svg, axes_class);
+
+            const totalElements =
+              lines.size() + bars.size() + points.size() + areas.size();
+            console.log(
+              `PlotJS:   - Total elements: ${totalElements} (${lines.size()} lines, ${bars.size()} bars, ${points.size()} points, ${areas.size()} areas)`,
             );
-            plotParser.setHoverEffect(
-              bars,
-              axes_class,
-              tooltip_labels,
-              tooltip_groups,
-              show_tooltip,
-              hover_nearest
-            );
-            plotParser.setHoverEffect(
-              areas,
-              axes_class,
-              tooltip_labels,
-              tooltip_groups,
-              show_tooltip,
-              hover_nearest
-            );
+
+            if (points.size() > 0) {
+              plotParser.setHoverEffect(
+                points,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS:   - Hover effects attached to ${points.size()} points`,
+              );
+            }
+
+            if (lines.size() > 0) {
+              plotParser.setHoverEffect(
+                lines,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS:   - Hover effects attached to ${lines.size()} lines`,
+              );
+            }
+
+            if (bars.size() > 0) {
+              plotParser.setHoverEffect(
+                bars,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS:   - Hover effects attached to ${bars.size()} bars`,
+              );
+            }
+
+            if (areas.size() > 0) {
+              plotParser.setHoverEffect(
+                areas,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS:   - Hover effects attached to ${areas.size()} areas`,
+              );
+            }
+
+            console.log(`PlotJS: Finished processing axes "${axes_class}"`);
           }
         }
+
+        console.log("PlotJS: Initialization complete - plot is interactive");
       })();
     </script>
 

@@ -50,10 +50,11 @@ class PlotJS:
         buf: io.StringIO = io.StringIO()
 
         # temporary change svg hashsalt and id for reproductibility
-        # https://matplotlib.org/stable/users/explain/customizing.html#the-default-matplotlibrc-file
+        # https://github.com/y-sunflower/plotjs/issues/54
         plt.rcParams["svg.hashsalt"] = "svg-hashsalt"
         plt.rcParams["svg.id"] = "svg-id"
         fig.savefig(buf, format="svg", **savefig_kws)
+        fig.savefig("debug.svg", **savefig_kws)
         plt.rcParams["svg.hashsalt"] = None
         plt.rcParams["svg.id"] = None
 

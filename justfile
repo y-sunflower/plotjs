@@ -1,3 +1,10 @@
+call_recipe := just_executable() + " --justfile=" + justfile()
+
+doc:
+	{{call_recipe}} examples
+	{{call_recipe}} gallery
+	{{call_recipe}} jsdoc
+
 index:
 	quarto render docs/index.qmd
 
