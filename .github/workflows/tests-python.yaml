@@ -26,5 +26,5 @@ jobs:
       - name: Install the project
         run: uv sync --all-groups
 
-      - name: Run tests
-        run: uv run pytest
+      - name: Run unit tests (excluding browser tests)
+        run: uv run pytest tests/test-python/ -v
