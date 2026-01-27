@@ -24,7 +24,7 @@ Matplotlib Figure → SVG Export (Python) → HTML Template (Jinja2) → Interac
 
 **`main.py`** - Core `PlotJS` class with method chaining
 
-- `__init__(fig, seed, **savefig_kws)` - Converts matplotlib figure to SVG
+- `__init__(fig, **savefig_kws)` - Converts matplotlib figure to SVG
 - `add_tooltip(labels, groups, hover_nearest, ax)` - Configure hover tooltips
 - `add_css(from_string)` - Add custom CSS styling
 - `add_javascript(from_string)` - Add custom JavaScript
@@ -198,7 +198,7 @@ from plotjs import PlotJS
 fig, ax = plt.subplots()
 ax.scatter(x, y)
 
-PlotJS(fig, seed=42) \
+PlotJS(fig) \
     .add_tooltip(
         labels=["Point 1", "Point 2", ...],
         groups=["Group A", "Group A", "Group B", ...],
