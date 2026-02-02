@@ -293,3 +293,137 @@ def test_multiple_axes_independent_hover(page, tmp_output_dir, load_html):
     tooltip_text = tooltip.inner_text()
     # Just verify that tooltip updated (should show "Right" label from second axes)
     assert "Right" in tooltip_text, f"Expected 'Right' in tooltip, got: {tooltip_text}"
+
+
+def test_on_parameter_point_only(page, tmp_output_dir, load_html):
+    """Test that on='point' only enables hover on points, not lines."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+    ax.plot([1, 2, 3], [3, 2, 1])
+
+    html_path = tmp_output_dir / "on_point_only.html"
+    PlotJS(fig).add_tooltip(labels=["P1", "P2", "P3", "Line"], on="point").save(
+        str(html_path)
+    )
+    plt.close(fig)
+
+    load_html(page, html_path)
+
+    # Points should have the plot-element class
+    points = page.locator('svg g[id^="PathCollection"] use.plot-element')
+    assert points.count() == 3, (
+        f"Expected 3 points with plot-element class, got {points.count()}"
+    )
+
+    # Lines should NOT have the plot-element class (since on="point")
+    lines = page.locator('svg g[id^="line2d"] path.plot-element')
+    assert lines.count() == 0, (
+        f"Expected 0 lines with plot-element class, got {lines.count()}"
+    )
+
+    # Hover over point - should show tooltip
+    first_point = page.locator('svg g[id^="PathCollection"] use').first
+    first_point.hover()
+    page.wait_for_selector(".tooltip[style*='display: block']", timeout=2000)
+    tooltip = page.locator(".tooltip")
+    assert tooltip.is_visible()
+
+
+def test_on_parameter_line_only(page, tmp_output_dir, load_html):
+    """Test that on='line' only enables hover on lines, not points."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+    ax.plot([1, 2, 3], [3, 2, 1])
+
+    html_path = tmp_output_dir / "on_line_only.html"
+    PlotJS(fig).add_tooltip(labels=["Line"], on="line").save(str(html_path))
+    plt.close(fig)
+
+    load_html(page, html_path)
+
+    # Points should NOT have the plot-element class (since on="line")
+    points = page.locator('svg g[id^="PathCollection"] use.plot-element')
+    assert points.count() == 0, (
+        f"Expected 0 points with plot-element class, got {points.count()}"
+    )
+
+    # Lines should have the plot-element class
+    lines = page.locator('svg g[id^="line2d"] path.plot-element')
+    assert lines.count() >= 1, (
+        f"Expected at least 1 line with plot-element class, got {lines.count()}"
+    )
+
+
+def test_on_parameter_multiple_types(page, tmp_output_dir, load_html):
+    """Test that on=['point', 'line'] enables hover on both."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+    ax.plot([1, 2, 3], [3, 2, 1])
+
+    html_path = tmp_output_dir / "on_multiple.html"
+    PlotJS(fig).add_tooltip(
+        labels=["P1", "P2", "P3", "Line"], on=["point", "line"]
+    ).save(str(html_path))
+    plt.close(fig)
+
+    load_html(page, html_path)
+
+    # Both points and lines should have the plot-element class
+    points = page.locator('svg g[id^="PathCollection"] use.plot-element')
+    assert points.count() == 3, (
+        f"Expected 3 points with plot-element class, got {points.count()}"
+    )
+
+    lines = page.locator('svg g[id^="line2d"] path.plot-element')
+    assert lines.count() >= 1, (
+        f"Expected at least 1 line with plot-element class, got {lines.count()}"
+    )
+
+
+def test_on_parameter_none_enables_all(page, tmp_output_dir, load_html):
+    """Test that on=None (default) enables hover on all element types."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+    ax.plot([1, 2, 3], [3, 2, 1])
+
+    html_path = tmp_output_dir / "on_none.html"
+    PlotJS(fig).add_tooltip(labels=["P1", "P2", "P3", "Line"]).save(str(html_path))
+    plt.close(fig)
+
+    load_html(page, html_path)
+
+    # Both points and lines should have the plot-element class
+    points = page.locator('svg g[id^="PathCollection"] use.plot-element')
+    assert points.count() == 3, (
+        f"Expected 3 points with plot-element class, got {points.count()}"
+    )
+
+    lines = page.locator('svg g[id^="line2d"] path.plot-element')
+    assert lines.count() >= 1, (
+        f"Expected at least 1 line with plot-element class, got {lines.count()}"
+    )
+
+
+def test_on_parameter_bar_only(page, tmp_output_dir, load_html):
+    """Test that on='bar' only enables hover on bars."""
+    fig, ax = plt.subplots()
+    ax.bar([1, 2, 3], [1, 2, 3])
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    html_path = tmp_output_dir / "on_bar_only.html"
+    PlotJS(fig).add_tooltip(labels=["B1", "B2", "B3"], on="bar").save(str(html_path))
+    plt.close(fig)
+
+    load_html(page, html_path)
+
+    # Bars should have the plot-element class
+    bars = page.locator("svg .bar.plot-element")
+    assert bars.count() == 3, (
+        f"Expected 3 bars with plot-element class, got {bars.count()}"
+    )
+
+    # Points should NOT have the plot-element class
+    points = page.locator('svg g[id^="PathCollection"] use.plot-element')
+    assert points.count() == 0, (
+        f"Expected 0 points with plot-element class, got {points.count()}"
+    )

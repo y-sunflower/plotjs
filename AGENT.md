@@ -12,11 +12,17 @@ PlotJS is a Python package that transforms static matplotlib charts into interac
 Matplotlib Figure → SVG Export (Python) → HTML Template (Jinja2) → Interactive Browser
 ```
 
-### Workflow:
-
 1. **Python (PlotJS class):** Captures matplotlib figure as SVG string, collects tooltip/styling metadata
 2. **Jinja2 Template:** Injects SVG + CSS + JavaScript parser + configuration into HTML
 3. **Browser (PlotSVGParser):** Parses SVG structure to identify plot elements, attaches hover interactivity
+
+## How to run command
+
+Always use `uv` and/or `just` for running commands:
+
+- `uv run pytest tests/test-python`
+- `uv run pytest tests/test-python`
+- `uv run python -c "import matplotlib"`
 
 ## Key Components
 
