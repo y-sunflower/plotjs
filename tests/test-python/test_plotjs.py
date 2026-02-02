@@ -162,7 +162,7 @@ def test_open_after_save(mock_webbrowser):
     temp_file.close()
 
     try:
-        mp = PlotJS(fig=fig).add_tooltip(labels=df["species"]).save(temp_path).open()
+        mp = PlotJS(fig=fig).add_tooltip(labels=df["species"]).save(temp_path).show()
 
         # Verify method chaining works
         assert isinstance(mp, PlotJS)
@@ -186,7 +186,7 @@ def test_open_without_save(mock_webbrowser):
     fig, ax = plt.subplots()
     ax.scatter(df["sepal_width"], df["sepal_length"])
 
-    mp = PlotJS(fig=fig).add_tooltip(labels=df["species"]).open()
+    mp = PlotJS(fig=fig).add_tooltip(labels=df["species"]).show()
 
     # Verify method chaining works
     assert isinstance(mp, PlotJS)
@@ -227,7 +227,7 @@ def test_open_method_chaining(mock_webbrowser):
             .add_tooltip(labels=df["species"])
             .add_css(".tooltip{color: red;}")
             .save(temp_path)
-            .open()
+            .show()
         )
 
         # Verify all methods were applied

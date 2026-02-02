@@ -49,12 +49,14 @@ class PlotJS:
 
         # temporary change svg hashsalt and id for reproductibility
         # https://github.com/y-sunflower/plotjs/issues/54
+        old_svg_hashsalt = plt.rcParams["svg.hashsalt"]
+        old_svg_id = plt.rcParams["svg.id"]
         plt.rcParams["svg.hashsalt"] = "svg-hashsalt"
         plt.rcParams["svg.id"] = "svg-id"
         fig.savefig(buf, format="svg", **savefig_kws)
         fig.savefig("debug.svg", **savefig_kws)
-        plt.rcParams["svg.hashsalt"] = None
-        plt.rcParams["svg.id"] = None
+        plt.rcParams["svg.hashsalt"] = old_svg_hashsalt
+        plt.rcParams["svg.id"] = old_svg_id
 
         buf.seek(0)
         self._svg_content = buf.getvalue()
@@ -373,7 +375,7 @@ class PlotJS:
         with open(file_path, "w") as f:
             f.write(self.html)
 
-        # store the file path for later use (e.g., open() method)
+        # store the file path for later use (e.g., show() method)
         self._file_path = os.path.abspath(file_path)
 
         return self
@@ -407,7 +409,7 @@ class PlotJS:
         self._set_html()
         return self.html
 
-    def open(self) -> "PlotJS":
+    def show(self) -> "PlotJS":
         """
         Open the HTML file in the default browser.
         If the file hasn't been saved yet, it will be saved to a temporary file.
@@ -417,12 +419,12 @@ class PlotJS:
 
         Examples:
             ```python
-            PlotJS(fig).save("output.html").open()
+            PlotJS(fig).save("output.html").show()
             ```
 
             ```python
             # Open without explicitly saving (uses temp file)
-            PlotJS(fig).open()
+            PlotJS(fig).show()
             ```
         """
         if not hasattr(self, "_file_path"):
