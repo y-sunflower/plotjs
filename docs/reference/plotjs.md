@@ -1,1 +1,1 @@
-::: plotjs.main.PlotJS
+::: plotjs.plotjs.PlotJS
