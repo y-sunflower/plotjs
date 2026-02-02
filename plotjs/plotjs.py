@@ -2,6 +2,8 @@ import os
 import io
 import random
 import uuid
+import webbrowser
+import tempfile
 from typing import Optional
 
 import numpy as np
@@ -301,6 +303,9 @@ class PlotJS:
         with open(file_path, "w") as f:
             f.write(self.html)
 
+        # store the file path for later use (e.g., open() method)
+        self._file_path = os.path.abspath(file_path)
+
         return self
 
     def as_html(self) -> str:
@@ -331,6 +336,34 @@ class PlotJS:
         """
         self._set_html()
         return self.html
+
+    def open(self) -> "PlotJS":
+        """
+        Open the HTML file in the default browser.
+        If the file hasn't been saved yet, it will be saved to a temporary file.
+
+        Returns:
+            self: Returns the instance to allow method chaining.
+
+        Examples:
+            ```python
+            PlotJS(fig).save("output.html").open()
+            ```
+
+            ```python
+            # Open without explicitly saving (uses temp file)
+            PlotJS(fig).open()
+            ```
+        """
+        if not hasattr(self, "_file_path"):
+            temp_file = tempfile.NamedTemporaryFile(
+                mode="w", suffix=".html", delete=False
+            )
+            self.save(temp_file.name)
+            temp_file.close()
+
+        webbrowser.open(f"file://{self._file_path}")
+        return self
 
     def _set_plot_data_json(self) -> None:
         if not hasattr(self, "_tooltip_labels"):

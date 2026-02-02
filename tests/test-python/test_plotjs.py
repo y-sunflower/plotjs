@@ -1,5 +1,8 @@
 from plotjs import PlotJS, data
 import matplotlib.pyplot as plt
+import os
+import tempfile
+from unittest.mock import patch
 
 
 def test_add_css_method_chaining():
@@ -143,3 +146,93 @@ def test_multiple_axes_handling():
             "hover_nearest": "false",
         },
     }
+
+
+@patch("webbrowser.open")
+def test_open_after_save(mock_webbrowser):
+    """Test that open() works after saving a file."""
+    df = data.load_iris()
+    fig, ax = plt.subplots()
+    ax.scatter(df["sepal_width"], df["sepal_length"])
+
+    # Create a temp file for testing
+    temp_file = tempfile.NamedTemporaryFile(mode="w", suffix=".html", delete=False)
+    temp_path = temp_file.name
+    temp_file.close()
+
+    try:
+        mp = PlotJS(fig=fig).add_tooltip(labels=df["species"]).save(temp_path).open()
+
+        # Verify method chaining works
+        assert isinstance(mp, PlotJS)
+
+        # Verify webbrowser.open was called with correct path
+        expected_path = f"file://{os.path.abspath(temp_path)}"
+        mock_webbrowser.assert_called_once_with(expected_path)
+
+        # Verify file was created
+        assert os.path.exists(temp_path)
+    finally:
+        # Cleanup
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+
+
+@patch("webbrowser.open")
+def test_open_without_save(mock_webbrowser):
+    """Test that open() creates a temp file if not saved."""
+    df = data.load_iris()
+    fig, ax = plt.subplots()
+    ax.scatter(df["sepal_width"], df["sepal_length"])
+
+    mp = PlotJS(fig=fig).add_tooltip(labels=df["species"]).open()
+
+    # Verify method chaining works
+    assert isinstance(mp, PlotJS)
+
+    # Verify webbrowser.open was called
+    mock_webbrowser.assert_called_once()
+
+    # Verify the path starts with "file://"
+    call_args = mock_webbrowser.call_args[0][0]
+    assert call_args.startswith("file://")
+
+    # Verify a temp file was created
+    temp_path = call_args.replace("file://", "")
+    assert os.path.exists(temp_path)
+
+    # Verify it's an HTML file
+    assert temp_path.endswith(".html")
+
+    # Cleanup
+    if os.path.exists(temp_path):
+        os.remove(temp_path)
+
+
+@patch("webbrowser.open")
+def test_open_method_chaining(mock_webbrowser):
+    """Test that open() can be chained with other methods."""
+    df = data.load_iris()
+    fig, ax = plt.subplots()
+    ax.scatter(df["sepal_width"], df["sepal_length"])
+
+    temp_file = tempfile.NamedTemporaryFile(mode="w", suffix=".html", delete=False)
+    temp_path = temp_file.name
+    temp_file.close()
+
+    try:
+        mp = (
+            PlotJS(fig=fig)
+            .add_tooltip(labels=df["species"])
+            .add_css(".tooltip{color: red;}")
+            .save(temp_path)
+            .open()
+        )
+
+        # Verify all methods were applied
+        assert isinstance(mp, PlotJS)
+        assert ".tooltip{color: red;}" in mp.additional_css
+        mock_webbrowser.assert_called_once()
+    finally:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
