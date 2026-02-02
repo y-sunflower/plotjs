@@ -131,17 +131,17 @@ Optional `seed` parameter ensures deterministic UUID generation for consistent o
 ```
 plotjs/
 ├── __init__.py              # Package exports
-├── plotjs.py                  # Core PlotJS class (330 lines)
-├── css.py                   # CSS utilities (100 lines)
-├── javascript.py            # JavaScript utilities (23 lines)
-├── utils.py                 # Internal helpers (43 lines)
+├── plotjs.py                  # Core PlotJS class
+├── css.py                   # CSS utilities
+├── javascript.py            # JavaScript utilities
+├── utils.py                 # Internal helpers
 ├── data/
 │   ├── datasets.py          # Sample datasets with Narwhals
 │   └── *.csv                # Data files
 └── static/
-    ├── template.html        # Jinja2 HTML template (104 lines)
-    ├── plotparser.js        # SVG parser class (229 lines)
-    └── default.css          # Default styles (41 lines)
+    ├── template.html        # Jinja2 HTML template
+    ├── plotparser.js        # SVG parser class
+    └── default.css          # Default styles
 
 tests/
 ├── test-python/             # Python unit tests

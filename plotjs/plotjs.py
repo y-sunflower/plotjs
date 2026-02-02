@@ -22,7 +22,7 @@ TEMPLATE_DIR: str = MAIN_DIR / "static"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
 JS_PARSER_PATH: str = os.path.join(TEMPLATE_DIR, "plotparser.js")
 
-env: Environment = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
+env: Environment = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
 
 class PlotJS:
