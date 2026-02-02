@@ -1,5 +1,3 @@
-"""Test basic rendering and SVG generation in a real browser."""
-
 import pytest
 import matplotlib.pyplot as plt
 from plotjs import PlotJS, data

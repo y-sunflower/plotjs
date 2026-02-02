@@ -1,5 +1,3 @@
-"""Test interactive features like tooltips, hover effects, and grouping."""
-
 import pytest
 import matplotlib.pyplot as plt
 from plotjs import PlotJS, data
