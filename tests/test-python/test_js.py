@@ -41,6 +41,14 @@ def test_js_from_different_inputs():
     )
 
     plotjs = PlotJS()
+
+    plotjs.add_d3js().add_javascript("const aVariable = 'hello';")
+    assert (
+        plotjs.additional_javascript
+        == "import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';const aVariable = 'hello';"
+    )
+
+    plotjs = PlotJS()
     plotjs.add_javascript(from_file="tests/test-python/static/script.js")
     assert (
         plotjs.additional_javascript

@@ -1,43 +1,44 @@
 call_recipe := just_executable() + " --justfile=" + justfile()
+
 alias d := doc
 alias t := test
 
 doc:
-	{{call_recipe}} examples
-	{{call_recipe}} gallery
-	{{call_recipe}} jsdoc
+    {{ call_recipe }} examples
+    {{ call_recipe }} gallery
+    {{ call_recipe }} jsdoc
 
 index:
-	quarto render docs/index.qmd
+    quarto render docs/index.qmd
 
 examples:
-	quarto render docs/index.qmd
-	uv run docs/guides/advanced/advanced.py
-	uv run docs/guides/css/css.py
-	uv run docs/guides/javascript/javascript.py
+    quarto render docs/index.qmd
+    uv run docs/guides/advanced/advanced.py
+    uv run docs/guides/css/css.py
+    uv run docs/guides/javascript/javascript.py
 
 gallery:
-	quarto render docs/gallery/index.qmd
+    quarto render docs/gallery/index.qmd
 
-coverage:
-	uv run coverage run --source=plotjs -m pytest
-	uv run coverage report -m
-	uv run coverage xml
-	uv run genbadge coverage -i coverage.xml
-	rm coverage.xml
+cov:
+    uv run coverage run --source=plotjs -m pytest
+    uv run coverage report -m
+    uv run coverage xml
+    uv run genbadge coverage -i coverage.xml
+    rm coverage.xml
 
 preview:
-	uv run mkdocs serve
+    uv run mkdocs serve
 
 jsdoc:
-	bun run docs:js
+    bun run docs:js
 
 test:
-	uv run pytest
-	bun test
+    uv run pytest
+    bun test
 
 test-python:
-	uv run pytest
+    uv run pytest
 
 test-js:
-	bun test
+    bun test
