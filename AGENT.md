@@ -22,7 +22,7 @@ Matplotlib Figure → SVG Export (Python) → HTML Template (Jinja2) → Interac
 
 ### Python Module (`/plotjs/`)
 
-**`main.py`** - Core `PlotJS` class with method chaining
+**`plotjs.py`** - Core `PlotJS` class with method chaining
 
 - `__init__(fig, **savefig_kws)` - Converts matplotlib figure to SVG
 - `add_tooltip(labels, groups, hover_nearest, ax)` - Configure hover tooltips
@@ -125,7 +125,7 @@ Optional `seed` parameter ensures deterministic UUID generation for consistent o
 ```
 plotjs/
 ├── __init__.py              # Package exports
-├── main.py                  # Core PlotJS class (330 lines)
+├── plotjs.py                  # Core PlotJS class (330 lines)
 ├── css.py                   # CSS utilities (100 lines)
 ├── javascript.py            # JavaScript utilities (23 lines)
 ├── utils.py                 # Internal helpers (43 lines)

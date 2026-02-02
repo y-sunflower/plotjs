@@ -1,6 +1,4 @@
-from .main import PlotJS
+from plotjs.plotjs import PlotJS
 
 __version__ = "0.0.7"
-__all__: list[str] = [
-    "PlotJS",
-]
+__all__: list[str] = ["PlotJS"]
