@@ -89,6 +89,7 @@ class PlotJS:
         tooltip_x_shift: int = 0,
         tooltip_y_shift: int = 0,
         hover_nearest: bool = False,
+        on: str | list[str] | None = None,
         ax: Axes | None = None,
     ) -> "PlotJS":
         """
@@ -108,6 +109,10 @@ class PlotJS:
             tooltip_y_shift: Number of pixels to shift the tooltip from
                 the cursor, on the y axis.
             hover_nearest: When `True`, hover the nearest plot element.
+            on: Which plot elements to apply interactivity to. Can be a
+                single element type or a list. Valid values are "point",
+                "line", "bar", "area" (plurals like "points" also accepted).
+                If `None` (default), applies to all element types.
             ax: A matplotlib Axes. If `None` (default), uses first Axes.
 
         Returns:
@@ -133,9 +138,50 @@ class PlotJS:
                 hover_nearest=True,
             )
             ```
+
+            ```python
+            PlotJS(...).add_tooltip(
+                labels=["S&P500", "CAC40", "Sunflower"],
+                on="point",  # only apply hover to points
+            )
+            ```
+
+            ```python
+            PlotJS(...).add_tooltip(
+                labels=["S&P500", "CAC40", "Sunflower"],
+                on=["point", "line"],  # apply hover to points and lines only
+            )
+            ```
         """
         self._tooltip_x_shift = tooltip_x_shift
         self._tooltip_y_shift = tooltip_y_shift
+
+        # Normalize and validate the `on` parameter
+        valid_elements = {"point", "line", "bar", "area"}
+        plural_to_singular = {
+            "points": "point",
+            "lines": "line",
+            "bars": "bar",
+            "areas": "area",
+        }
+
+        if on is None:
+            normalized_on = None
+        else:
+            if isinstance(on, str):
+                on = [on]
+            normalized_on = []
+            for element in on:
+                element = element.lower()
+                element = plural_to_singular.get(element, element)
+                if element not in valid_elements:
+                    raise ValueError(
+                        f"Invalid element type '{element}' in `on` parameter. "
+                        f"Valid values are: {', '.join(sorted(valid_elements))} "
+                        f"(plurals also accepted)."
+                    )
+                if element not in normalized_on:
+                    normalized_on.append(element)
 
         if ax is None:
             ax: Axes = self._axes[0]
@@ -162,6 +208,7 @@ class PlotJS:
                 "tooltip_labels": self._tooltip_labels,
                 "tooltip_groups": self._tooltip_groups,
                 "hover_nearest": "true" if hover_nearest else "false",  # js boolean
+                "on": normalized_on,  # None means all elements, otherwise list of element types
             }
         }
         self._axes_tooltip.update(axe_tooltip)

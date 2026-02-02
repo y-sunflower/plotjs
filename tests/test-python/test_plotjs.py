@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import os
 import tempfile
 from unittest.mock import patch
+import pytest
 
 
 def test_add_css_method_chaining():
@@ -236,3 +237,122 @@ def test_open_method_chaining(mock_webbrowser):
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
+
+
+def test_add_tooltip_on_parameter_single_string():
+    """Test that on parameter accepts a single string."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    mp = PlotJS(fig=fig).add_tooltip(labels=["A", "B", "C"], on="point")
+    assert mp._axes_tooltip["axes_1"]["on"] == ["point"]
+
+    plt.close(fig)
+
+
+def test_add_tooltip_on_parameter_list():
+    """Test that on parameter accepts a list of strings."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    mp = PlotJS(fig=fig).add_tooltip(labels=["A", "B", "C"], on=["point", "line"])
+    assert mp._axes_tooltip["axes_1"]["on"] == ["point", "line"]
+
+    plt.close(fig)
+
+
+def test_add_tooltip_on_parameter_plurals():
+    """Test that on parameter accepts plural forms."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    mp = PlotJS(fig=fig).add_tooltip(labels=["A", "B", "C"], on="points")
+    assert mp._axes_tooltip["axes_1"]["on"] == ["point"]
+
+    mp = PlotJS(fig=fig).add_tooltip(labels=["A", "B", "C"], on=["lines", "bars"])
+    assert mp._axes_tooltip["axes_1"]["on"] == ["line", "bar"]
+
+    plt.close(fig)
+
+
+def test_add_tooltip_on_parameter_none():
+    """Test that on=None means all elements (default)."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    mp = PlotJS(fig=fig).add_tooltip(labels=["A", "B", "C"], on=None)
+    assert mp._axes_tooltip["axes_1"]["on"] is None
+
+    # Also test default (no on parameter)
+    mp = PlotJS(fig=fig).add_tooltip(labels=["A", "B", "C"])
+    assert mp._axes_tooltip["axes_1"]["on"] is None
+
+    plt.close(fig)
+
+
+def test_add_tooltip_on_parameter_case_insensitive():
+    """Test that on parameter is case insensitive."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    mp = PlotJS(fig=fig).add_tooltip(labels=["A", "B", "C"], on="POINT")
+    assert mp._axes_tooltip["axes_1"]["on"] == ["point"]
+
+    mp = PlotJS(fig=fig).add_tooltip(labels=["A", "B", "C"], on=["LINE", "Bar"])
+    assert mp._axes_tooltip["axes_1"]["on"] == ["line", "bar"]
+
+    plt.close(fig)
+
+
+def test_add_tooltip_on_parameter_deduplication():
+    """Test that duplicate values in on parameter are removed."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    mp = PlotJS(fig=fig).add_tooltip(
+        labels=["A", "B", "C"], on=["point", "point", "line"]
+    )
+    assert mp._axes_tooltip["axes_1"]["on"] == ["point", "line"]
+
+    # Also test mixed plural/singular
+    mp = PlotJS(fig=fig).add_tooltip(
+        labels=["A", "B", "C"], on=["point", "points", "line"]
+    )
+    assert mp._axes_tooltip["axes_1"]["on"] == ["point", "line"]
+
+    plt.close(fig)
+
+
+def test_add_tooltip_on_parameter_all_valid_values():
+    """Test that all valid element types are accepted."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    mp = PlotJS(fig=fig).add_tooltip(
+        labels=["A", "B", "C"], on=["point", "line", "bar", "area"]
+    )
+    assert mp._axes_tooltip["axes_1"]["on"] == ["point", "line", "bar", "area"]
+
+    plt.close(fig)
+
+
+def test_add_tooltip_on_parameter_invalid_value():
+    """Test that invalid values raise ValueError."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    with pytest.raises(ValueError, match=r"Invalid element type 'invalid'"):
+        PlotJS(fig=fig).add_tooltip(labels=["A", "B", "C"], on="invalid")
+
+    plt.close(fig)
+
+
+def test_add_tooltip_on_parameter_invalid_in_list():
+    """Test that invalid values in a list raise ValueError."""
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    with pytest.raises(ValueError, match=r"Invalid element type 'circle'"):
+        PlotJS(fig=fig).add_tooltip(labels=["A", "B", "C"], on=["point", "circle"])
+
+    plt.close(fig)

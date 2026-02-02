@@ -60,6 +60,7 @@
             const tooltip_groups = axe_data["tooltip_groups"];
             const hover_nearest = axe_data["hover_nearest"] === "true";
             const show_tooltip = tooltip_labels.length === 0 ? "none" : "block";
+            const on = axe_data["on"] ?? null; // null/undefined means all elements, otherwise array of element types
 
             console.log(`PlotJS:   - ${tooltip_labels.length} tooltip labels`);
             console.log(`PlotJS:   - ${tooltip_groups.length} tooltip groups`);
@@ -67,15 +68,26 @@
             console.log(
               `PlotJS:   - Show tooltips: ${show_tooltip === "block"}`,
             );
-
-            const lines = plotParser.findLines(plotParser.svg, axes_class);
-            const bars = plotParser.findBars(plotParser.svg, axes_class);
-            const points = plotParser.findPoints(
-              plotParser.svg,
-              axes_class,
-              tooltip_groups,
+            console.log(
+              `PlotJS:   - Element filter (on): ${on === null ? "all" : on.join(", ")}`,
             );
-            const areas = plotParser.findAreas(plotParser.svg, axes_class);
+
+            // Helper to check if an element type should be processed
+            const shouldProcess = (elementType) =>
+              on === null || on.includes(elementType);
+
+            const lines = shouldProcess("line")
+              ? plotParser.findLines(plotParser.svg, axes_class)
+              : new Selection([]);
+            const bars = shouldProcess("bar")
+              ? plotParser.findBars(plotParser.svg, axes_class)
+              : new Selection([]);
+            const points = shouldProcess("point")
+              ? plotParser.findPoints(plotParser.svg, axes_class, tooltip_groups)
+              : new Selection([]);
+            const areas = shouldProcess("area")
+              ? plotParser.findAreas(plotParser.svg, axes_class)
+              : new Selection([]);
 
             const totalElements =
               lines.size() + bars.size() + points.size() + areas.size();
