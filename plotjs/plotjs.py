@@ -28,10 +28,6 @@ env: Environment = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 class PlotJS:
     """
     Class to convert static matplotlib plots to interactive charts.
-
-    Attributes:
-        - additional_css: All the CSS added via `add_css()`
-        - additional_javascript: All the JavaScript added via `add_javascript()`
     """
 
     def __init__(
@@ -65,6 +61,9 @@ class PlotJS:
 
         self._axes: list[Axes] = fig.get_axes()
 
+        rnd = random.Random(22022001)
+        self._uuid = uuid.UUID(int=rnd.getrandbits(128))
+
         self.additional_css = ""
         self.additional_javascript = ""
         self._hover_nearest = False
@@ -77,9 +76,6 @@ class PlotJS:
             file_path=JS_PARSER_PATH,
             after_pattern=r"class Selection.*",
         )
-
-        rnd = random.Random(22022001)
-        self._uuid = uuid.UUID(int=rnd.getrandbits(128))
 
     def add_tooltip(
         self,
@@ -309,6 +305,33 @@ class PlotJS:
             raise ValueError(
                 "Must provide at least one of: `from_string`, `from_file`."
             )
+        return self
+
+    def add_d3js(self, version: int = 7) -> "PlotJS":
+        """
+        Add D3.js library import in the additional JavaScript code.
+        This is mostly useful when adding custom JS that relies on
+        D3.
+
+        Arguments:
+            version: D3.js version to use, default to 7.
+
+        Returns:
+            self: Returns the instance to allow method chaining.
+
+        Examples:
+            ```python
+            (
+                PlotJS()
+                .add_d3js()
+                .add_javascript("d3.selectAll(".point").on("click", () => alert("I wish cookies were 0 calories..."));"
+                )
+            )
+            ```
+        """
+        self.additional_javascript += (
+            f"import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@{version}/+esm';"
+        )
         return self
 
     def save(

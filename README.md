@@ -1,5 +1,3 @@
-![](./coverage-badge.svg)
-
 # `plotjs`: Turn static matplotlib charts into interactive web visualizations
 
 <img src="https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/image.png?raw=true" alt="plotjs logo" align="right" width="150px"/>

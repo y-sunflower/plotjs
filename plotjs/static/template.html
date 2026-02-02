@@ -62,14 +62,12 @@
             const show_tooltip = tooltip_labels.length === 0 ? "none" : "block";
             const on = axe_data["on"] ?? null; // null/undefined means all elements, otherwise array of element types
 
-            console.log(`PlotJS:   - ${tooltip_labels.length} tooltip labels`);
-            console.log(`PlotJS:   - ${tooltip_groups.length} tooltip groups`);
-            console.log(`PlotJS:   - Hover nearest: ${hover_nearest}`);
+            console.log(`PlotJS: ${tooltip_labels.length} tooltip labels`);
+            console.log(`PlotJS: ${tooltip_groups.length} tooltip groups`);
+            console.log(`PlotJS: Hover nearest: ${hover_nearest}`);
+            console.log(`PlotJS: Show tooltips: ${show_tooltip === "block"}`);
             console.log(
-              `PlotJS:   - Show tooltips: ${show_tooltip === "block"}`,
-            );
-            console.log(
-              `PlotJS:   - Element filter (on): ${on === null ? "all" : on.join(", ")}`,
+              `PlotJS: Element filter (on): ${on === null ? "all" : on.join(", ")}`,
             );
 
             // Helper to check if an element type should be processed
@@ -83,7 +81,11 @@
               ? plotParser.findBars(plotParser.svg, axes_class)
               : new Selection([]);
             const points = shouldProcess("point")
-              ? plotParser.findPoints(plotParser.svg, axes_class, tooltip_groups)
+              ? plotParser.findPoints(
+                  plotParser.svg,
+                  axes_class,
+                  tooltip_groups,
+                )
               : new Selection([]);
             const areas = shouldProcess("area")
               ? plotParser.findAreas(plotParser.svg, axes_class)
@@ -92,7 +94,7 @@
             const totalElements =
               lines.size() + bars.size() + points.size() + areas.size();
             console.log(
-              `PlotJS:   - Total elements: ${totalElements} (${lines.size()} lines, ${bars.size()} bars, ${points.size()} points, ${areas.size()} areas)`,
+              `PlotJS: Total elements: ${totalElements} (${lines.size()} lines, ${bars.size()} bars, ${points.size()} points, ${areas.size()} areas)`,
             );
 
             if (points.size() > 0) {
@@ -105,7 +107,7 @@
                 hover_nearest,
               );
               console.log(
-                `PlotJS:   - Hover effects attached to ${points.size()} points`,
+                `PlotJS: Hover effects attached to ${points.size()} points`,
               );
             }
 
@@ -119,7 +121,7 @@
                 hover_nearest,
               );
               console.log(
-                `PlotJS:   - Hover effects attached to ${lines.size()} lines`,
+                `PlotJS: Hover effects attached to ${lines.size()} lines`,
               );
             }
 
@@ -133,7 +135,7 @@
                 hover_nearest,
               );
               console.log(
-                `PlotJS:   - Hover effects attached to ${bars.size()} bars`,
+                `PlotJS: Hover effects attached to ${bars.size()} bars`,
               );
             }
 
@@ -147,7 +149,7 @@
                 hover_nearest,
               );
               console.log(
-                `PlotJS:   - Hover effects attached to ${areas.size()} areas`,
+                `PlotJS: Hover effects attached to ${areas.size()} areas`,
               );
             }
 

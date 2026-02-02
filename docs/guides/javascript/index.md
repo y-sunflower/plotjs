@@ -23,6 +23,7 @@ ax.scatter(
 (
     PlotJS(fig=fig)
     .add_tooltip(labels=df["species"])
+    .add_d3js()  # import D3.js library
     .add_javascript(
         """
 d3.selectAll(".point").on("click", () =>
@@ -39,31 +40,33 @@ Relevant code here is:
 
 ```js
 d3.selectAll(".point").on("click", () =>
-  alert("I wish cookies were 0 calories...")
+  alert("I wish cookies were 0 calories..."),
 );
 ```
 
-Here’s what it does:
+Here's what it does:
 
 - selects all points (e.g., from the scatter plot)
 - sets that when clicking one of the points
 - it displays a message
 
+???+ info
+
+    We need to call the `add_d3js()` method in order to use the `d3` object here. This method just import D3.js and let us use D3.js functions.
+
 ## Loading JavaScript from file
 
-`plotjs` requires the JavaScript to be in a string, but it's far from being a comfortable way of coding. So there is a convenient function to load JavaScript from a file:
+`plotjs` requires the JavaScript to be in a string, but it's far from being a comfortable way of coding. So there is a convenient argument to load JavaScript from a file:
 
 ```python
-from plotjs import javascript
-
-PlotJS(fig=fig).add_javascript(
-    javascript.from_file("my_script.js"),
-)
+PlotJS(fig=fig).add_javascript(from_file="my_script.js")
 ```
 
 This allows you to write JavaScript in a separate file so that you can have a code formatter (prettier, etc.), code completion, syntax highlighting, and so on. This is what is recommended to do if you're writing a significant amount of code.
 
 ## Advanced usage
+
+With JavaScript, we can do pretty much anything we want, so be creative! Here, we can force the dots to remain highlighted once we click on them:
 
 ```python
 import matplotlib.pyplot as plt
@@ -84,7 +87,7 @@ for specie in df["species"].unique():
     )
 ax.legend()
 
-custom_js: str = """
+custom_js = """
 document.querySelectorAll('.point').forEach(el => {
 el.addEventListener('click', function() {
     const group = this.getAttribute('data-group');
@@ -108,7 +111,7 @@ el.addEventListener('click', function() {
 });
 """
 
-custom_css: str = """
+custom_css = """
 .point.dimmed {
     opacity: 0.2;
 }
@@ -119,10 +122,7 @@ custom_css: str = """
 
 (
     PlotJS(fig=fig)
-    .add_tooltip(
-        labels=df["species"],
-        groups=df["species"],
-    )
+    .add_tooltip(labels=df["species"], groups=df["species"])
     .add_css(custom_css)
     .add_javascript(custom_js)
 )

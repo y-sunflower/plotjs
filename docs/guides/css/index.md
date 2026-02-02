@@ -36,7 +36,7 @@ You can directly apply a CSS string to your plot:
 
 ## Using a Python dictionary
 
-For better readability and reusability, you can define CSS as a dictionary using `plotjs.css.from_dict()`:
+For better readability and reusability, you can define CSS as a dictionary:
 
 ```python
 from plotjs import css
@@ -44,12 +44,12 @@ from plotjs import css
 (
     PlotJS()
     .add_tooltip(labels=df["tooltip"])
-    .add_css(css.from_dict({
+    .add_css(from_dict = {
         ".tooltip": {
             "background": "red",
             "color": "blue"
         }
-    }))
+    })
 )
 ```
 
@@ -59,8 +59,8 @@ Method chaining also works if you want to split styles:
 (
     PlotJS()
     .add_tooltip(labels=df["tooltip"])
-    .add_css(css.from_dict({".tooltip": {"color": "blue"}}))
-    .add_css(css.from_dict({".tooltip": {"background": "red"}}))
+    .add_css(from_dict = {".tooltip": {"color": "blue"}})
+    .add_css(from_dict = {".tooltip": {"background": "red"}})
 )
 ```
 
@@ -83,7 +83,7 @@ from plotjs import css
 (
     PlotJS()
     .add_tooltip(labels=df["tooltip"])
-    .add_css(css.from_file("docs/static/style.css"))
+    .add_css(from_file = "docs/static/style.css")
 )
 ```
 
@@ -114,7 +114,7 @@ You can combine with `.hovered` or `.not-hovered`, e.g., `.point.hovered`.
 
 ## Default CSS
 
-You can find the default CSS applied by plotjs [here](https://github.com/y-sunflower/plotjs/blob/main/plotjs/static/default.css)
+You can find the default CSS applied by plotjs [here](https://github.com/y-sunflower/plotjs/blob/main/plotjs/static/default.css).
 
 ## Appendix
 

@@ -16,6 +16,7 @@ ax.scatter(
 (
     PlotJS(fig=fig)
     .add_tooltip(labels=df["species"])
+    .add_d3js()  # import D3.js library
     .add_javascript(
         """
 d3.selectAll(".point").on("click", () =>
