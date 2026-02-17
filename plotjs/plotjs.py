@@ -54,7 +54,6 @@ class PlotJS:
         plt.rcParams["svg.hashsalt"] = "svg-hashsalt"
         plt.rcParams["svg.id"] = "svg-id"
         fig.savefig(buf, format="svg", **savefig_kws)
-        fig.savefig("debug.svg", **savefig_kws)
         plt.rcParams["svg.hashsalt"] = old_svg_hashsalt
         plt.rcParams["svg.id"] = old_svg_id
 
