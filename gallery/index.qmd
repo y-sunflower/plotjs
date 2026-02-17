@@ -1,0 +1,31 @@
+---
+format: gfm
+from: markdown-smart
+---
+
+This page contains all the `plotjs` examples from this website.
+
+**TODO: make this page less ugly and add more diverse examples.**
+
+```{python}
+# | echo: false
+# | output: asis
+from pathlib import Path
+
+html_files = list(Path("../iframes").rglob("*.html"))
+html_paths = [str(path) for path in html_files]
+
+
+# Split the list into chunks of 2
+def chunks(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i : i + n]
+
+
+for pair in chunks(html_paths, 2):
+    print('<div style="display: flex;">')
+    for html_path in pair:
+        iframe = f'<iframe width="100%" height="300" src="{html_path}" style="flex: 1; border: none;"></iframe>'
+        print(iframe)
+    print("</div>")
+```
