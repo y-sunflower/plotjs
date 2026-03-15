@@ -344,6 +344,65 @@ describe("setHoverEffect", () => {
     expect(tooltip.innerHTML).toBe("Area 1");
   });
 
+  test("should link legend swatches to grouped area elements", () => {
+    const dom = new JSDOM(`<html><body>
+      <div id="tooltip" style="display: none;"></div>
+      <svg>
+        <g id="axes_1">
+          <g id="FillBetweenPolyCollection_1">
+            <path style="fill: #1f77b4"></path>
+          </g>
+          <g id="FillBetweenPolyCollection_2">
+            <path style="fill: #ff7f0e"></path>
+          </g>
+          <g id="legend_1">
+            <g id="patch_5">
+              <path style="fill: #ffffff; opacity: 0.8"></path>
+            </g>
+            <g id="patch_6">
+              <path style="fill: #1f77b4"></path>
+            </g>
+            <g id="patch_7">
+              <path style="fill: #ff7f0e"></path>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </body></html>`);
+
+    const document = dom.window.document;
+    const svg = document.querySelector("svg");
+    const tooltip = document.querySelector("#tooltip");
+    const parser = new PlotSVGParser(svg, tooltip, 0, 0);
+
+    const areas = parser.findAreas(parser.svg, "axes_1");
+    parser.setHoverEffect(
+      areas,
+      "axes_1",
+      ["Series A", "Series B", "Series A", "Series B"],
+      ["Series A", "Series B", "Series A", "Series B"],
+      "block",
+      false,
+    );
+
+    const nodes = areas.nodes();
+    const firstLegendSwatch = nodes[2];
+    firstLegendSwatch.dispatchEvent(
+      new dom.window.MouseEvent("mouseover", {
+        bubbles: true,
+        pageX: 0,
+        pageY: 0,
+        currentTarget: firstLegendSwatch,
+      }),
+    );
+
+    expect(nodes[0].classList.contains("hovered")).toBe(true);
+    expect(nodes[2].classList.contains("hovered")).toBe(true);
+    expect(nodes[1].classList.contains("not-hovered")).toBe(true);
+    expect(nodes[3].classList.contains("not-hovered")).toBe(true);
+    expect(tooltip.innerHTML).toBe("Series A");
+  });
+
   test("should show correct label for each element", () => {
     const dom = new JSDOM(`<html><body>
       <div id="tooltip" style="display: none;"></div>

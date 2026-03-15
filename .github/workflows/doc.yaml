@@ -21,8 +21,6 @@ jobs:
           python-version: 3.x
       - run: pip install zensical
       - run: zensical build --clean
-      - name: Add CNAME for custom domain
-        run: echo "typst-in-production.com" > site/CNAME
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4

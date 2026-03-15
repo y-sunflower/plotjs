@@ -161,6 +161,23 @@ export default class PlotSVGParser {
   }
 
   /**
+   * Extract the raw fill value from an SVG element.
+   *
+   * @param {Element} element - SVG element to inspect.
+   * @returns {string} Normalized fill value, or empty string if absent.
+   */
+  getFillValue(element) {
+    const style = element?.getAttribute("style") ?? "";
+    const styleMatch = style.match(/(?:^|;)\s*fill:\s*([^;]+)/i);
+
+    if (styleMatch) {
+      return styleMatch[1].trim().toLowerCase();
+    }
+
+    return (element?.getAttribute("fill") ?? "").trim().toLowerCase();
+  }
+
+  /**
    * Find bar elements (`patch` groups with clipping) inside a given axes.
    *
    * @param {Selection} svg - Selection of the SVG element.
@@ -236,16 +253,35 @@ export default class PlotSVGParser {
 
   /**
    * Find filled area elements (`FillBetweenPolyCollection` paths) inside a given axes.
+   * Also includes legend swatches whose fill matches the plotted areas so legend hover
+   * can target the same series as the chart area.
    *
    * @param {Selection} svg - Selection of the SVG element.
    * @param {string} axes_class - ID of the axes group.
    * @returns {Selection} Selection of area elements.
    */
   findAreas(svg, axes_class) {
-    // select all <path> of FillBetweenPolyCollection elements within the specific axes
-    const areas = svg.selectAll(
+    const parser = this;
+    const plottedAreas = svg.selectAll(
       `g#${axes_class} g[id^="FillBetweenPolyCollection"] path`,
     );
+    const areaFills = new Set(
+      plottedAreas
+        .nodes()
+        .map((element) => this.getFillValue(element))
+        .filter((fill) => fill && fill !== "none"),
+    );
+
+    const legendAreas = svg
+      .selectAll(`g#${axes_class} g[id^="legend"] g[id^="patch"] path`)
+      .filter(function () {
+        return areaFills.size > 0 && areaFills.has(parser.getFillValue(this));
+      });
+
+    const areas = new Selection([
+      ...plottedAreas.nodes(),
+      ...legendAreas.nodes(),
+    ]);
     areas.attr("class", "area plot-element");
 
     console.log(`Found ${areas.size()} "area" element`);

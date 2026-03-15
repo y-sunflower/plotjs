@@ -21,10 +21,10 @@ MAIN_DIR: str = Path(__file__).parent
 TEMPLATE_DIR: str = MAIN_DIR / "static"
 CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
 JS_PARSER_PATH: str = os.path.join(TEMPLATE_DIR, "plotparser.js")
-
-env: Environment = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 DEFAULT_FAVICON_PATH = "https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/favicon.ico?raw=true"
 DEFAULT_DOCUMENT_TITLE = "Made with plotjs"
+
+env: Environment = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
 
 class PlotJS:
@@ -35,6 +35,7 @@ class PlotJS:
     def __init__(
         self,
         fig: Figure | None = None,
+        _debug: bool = False,
         **savefig_kws: dict,
     ):
         """
@@ -57,6 +58,9 @@ class PlotJS:
             plt.rcParams["svg.hashsalt"] = "svg-hashsalt"
             plt.rcParams["svg.id"] = "svg-id"
             fig.savefig(buf, format="svg", **savefig_kws)
+
+            if _debug:
+                fig.savefig("debug-plotjs.svg", **savefig_kws)
         finally:
             plt.rcParams["svg.hashsalt"] = old_svg_hashsalt
             plt.rcParams["svg.id"] = old_svg_id

@@ -16,6 +16,9 @@ Provides basic DOM manipulation methods for working with SVG elements.</p>
 <dt><a href="#getPointerPosition">getPointerPosition(event, svgElement)</a> ⇒ <code>Array.&lt;number&gt;</code></dt>
 <dd><p>Get mouse position relative to an SVG element.</p>
 </dd>
+<dt><a href="#getFillValue">getFillValue(element)</a> ⇒ <code>string</code></dt>
+<dd><p>Extract the raw fill value from an SVG element.</p>
+</dd>
 <dt><a href="#findBars">findBars(svg, axes_class)</a> ⇒ <code><a href="#Selection">Selection</a></code></dt>
 <dd><p>Find bar elements (<code>patch</code> groups with clipping) inside a given axes.</p>
 </dd>
@@ -29,7 +32,9 @@ and assigns <code>data-group</code> attributes based on tooltip groups.</p>
 excluding axis grid lines.</p>
 </dd>
 <dt><a href="#findAreas">findAreas(svg, axes_class)</a> ⇒ <code><a href="#Selection">Selection</a></code></dt>
-<dd><p>Find filled area elements (<code>FillBetweenPolyCollection</code> paths) inside a given axes.</p>
+<dd><p>Find filled area elements (<code>FillBetweenPolyCollection</code> paths) inside a given axes.
+Also includes legend swatches whose fill matches the plotted areas so legend hover
+can target the same series as the chart area.</p>
 </dd>
 <dt><a href="#nearestElementFromMouse">nearestElementFromMouse(mouseX, mouseY, elements)</a> ⇒ <code>Element</code> | <code>null</code></dt>
 <dd><p>Compute the nearest element to the mouse cursor from a set of elements.
@@ -73,6 +78,18 @@ Get mouse position relative to an SVG element.
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The mouse event |
 | svgElement | <code>Element</code> \| [<code>Selection</code>](#Selection) | The SVG element or Selection |
+
+<a name="getFillValue"></a>
+
+## getFillValue(element) ⇒ <code>string</code>
+Extract the raw fill value from an SVG element.
+
+**Kind**: global function
+**Returns**: <code>string</code> - Normalized fill value, or empty string if absent.
+
+| Param | Type | Description |
+| --- | --- | --- |
+| element | <code>Element</code> | SVG element to inspect. |
 
 <a name="findBars"></a>
 
@@ -121,6 +138,8 @@ excluding axis grid lines.
 
 ## findAreas(svg, axes_class) ⇒ [<code>Selection</code>](#Selection)
 Find filled area elements (`FillBetweenPolyCollection` paths) inside a given axes.
+Also includes legend swatches whose fill matches the plotted areas so legend hover
+can target the same series as the chart area.
 
 **Kind**: global function
 **Returns**: [<code>Selection</code>](#Selection) - Selection of area elements.

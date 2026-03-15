@@ -254,6 +254,51 @@ def test_line_chart_hover(page, tmp_output_dir, load_html):
         assert len(line_paths) > 0, "Should have at least one line path"
 
 
+def test_area_legend_hover_highlights_matching_area(page, tmp_output_dir, load_html):
+    """Test that hovering an area legend swatch highlights the matching filled area."""
+    import numpy as np
+
+    x = np.arange(4)
+    y1 = np.array([2, 3, 2, 4])
+    y2 = np.array([1, 1.5, 1, 2])
+
+    fig, ax = plt.subplots()
+    ax.fill_between(x, y1, label="Series A")
+    ax.fill_between(x, y2, label="Series B")
+    ax.legend()
+
+    html_path = tmp_output_dir / "area_legend_hover.html"
+    PlotJS(fig).add_tooltip(
+        labels=["Series A", "Series B"],
+        groups=["Series A", "Series B"],
+        on="area",
+    ).save(str(html_path))
+    plt.close(fig)
+
+    load_html(page, html_path)
+
+    areas = page.locator('svg g[id^="FillBetweenPolyCollection"] path.plot-element')
+    legend_swatches = page.locator(
+        'svg g[id^="legend"] g[id^="patch"] path.plot-element'
+    )
+
+    assert areas.count() == 2, f"Expected 2 plotted areas, got {areas.count()}"
+    assert legend_swatches.count() == 2, (
+        f"Expected 2 interactive legend swatches, got {legend_swatches.count()}"
+    )
+
+    legend_swatches.nth(0).hover(force=True)
+    page.wait_for_timeout(200)
+
+    first_area_classes = areas.nth(0).get_attribute("class") or ""
+    second_area_classes = areas.nth(1).get_attribute("class") or ""
+    assert "hovered" in first_area_classes, first_area_classes
+    assert "not-hovered" in second_area_classes, second_area_classes
+
+    tooltip = page.locator(".tooltip")
+    assert "Series A" in tooltip.inner_text()
+
+
 def test_multiple_axes_independent_hover(page, tmp_output_dir, load_html):
     """Test that multiple axes have independent hover interactions."""
     df = data.load_iris().head(6)

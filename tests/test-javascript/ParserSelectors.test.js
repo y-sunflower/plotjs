@@ -347,6 +347,42 @@ describe("findAreas", () => {
     expect(parser.findAreas(parser.svg, "axes_1").size()).toBe(1);
     expect(parser.findAreas(parser.svg, "axes_2").size()).toBe(1);
   });
+
+  test("should include matching legend swatches and exclude legend background", () => {
+    const dom = new JSDOM(`<svg>
+      <g id="axes_1">
+        <g id="FillBetweenPolyCollection_1">
+          <path style="fill: #1f77b4"></path>
+        </g>
+        <g id="FillBetweenPolyCollection_2">
+          <path style="fill: #ff7f0e"></path>
+        </g>
+        <g id="legend_1">
+          <g id="patch_5">
+            <path style="fill: #ffffff; opacity: 0.8"></path>
+          </g>
+          <g id="patch_6">
+            <path style="fill: #1f77b4"></path>
+          </g>
+          <g id="patch_7">
+            <path style="fill: #ff7f0e"></path>
+          </g>
+        </g>
+      </g>
+    </svg>`);
+
+    const svg = dom.window.document.querySelector("svg");
+    const parser = new PlotSVGParser(svg, null, 0, 0);
+    const areas = parser.findAreas(parser.svg, "axes_1");
+
+    expect(areas.size()).toBe(4);
+    expect(areas.nodes().map((node) => node.parentNode.id)).toEqual([
+      "FillBetweenPolyCollection_1",
+      "FillBetweenPolyCollection_2",
+      "patch_6",
+      "patch_7",
+    ]);
+  });
 });
 
 describe("nearestElementFromMouse", () => {
