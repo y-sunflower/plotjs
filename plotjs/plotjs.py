@@ -23,6 +23,8 @@ CSS_PATH: str = os.path.join(TEMPLATE_DIR, "default.css")
 JS_PARSER_PATH: str = os.path.join(TEMPLATE_DIR, "plotparser.js")
 
 env: Environment = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+DEFAULT_FAVICON_PATH = "https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/favicon.ico?raw=true"
+DEFAULT_DOCUMENT_TITLE = "Made with plotjs"
 
 
 class PlotJS:
@@ -51,11 +53,13 @@ class PlotJS:
         # https://github.com/y-sunflower/plotjs/issues/54
         old_svg_hashsalt = plt.rcParams["svg.hashsalt"]
         old_svg_id = plt.rcParams["svg.id"]
-        plt.rcParams["svg.hashsalt"] = "svg-hashsalt"
-        plt.rcParams["svg.id"] = "svg-id"
-        fig.savefig(buf, format="svg", **savefig_kws)
-        plt.rcParams["svg.hashsalt"] = old_svg_hashsalt
-        plt.rcParams["svg.id"] = old_svg_id
+        try:
+            plt.rcParams["svg.hashsalt"] = "svg-hashsalt"
+            plt.rcParams["svg.id"] = "svg-id"
+            fig.savefig(buf, format="svg", **savefig_kws)
+        finally:
+            plt.rcParams["svg.hashsalt"] = old_svg_hashsalt
+            plt.rcParams["svg.id"] = old_svg_id
 
         buf.seek(0)
         self._svg_content = buf.getvalue()
@@ -68,6 +72,8 @@ class PlotJS:
         self.additional_css = ""
         self.additional_javascript = ""
         self._hover_nearest = False
+        self._favicon_path = DEFAULT_FAVICON_PATH
+        self._document_title = DEFAULT_DOCUMENT_TITLE
         self._template = env.get_template("template.html")
 
         with open(CSS_PATH) as f:
@@ -181,7 +187,13 @@ class PlotJS:
                     normalized_on.append(element)
 
         if ax is None:
+            if not self._axes:
+                raise ValueError("Cannot add tooltip because the figure has no Axes.")
             ax: Axes = self._axes[0]
+        elif ax not in self._axes:
+            raise ValueError(
+                "Cannot add tooltip on an Axes that does not belong to this figure."
+            )
         self._legend_handles, self._legend_handles_labels = (
             ax.get_legend_handles_labels()
         )
@@ -338,8 +350,8 @@ class PlotJS:
     def save(
         self,
         file_path: str,
-        favicon_path: str = "https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/favicon.ico?raw=true",
-        document_title: str = "Made with plotjs",
+        favicon_path: str = DEFAULT_FAVICON_PATH,
+        document_title: str = DEFAULT_DOCUMENT_TITLE,
     ) -> "PlotJS":
         """
         Save the interactive matplotlib plots to an HTML file.
@@ -371,7 +383,7 @@ class PlotJS:
 
         if not file_path.endswith(".html"):
             file_path += ".html"
-        with open(file_path, "w") as f:
+        with open(file_path, "w", encoding="utf-8") as f:
             f.write(self.html)
 
         # store the file path for later use (e.g., show() method)
@@ -427,18 +439,23 @@ class PlotJS:
             ```
         """
         if not hasattr(self, "_file_path"):
-            temp_file = tempfile.NamedTemporaryFile(
-                mode="w", suffix=".html", delete=False
-            )
-            self.save(temp_file.name)
-            temp_file.close()
+            temp_fd, temp_path = tempfile.mkstemp(suffix=".html")
+            os.close(temp_fd)
+            self.save(temp_path)
 
         webbrowser.open(f"file://{self._file_path}")
         return self
 
     def _set_plot_data_json(self) -> None:
         if not hasattr(self, "_tooltip_labels"):
-            self.add_tooltip()
+            if self._axes:
+                self.add_tooltip()
+            else:
+                self._tooltip_labels = []
+                self._tooltip_groups = []
+                self._tooltip_x_shift = 0
+                self._tooltip_y_shift = 0
+                self._axes_tooltip = {}
 
         self.plot_data_json = {
             "tooltip_labels": self._tooltip_labels,
