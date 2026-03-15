@@ -5,9 +5,12 @@ h4 {
 }
 
 footer.custom-footer {
-  box-shadow: 0 0 1rem #0000003e, 0 0.2rem 0.4rem #0003;
-  transition: transform 0.25s cubic-bezier(0.1, 0.7, 0.1, 1), box-shadow 0.25s;
-  color: #000000ff;
+  box-shadow:
+    0 0 1rem #0000003e,
+    0 0.2rem 0.4rem #0003;
+  transition:
+    transform 0.25s cubic-bezier(0.1, 0.7, 0.1, 1),
+    box-shadow 0.25s;
   padding: 20px 20px;
   text-align: center;
   margin-top: 50px;

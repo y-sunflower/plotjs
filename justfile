@@ -28,7 +28,7 @@ cov:
     rm coverage.xml
 
 preview:
-    uv run mkdocs serve
+    uv run zensical serve
 
 jsdoc:
     bun run docs:js
