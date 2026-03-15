@@ -36,7 +36,7 @@ git checkout -b my-feature
 
 ```bash
 uv sync --all-groups --dev
-uv run pre-commit install
+uv run prek install -f
 uv pip install -e .
 ```
 

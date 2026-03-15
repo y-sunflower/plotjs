@@ -35,3 +35,4 @@ release.sh
 node_modules
 bun.lockb
 .claude/
+site/
