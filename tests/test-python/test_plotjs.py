@@ -356,3 +356,54 @@ def test_add_tooltip_on_parameter_invalid_in_list():
         PlotJS(fig=fig).add_tooltip(labels=["A", "B", "C"], on=["point", "circle"])
 
     plt.close(fig)
+
+
+def test_as_html_without_save_uses_default_metadata():
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    html = PlotJS(fig=fig).as_html()
+
+    assert "<title>Made with plotjs</title>" in html
+    assert 'rel="icon"' in html
+    assert "<svg" in html
+
+    plt.close(fig)
+
+
+def test_as_html_without_axes_and_without_tooltip():
+    fig = plt.figure()
+
+    html = PlotJS(fig=fig).as_html()
+
+    assert "<svg" in html
+
+    plt.close(fig)
+
+
+def test_add_tooltip_without_axes_raises_clear_error():
+    fig = plt.figure()
+
+    with pytest.raises(
+        ValueError, match=r"Cannot add tooltip because the figure has no Axes\."
+    ):
+        PlotJS(fig=fig).add_tooltip()
+
+    plt.close(fig)
+
+
+def test_init_restores_svg_rcparams_if_savefig_fails():
+    fig, ax = plt.subplots()
+    ax.scatter([1, 2, 3], [1, 2, 3])
+
+    old_svg_hashsalt = plt.rcParams["svg.hashsalt"]
+    old_svg_id = plt.rcParams["svg.id"]
+
+    with patch.object(fig, "savefig", side_effect=RuntimeError("boom")):
+        with pytest.raises(RuntimeError, match="boom"):
+            PlotJS(fig=fig)
+
+    assert plt.rcParams["svg.hashsalt"] == old_svg_hashsalt
+    assert plt.rcParams["svg.id"] == old_svg_id
+
+    plt.close(fig)
