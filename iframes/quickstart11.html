@@ -61,7 +61,7 @@ svg {
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-02-02T14:52:20.009575</dc:date>
+    <dc:date>2026-03-15T20:57:14.836735</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -2352,6 +2352,23 @@ class PlotSVGParser {
   }
 
   /**
+   * Extract the raw fill value from an SVG element.
+   *
+   * @param {Element} element - SVG element to inspect.
+   * @returns {string} Normalized fill value, or empty string if absent.
+   */
+  getFillValue(element) {
+    const style = element?.getAttribute("style") ?? "";
+    const styleMatch = style.match(/(?:^|;)\s*fill:\s*([^;]+)/i);
+
+    if (styleMatch) {
+      return styleMatch[1].trim().toLowerCase();
+    }
+
+    return (element?.getAttribute("fill") ?? "").trim().toLowerCase();
+  }
+
+  /**
    * Find bar elements (`patch` groups with clipping) inside a given axes.
    *
    * @param {Selection} svg - Selection of the SVG element.
@@ -2427,16 +2444,35 @@ class PlotSVGParser {
 
   /**
    * Find filled area elements (`FillBetweenPolyCollection` paths) inside a given axes.
+   * Also includes legend swatches whose fill matches the plotted areas so legend hover
+   * can target the same series as the chart area.
    *
    * @param {Selection} svg - Selection of the SVG element.
    * @param {string} axes_class - ID of the axes group.
    * @returns {Selection} Selection of area elements.
    */
   findAreas(svg, axes_class) {
-    // select all <path> of FillBetweenPolyCollection elements within the specific axes
-    const areas = svg.selectAll(
+    const parser = this;
+    const plottedAreas = svg.selectAll(
       `g#${axes_class} g[id^="FillBetweenPolyCollection"] path`,
     );
+    const areaFills = new Set(
+      plottedAreas
+        .nodes()
+        .map((element) => this.getFillValue(element))
+        .filter((fill) => fill && fill !== "none"),
+    );
+
+    const legendAreas = svg
+      .selectAll(`g#${axes_class} g[id^="legend"] g[id^="patch"] path`)
+      .filter(function () {
+        return areaFills.size > 0 && areaFills.has(parser.getFillValue(this));
+      });
+
+    const areas = new Selection([
+      ...plottedAreas.nodes(),
+      ...legendAreas.nodes(),
+    ]);
     areas.attr("class", "area plot-element");
 
     console.log(`Found ${areas.size()} "area" element`);
