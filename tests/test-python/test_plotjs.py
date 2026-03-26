@@ -493,3 +493,46 @@ def test_histogram_with_custom_labels():
             "on": None,
         }
     }
+
+
+def test_pie_chart():
+    labels = ["A", "B", "C", "D"]
+    sizes = [15, 10, 25, 10]
+
+    fig, ax = plt.subplots()
+    ax.pie(sizes, labels=labels, autopct="%1.1f%%")
+
+    tooltip = [f"{lab} (n = {size})" for lab, size in zip(labels, sizes)]
+
+    plotjs = PlotJS(fig, _debug=True).add_tooltip(labels=tooltip)
+
+    assert len(plotjs._axes) == 1
+    assert plotjs._tooltip_labels == [
+        "A (n = 15)",
+        "B (n = 10)",
+        "C (n = 25)",
+        "D (n = 10)",
+        "A",
+        "B",
+        "C",
+        "D",
+    ]
+    assert plotjs._tooltip_groups == [0, 1, 2, 3, 4, 5, 6, 7]
+
+    assert plotjs._axes_tooltip == {
+        "axes_1": {
+            "tooltip_labels": [
+                "A (n = 15)",
+                "B (n = 10)",
+                "C (n = 25)",
+                "D (n = 10)",
+                "A",
+                "B",
+                "C",
+                "D",
+            ],
+            "tooltip_groups": [0, 1, 2, 3, 4, 5, 6, 7],
+            "hover_nearest": "false",
+            "on": None,
+        }
+    }

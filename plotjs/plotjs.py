@@ -118,8 +118,8 @@ class PlotJS:
             hover_nearest: When `True`, hover the nearest plot element.
             on: Which plot elements to apply interactivity to. Can be a
                 single element type or a list. Valid values are "point",
-                "line", "bar", "area" (plurals like "points" also accepted).
-                If `None` (default), applies to all element types.
+                "line", "bar", "area", "pie (plurals like "points" also
+                accepted). If `None` (default), applies to all element types.
             ax: A matplotlib Axes. If `None` (default), uses first Axes.
 
         Returns:
@@ -164,12 +164,13 @@ class PlotJS:
         self._tooltip_y_shift = tooltip_y_shift
 
         # Normalize and validate the `on` parameter
-        valid_elements = {"point", "line", "bar", "area"}
+        valid_elements = {"point", "line", "bar", "area", "pie"}
         plural_to_singular = {
             "points": "point",
             "lines": "line",
             "bars": "bar",
             "areas": "area",
+            "pies": "pie",
         }
 
         if on is None:
