@@ -201,6 +201,68 @@ describe("findPoints", () => {
   });
 });
 
+describe("findPies", () => {
+  test("should find pie slice patch paths", () => {
+    const dom = new JSDOM(`<svg>
+      <g id="axes_1">
+        <g id="patch_2">
+          <path
+            d="M 342.6048 174.528 C 342.6048 146.307911 331.382456 119.214776 311.42784 99.26016 L 236.16 174.528 z"
+            style="fill: #1f77b4"
+          ></path>
+        </g>
+        <g id="patch_3">
+          <path
+            d="M 236.159995 68.0832 C 217.476423 68.0832 199.118042 73.002311 182.937594 82.344101 L 236.16 174.528 z"
+            style="fill: #ff7f0e"
+          ></path>
+        </g>
+      </g>
+    </svg>`);
+
+    const svg = dom.window.document.querySelector("svg");
+    const parser = new PlotSVGParser(svg, null, 0, 0);
+    const pies = parser.findPies(parser.svg, "axes_1");
+
+    expect(pies.size()).toBe(2);
+    pies.each(function () {
+      expect(this.getAttribute("class")).toBe("pie plot-element");
+    });
+  });
+
+  test("should ignore scatter plot patch paths", () => {
+    const dom = new JSDOM(`<svg>
+      <g id="axes_1">
+        <g id="patch_2">
+          <path
+            d="M 57.6 307.584 L 414.72 307.584 L 414.72 41.472 L 57.6 41.472 z"
+            style="fill: #ffffff"
+          ></path>
+        </g>
+        <g id="patch_3">
+          <path
+            d="M 57.6 307.584 L 57.6 41.472"
+            style="fill: none; stroke: #000000; stroke-width: 0.8"
+          ></path>
+        </g>
+        <g id="patch_4">
+          <path
+            d="M 414.72 307.584 L 414.72 41.472"
+            style="fill: none; stroke: #000000; stroke-width: 0.8"
+          ></path>
+        </g>
+      </g>
+    </svg>`);
+
+    const svg = dom.window.document.querySelector("svg");
+    const parser = new PlotSVGParser(svg, null, 0, 0);
+    const pies = parser.findPies(parser.svg, "axes_1");
+
+    expect(pies.size()).toBe(0);
+    expect(pies.empty()).toBe(true);
+  });
+});
+
 describe("findLines", () => {
   test("should find line2d path elements", () => {
     const dom = new JSDOM(`<svg>
