@@ -1,75 +1,84 @@
 [project]
 name = "plotjs"
-description = "Turn static matplotlib charts into interactive web visualizations"
 version = "0.0.9"
-license = "MIT"
-license-files = ["LICENSE"]
-keywords = ["matplotlib", "interactive", "javascript", "web", "css", "d3", "mpld3", "plotnine"]
-authors = [
-  { name="Joseph Barbier", email="joseph.barbierdarnal@mail.com" },
-]
+description = "Turn static matplotlib charts into interactive web visualizations"
 readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Joseph Barbier", email = "joseph.barbierdarnal@mail.com" },
+]
+keywords = [
+  "css",
+  "d3",
+  "interactive",
+  "javascript",
+  "matplotlib",
+  "mpld3",
+  "plotnine",
+  "web"
+]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
-    "Development Status :: 3 - Alpha"
+  "Development Status :: 3 - Alpha",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3"
 ]
 dependencies = [
-    "jinja2>=3.0.0",
-    "matplotlib>=3.10.0",
-    "narwhals>=2.0.0",
+  "jinja2>=3.0.0",
+  "matplotlib>=3.10.0",
+  "narwhals>=2.0.0",
+]
+
+[project.urls]
+Documentation = "https://y-sunflower.github.io/plotjs/"
+Homepage = "https://y-sunflower.github.io/plotjs/"
+Issues = "https://github.com/y-sunflower/plotjs/issues"
+Repository = "https://github.com/y-sunflower/plotjs"
+
+[dependency-groups]
+dev = [
+  "coverage>=7.9.1",
+  "drawarrow>=0.1.0",
+  "genbadge[coverage]>=1.1.2",
+  "highlight-text>=0.2",
+  "ipywidgets>=8.1.7",
+  "jupyter>=1.1.1",
+  "mkdocs-material>=9.6.9",
+  "mkdocstrings-python>=1.16.5",
+  "morethemes>=0.4.0",
+  "nbclient>=0.10.2",
+  "nbformat>=5.10.4",
+  "pandas>=2.3.1",
+  "playwright>=1.40.0",
+  "plotnine>=0.13.6",
+  "polars>=1.31.0",
+  "prek>=0.3.5",
+  "pyfonts>=1.0.0",
+  "pypalettes>=0.1.4",
+  "pytest>=8.3.5",
+  "ruff>=0.11.13",
+  "seaborn>=0.13.2",
+  "ty>=0.0.1a16",
+  "zensical>=0.0.27",
 ]
 
 [build-system]
 requires = [
-    "setuptools",
-    "setuptools-scm",
+  "setuptools",
+  "setuptools-scm",
 ]
 build-backend = "setuptools.build_meta"
 
+[tool.ruff]
+extend-exclude = ["docs/index.qmd"]
+
 [tool.setuptools]
 packages = ["plotjs"]
-
-[tool.uv.sources]
-plotjs = { workspace = true }
-
-[dependency-groups]
-dev = [
-    "pytest>=8.3.5",
-    "ruff>=0.11.13",
-    "mkdocs-material>=9.6.9",
-    "mkdocstrings-python>=1.16.5",
-    "coverage>=7.9.1",
-    "genbadge[coverage]>=1.1.2",
-    "pandas>=2.3.1",
-    "pypalettes>=0.1.4",
-    "pyfonts>=1.0.0",
-    "morethemes>=0.4.0",
-    "plotnine>=0.13.6",
-    "ty>=0.0.1a16",
-    "polars>=1.31.0",
-    "nbformat>=5.10.4",
-    "nbclient>=0.10.2",
-    "jupyter>=1.1.1",
-    "ipywidgets>=8.1.7",
-    "highlight-text>=0.2",
-    "drawarrow>=0.1.0",
-    "playwright>=1.40.0",
-    "prek>=0.3.5",
-    "seaborn>=0.13.2",
-    "zensical>=0.0.27",
-]
-
-[project.urls]
-Homepage = "https://y-sunflower.github.io/plotjs/"
-Issues = "https://github.com/y-sunflower/plotjs/issues"
-Documentation = "https://y-sunflower.github.io/plotjs/"
-Repository = "https://github.com/y-sunflower/plotjs"
 
 [tool.ty.src]
 include = ["plotjs"]
 exclude = ["tests", "sandbox"]
 
-[tool.ruff]
-extend-exclude = ["docs/index.qmd"]
+[tool.uv.sources]
+plotjs = { workspace = true }
