@@ -13,7 +13,7 @@ interactive charts with minimum user inputs. You can:
 
 ???+ warning
 
-    `plotjs` is in very early stage: expect regular breaking changes.
+    Consider that `plotjs` is still unstable.
 
 ## Get started
 
@@ -224,6 +224,31 @@ ax.barh(
 ```
 
 <iframe width="800" height="600" src="iframes/quickstart6.html" style="border:none;">
+
+</iframe>
+
+### Histogram
+
+``` python
+import matplotlib.pyplot as plt
+import numpy as np
+
+from plotjs import PlotJS
+
+x = np.random.normal(loc=0.0, scale=1.0, size=100)
+
+fig, ax = plt.subplots()
+counts, bins, _ = ax.hist(x, color="#2a9d8f")
+
+labels = [
+    f"Lower bound: {lo:.2f}<br>Upper bound:{hi:.2f}<br>n: {int(n)}"
+    for lo, hi, n in zip(bins[:-1], bins[1:], counts)
+]
+
+PlotJS(fig=fig).add_tooltip(labels=labels).save("iframes/quickstart12.html")
+```
+
+<iframe width="800" height="600" src="iframes/quickstart12.html" style="border:none;">
 
 </iframe>
 
