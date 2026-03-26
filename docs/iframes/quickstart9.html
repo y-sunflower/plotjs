@@ -61,7 +61,7 @@ svg {
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-03-26T15:26:20.183536</dc:date>
+    <dc:date>2026-03-26T16:35:09.960250</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -1966,6 +1966,39 @@ class PlotSVGParser {
   }
 
   /**
+   * Find pie elements (`patch` paths) inside a given axes.
+   *
+   * @param {Selection} svg - Selection of the SVG element.
+   * @param {string} axes_class - ID of the axes group.
+   * @returns {Selection} Selection of pie elements.
+   */
+  findPies(svg, axes_class) {
+    // Matplotlib also uses patch_* groups for axes backgrounds and spines.
+    // Pie wedges are the patch paths with a non-empty fill and curve commands.
+    const parser = this;
+    const pies = svg
+      .selectAll(`g#${axes_class} g[id^="patch_"] path`)
+      .filter(function () {
+        const element = this;
+        const clipPath = element.getAttribute("clip-path");
+        const normalizedFill = parser.getFillValue(element);
+        const pathData = element.getAttribute("d") ?? "";
+
+        return (
+          !clipPath &&
+          normalizedFill !== "" &&
+          normalizedFill !== "none" &&
+          /[CQAST]/.test(pathData)
+        );
+      });
+
+    pies.attr("class", "pie plot-element");
+
+    console.log(`Found ${pies.size()} "pie" element`);
+    return pies;
+  }
+
+  /**
    * Find line elements (`line2d` paths) inside a given axes,
    * excluding axis grid lines.
    *
@@ -2185,6 +2218,9 @@ class PlotSVGParser {
             const lines = shouldProcess("line")
               ? plotParser.findLines(plotParser.svg, axes_class)
               : new Selection([]);
+            const pies = shouldProcess("pie")
+              ? plotParser.findPies(plotParser.svg, axes_class)
+              : new Selection([]);
             const bars = shouldProcess("bar")
               ? plotParser.findBars(plotParser.svg, axes_class)
               : new Selection([]);
@@ -2200,9 +2236,13 @@ class PlotSVGParser {
               : new Selection([]);
 
             const totalElements =
-              lines.size() + bars.size() + points.size() + areas.size();
+              lines.size() +
+              bars.size() +
+              points.size() +
+              areas.size() +
+              pies.size();
             console.log(
-              `PlotJS: Total elements: ${totalElements} (${lines.size()} lines, ${bars.size()} bars, ${points.size()} points, ${areas.size()} areas)`,
+              `PlotJS: Total elements: ${totalElements} (${lines.size()} lines, ${bars.size()} bars, ${points.size()} points, ${areas.size()} areas, ${pies.size()} pies)`,
             );
 
             if (points.size() > 0) {
@@ -2230,6 +2270,20 @@ class PlotSVGParser {
               );
               console.log(
                 `PlotJS: Hover effects attached to ${lines.size()} lines`,
+              );
+            }
+
+            if (pies.size() > 0) {
+              plotParser.setHoverEffect(
+                pies,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS: Hover effects attached to ${pies.size()} pies`,
               );
             }
 

@@ -292,8 +292,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from plotjs import PlotJS
 
-np.random.seed(0)
-
 length = 500
 walk1 = np.cumsum(np.random.choice([-1, 1], size=length))
 walk2 = np.cumsum(np.random.choice([-1, 1], size=length))
