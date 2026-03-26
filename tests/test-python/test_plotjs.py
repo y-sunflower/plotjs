@@ -443,3 +443,53 @@ def test_fill_between_with_legend():
             "on": ["area"],
         }
     }
+
+
+def test_histogram_with_custom_labels():
+    np.random.seed(0)
+    x = np.random.normal(loc=0.0, scale=1.0, size=100)
+
+    fig, ax = plt.subplots()
+    counts, bins, _ = ax.hist(x, color="#2a9d8f")
+
+    labels = [
+        f"Lower bound: {lo:.2f}<br>Upper bound:{hi:.2f}<br>n: {int(n)}"
+        for lo, hi, n in zip(bins[:-1], bins[1:], counts)
+    ]
+
+    plotjs = PlotJS(fig=fig).add_tooltip(labels=labels)
+
+    assert len(plotjs._axes) == 1
+    assert plotjs._tooltip_labels == [
+        "Lower bound: -2.55<br>Upper bound:-2.07<br>n: 1",
+        "Lower bound: -2.07<br>Upper bound:-1.59<br>n: 5",
+        "Lower bound: -1.59<br>Upper bound:-1.11<br>n: 7",
+        "Lower bound: -1.11<br>Upper bound:-0.62<br>n: 13",
+        "Lower bound: -0.62<br>Upper bound:-0.14<br>n: 17",
+        "Lower bound: -0.14<br>Upper bound:0.34<br>n: 18",
+        "Lower bound: 0.34<br>Upper bound:0.82<br>n: 16",
+        "Lower bound: 0.82<br>Upper bound:1.31<br>n: 11",
+        "Lower bound: 1.31<br>Upper bound:1.79<br>n: 7",
+        "Lower bound: 1.79<br>Upper bound:2.27<br>n: 5",
+    ]
+    assert plotjs._tooltip_groups == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    assert plotjs._axes_tooltip == {
+        "axes_1": {
+            "tooltip_labels": [
+                "Lower bound: -2.55<br>Upper bound:-2.07<br>n: 1",
+                "Lower bound: -2.07<br>Upper bound:-1.59<br>n: 5",
+                "Lower bound: -1.59<br>Upper bound:-1.11<br>n: 7",
+                "Lower bound: -1.11<br>Upper bound:-0.62<br>n: 13",
+                "Lower bound: -0.62<br>Upper bound:-0.14<br>n: 17",
+                "Lower bound: -0.14<br>Upper bound:0.34<br>n: 18",
+                "Lower bound: 0.34<br>Upper bound:0.82<br>n: 16",
+                "Lower bound: 0.82<br>Upper bound:1.31<br>n: 11",
+                "Lower bound: 1.31<br>Upper bound:1.79<br>n: 7",
+                "Lower bound: 1.79<br>Upper bound:2.27<br>n: 5",
+            ],
+            "tooltip_groups": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            "hover_nearest": "false",
+            "on": None,
+        }
+    }
