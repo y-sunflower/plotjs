@@ -230,6 +230,23 @@ export default class PlotSVGParser {
   }
 
   /**
+   * Find pie elements (`patch` paths) inside a given axes.
+   *
+   * @param {Selection} svg - Selection of the SVG element.
+   * @param {string} axes_class - ID of the axes group.
+   * @returns {Selection} Selection of pie elements.
+   */
+  findPies(svg, axes_class) {
+    // select all <patch_> of Patch elements within the specific axes
+    const pies = svg.selectAll(`g#${axes_class} g[id^="patch_"] path`);
+
+    pies.attr("class", "pie plot-element");
+
+    console.log(`Found ${pies.size()} "pie" element`);
+    return pies;
+  }
+
+  /**
    * Find line elements (`line2d` paths) inside a given axes,
    * excluding axis grid lines.
    *
