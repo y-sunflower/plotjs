@@ -1,4 +1,5 @@
 from plotjs import PlotJS, data
+import numpy as np
 import matplotlib.pyplot as plt
 import os
 import tempfile
@@ -407,3 +408,38 @@ def test_init_restores_svg_rcparams_if_savefig_fails():
     assert plt.rcParams["svg.id"] == old_svg_id
 
     plt.close(fig)
+
+
+def test_fill_between_with_legend():
+    x = np.arange(10)
+    y1 = np.array([2, 3, 4, 3, 5, 6, 5, 7, 6, 8])
+    y2 = np.array([1, 2, 2, 3, 3, 4, 4, 5, 5, 6])
+
+    fig, ax = plt.subplots()
+
+    ax.fill_between(x, y1, label="Series A")
+    ax.fill_between(x, y2, label="Series B")
+
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.legend()
+
+    plotjs = PlotJS(fig, _debug=True).add_tooltip(
+        labels=["Series A", "Series B"],
+        groups=["Series A", "Series B"],
+        on="area",
+    )
+
+    assert len(plotjs._axes) == 1
+    assert plotjs._tooltip_labels == ["Series A", "Series B", "Series A", "Series B"]
+    assert plotjs._tooltip_groups == ["Series A", "Series B", "Series A", "Series B"]
+
+    assert len(plotjs._legend_handles) == 2
+    assert plotjs._legend_handles_labels == ["Series A", "Series B"]
+    assert plotjs._axes_tooltip == {
+        "axes_1": {
+            "tooltip_labels": ["Series A", "Series B", "Series A", "Series B"],
+            "tooltip_groups": ["Series A", "Series B", "Series A", "Series B"],
+            "hover_nearest": "false",
+            "on": ["area"],
+        }
+    }
