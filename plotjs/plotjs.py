@@ -341,7 +341,7 @@ class PlotJS:
             (
                 PlotJS()
                 .add_d3js()
-                .add_javascript("d3.selectAll(".point").on("click", () => alert("I wish cookies were 0 calories..."));"
+                .add_javascript("d3.selectAll('.point').on('click', () => alert('I wish cookies were 0 calories...'));"
                 )
             )
             ```
