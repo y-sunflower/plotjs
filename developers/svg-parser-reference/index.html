@@ -238,7 +238,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../guides/css/" class="md-tabs__link">
+        <a href="../../guides/" class="md-tabs__link">
           
   
   Guides
@@ -408,6 +408,8 @@
       
         
       
+        
+      
     
     
     
@@ -428,14 +430,14 @@
   
   
   
-    <a href="../../guides/css/" class="md-nav__link">
+    <a href="../../guides/" class="md-nav__link">
       
   
   
   <span class="md-ellipsis">
     
   
-    Index
+    Guides
   
 
     
@@ -794,6 +796,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#findrectanglessvg-axes_class-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        findRectangles(svg, axes_class) ⇒ Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#findpiessvg-axes_class-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        findPies(svg, axes_class) ⇒ Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#findlinessvg-axes_class-selection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -995,6 +1019,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#findrectanglessvg-axes_class-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        findRectangles(svg, axes_class) ⇒ Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#findpiessvg-axes_class-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        findPies(svg, axes_class) ⇒ Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#findlinessvg-axes_class-selection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1132,6 +1178,12 @@ Provides basic DOM manipulation methods for working with SVG elements.</p>
 <dd><p>Find scatter plot points inside a given axes.
 Handles both <code>&lt;use&gt;</code> and <code>&lt;path&gt;</code> fallback cases,
 and assigns <code>data-group</code> attributes based on tooltip groups.</p>
+</dd>
+<dt><a href="#findRectangles">findRectangles(svg, axes_class)</a> ⇒ <code><a href="#Selection">Selection</a></code></dt>
+<dd><p>Find rectangle elements inside a given axes.</p>
+</dd>
+<dt><a href="#findPies">findPies(svg, axes_class)</a> ⇒ <code><a href="#Selection">Selection</a></code></dt>
+<dd><p>Find pie elements (<code>patch</code> paths) inside a given axes.</p>
 </dd>
 <dt><a href="#findLines">findLines(svg, axes_class)</a> ⇒ <code><a href="#Selection">Selection</a></code></dt>
 <dd><p>Find line elements (<code>line2d</code> paths) inside a given axes,
@@ -1282,6 +1334,58 @@ and assigns <code>data-group</code> attributes based on tooltip groups.</p>
 <td>tooltip_groups</td>
 <td><code>Array.&lt;string&gt;</code></td>
 <td>Group identifiers for tooltips, parallel to points.</td>
+</tr>
+</tbody>
+</table>
+<p><a name="findRectangles"></a></p>
+<h2 id="findrectanglessvg-axes_class-selection">findRectangles(svg, axes_class) ⇒ <a href="#Selection"><code>Selection</code></a><a class="headerlink" href="#findrectanglessvg-axes_class-selection" title="Permanent link">&para;</a></h2>
+<p>Find rectangle elements inside a given axes.</p>
+<p><strong>Kind</strong>: global function
+<strong>Returns</strong>: <a href="#Selection"><code>Selection</code></a> - Selection of rectangle elements.</p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>svg</td>
+<td><a href="#Selection"><code>Selection</code></a></td>
+<td>Selection of the SVG element.</td>
+</tr>
+<tr>
+<td>axes_class</td>
+<td><code>string</code></td>
+<td>ID of the axes group (e.g. "axes_1").</td>
+</tr>
+</tbody>
+</table>
+<p><a name="findPies"></a></p>
+<h2 id="findpiessvg-axes_class-selection">findPies(svg, axes_class) ⇒ <a href="#Selection"><code>Selection</code></a><a class="headerlink" href="#findpiessvg-axes_class-selection" title="Permanent link">&para;</a></h2>
+<p>Find pie elements (<code>patch</code> paths) inside a given axes.</p>
+<p><strong>Kind</strong>: global function
+<strong>Returns</strong>: <a href="#Selection"><code>Selection</code></a> - Selection of pie elements.</p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>svg</td>
+<td><a href="#Selection"><code>Selection</code></a></td>
+<td>Selection of the SVG element.</td>
+</tr>
+<tr>
+<td>axes_class</td>
+<td><code>string</code></td>
+<td>ID of the axes group.</td>
 </tr>
 </tbody>
 </table>

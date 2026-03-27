@@ -6,6 +6,8 @@ from pypalettes import load_cmap
 from highlight_text import fig_text, ax_text
 from pyfonts import load_google_font
 from drawarrow import ax_arrow
+import matplotlib.colors as mcolors
+import seaborn as sns
 
 url = "https://raw.githubusercontent.com/holtzy/The-Python-Graph-Gallery/master/static/data/disaster-events.csv"
 df = pd.read_csv(url)
@@ -192,85 +194,69 @@ PlotJS(fig, bbox_inches="tight").add_css(
     )
 ).add_tooltip(labels=columns).save("docs/iframes/area-natural-disasters.html")
 
-#####################################################
+##########################################################################@
 
+path = "https://raw.githubusercontent.com/holtzy/The-Python-Graph-Gallery/master/static/data/heatmap_data_norm.csv"
+heatmap_data_norm = pd.read_csv(path, index_col=0)
 
-size = 10000
+cmap = mcolors.LinearSegmentedColormap.from_list("", ["#2a9d8f", "#e9c46a", "#e76f51"])
 
-labels = ["S&P500", "CAC40", "Bitcoin", "Livret A", "Default"]
-groups = ["safe", "safe", "safe", "not safe", "not safe"]
+fig, ax = plt.subplots(figsize=(10, 10))
+sns.heatmap(heatmap_data_norm, ax=ax, cmap=cmap, cbar=False)
+ax.set_axis_off()
+for j, region in enumerate(heatmap_data_norm.index):
+    ax.text(
+        0.4,  # x axis position
+        j + 0.5,  # y axis position
+        f"{region}",  # text
+        ha="left",
+        va="center",
+        fontsize=17,
+        fontweight="light",
+    )
 
-fig, axs = plt.subplots(figsize=(10, 10), nrows=2)
-axs[0].plot(
-    np.cumsum(np.random.choice([-1, 1], size=size)),
-    linewidth=5,
-    color="#264653",
-    label=labels[0],
+ax.text(
+    0,
+    12.4,
+    "Consommation d'énergie par habitant",
+    ha="left",
+    va="center",
+    fontsize=12,
+    fontweight="light",
 )
-axs[0].plot(
-    np.cumsum(np.random.choice([-1, 1], size=size)),
-    linewidth=5,
-    color="#2a9d8f",
-    label=labels[1],
-)
-axs[0].plot(
-    np.cumsum(np.random.choice([-1, 1], size=size)),
-    linewidth=5,
-    color="#e9c46a",
-    label=labels[2],
-)
-axs[0].plot(
-    np.cumsum(np.random.choice([-1, 1], size=size)),
-    linewidth=5,
-    color="#0077b6",
-    label=labels[3],
-)
-axs[0].plot(
-    np.cumsum(np.random.choice([-1, 1], size=size)),
-    linewidth=5,
-    color="#14213d",
-    label=labels[4],
-)
-axs[0].legend()
 
-axs[1].plot(
-    np.cumsum(np.random.choice([-1, 1], size=size)),
-    linewidth=5,
-    color="#264653",
-    label=labels[0],
+ax.text(
+    0,
+    -0.2,
+    "2011",
+    ha="left",
+    va="center",
+    fontsize=12,
+    fontweight="light",
 )
-axs[1].plot(
-    np.cumsum(np.random.choice([-1, 1], size=size)),
-    linewidth=5,
-    color="#2a9d8f",
-    label=labels[1],
+ax.text(
+    10,
+    -0.2,
+    "2021",
+    ha="left",
+    va="center",
+    fontsize=12,
+    fontweight="light",
 )
-axs[1].plot(
-    np.cumsum(np.random.choice([-1, 1], size=size)),
-    linewidth=5,
-    color="#e9c46a",
-    label=labels[2],
-)
-axs[1].plot(
-    np.cumsum(np.random.choice([-1, 1], size=size)),
-    linewidth=5,
-    color="#0077b6",
-    label=labels[3],
-)
-axs[1].plot(
-    np.cumsum(np.random.choice([-1, 1], size=size)),
-    linewidth=5,
-    color="#14213d",
-    label=labels[4],
-)
-axs[1].legend()
 
-
+labels = [
+    f"{val:.1f} MWh/hab - {region} en {i + 2011}"
+    for region, row in heatmap_data_norm.iterrows()
+    for i, val in enumerate(row)
+]
 (
     PlotJS(fig=fig)
-    .add_tooltip(labels=labels, groups=labels, ax=axs[0])
-    .add_tooltip(labels=labels, groups=labels, ax=axs[1])
-    .save("docs/iframes/random-walk-1.html")
+    .add_tooltip(labels=labels)
+    .add_css(
+        from_dict={
+            ".tooltip": {"font-size": "1.2em"},
+            ".plot-element.not-hovered": {"opacity": 0.8},
+        }
+    )
+    .save("docs/iframes/energy-consumption-france.html")
 )
-
-##########################################

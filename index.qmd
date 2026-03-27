@@ -9,8 +9,10 @@ execute:
 ```{python}
 # | include: false
 import matplotlib.pyplot as plt
+import numpy as np
 
 plt.rcParams["figure.dpi"] = 300
+np.random.seed(0)
 ```
 
 <img src="https://github.com/JosephBARBIERDARNAL/static/blob/main/python-libs/plotjs/image.png?raw=true" alt="plotjs logo" align="right" width="150px"/>
@@ -25,7 +27,24 @@ plt.rcParams["figure.dpi"] = 300
 
 ???+ warning
 
-    `plotjs` is in very early stage: expect regular breaking changes.
+    Consider that `plotjs` is still unstable.
+
+## Installation
+
+- From PyPI (recommended):
+
+```bash
+pip install plotjs
+```
+
+- Latest dev version:
+
+```bash
+pip install git+https://github.com/y-sunflower/plotjs.git
+```
+
+- Python 3.10+
+- [matplotlib](https://matplotlib.org/), [jinja2](https://jinja.palletsprojects.com/en/stable/) and [narwhals](https://narwhals-dev.github.io/narwhals/)
 
 ## Get started
 
@@ -213,6 +232,63 @@ ax.barh(
 
 <iframe width="800" height="600" src="iframes/quickstart6.html" style="border:none;"></iframe>
 
+### Histogram
+
+```{python}
+import matplotlib.pyplot as plt
+import numpy as np
+
+from plotjs import PlotJS
+
+x = np.random.normal(loc=0.0, scale=1.0, size=100)
+
+fig, ax = plt.subplots()
+counts, bins, _ = ax.hist(x, color="#2a9d8f")
+
+labels = [
+    f"Lower bound: {lo:.2f}<br>Upper bound: {hi:.2f}<br>n: {int(n)}"
+    for lo, hi, n in zip(bins[:-1], bins[1:], counts)
+]
+
+PlotJS(fig=fig).add_tooltip(labels=labels).save("iframes/quickstart12.html")
+```
+
+<iframe width="800" height="600" src="iframes/quickstart12.html" style="border:none;"></iframe>
+
+### Boxplot
+
+```{python}
+from plotjs import PlotJS
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+planets = sns.load_dataset("planets")
+
+fig, ax = plt.subplots(figsize=(7, 6))
+ax.set_xscale("log")
+sns.boxplot(
+    planets,
+    x="distance",
+    y="method",
+    hue="method",
+    whis=[0, 100],
+    width=0.6,
+    palette="vlag",
+)
+sns.stripplot(planets, x="distance", y="method", size=4, color=".3", alpha=0.4)
+ax.xaxis.grid(True)
+ax.set(ylabel="")
+sns.despine()
+
+(
+    PlotJS(bbox_inches="tight")
+    .add_tooltip(labels=planets["method"].unique(), on="bar", hover_nearest=True)
+    .save("iframes/quickstart13.html")
+)
+```
+
+<iframe width="800" height="600" src="iframes/quickstart13.html" style="border:none;"></iframe>
+
 ### Connect legend and plot elements:
 
 - Scatter plot
@@ -250,8 +326,6 @@ ax.legend()
 import matplotlib.pyplot as plt
 import numpy as np
 from plotjs import PlotJS
-
-np.random.seed(0)
 
 length = 500
 walk1 = np.cumsum(np.random.choice([-1, 1], size=length))
@@ -390,26 +464,6 @@ ax3.scatter(**args)
 ```
 
 <iframe width="800" height="400" src="iframes/quickstart11.html" style="border:none;"></iframe>
-
-
-## Installation
-
-- From PyPI (recommended):
-
-```bash
-pip install plotjs
-```
-
-- Latest dev version:
-
-```bash
-pip install git+https://github.com/y-sunflower/plotjs.git
-```
-
-## Dependencies
-
-- Python 3.10+
-- [matplotlib](https://matplotlib.org/), [jinja2](https://jinja.palletsprojects.com/en/stable/) and [narwhals](https://narwhals-dev.github.io/narwhals/)
 
 ## Important limitation
 

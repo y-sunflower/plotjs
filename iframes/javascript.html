@@ -61,7 +61,7 @@ svg {
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-03-15T20:57:19.351940</dc:date>
+    <dc:date>2026-03-27T15:17:31.742979</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -1267,6 +1267,59 @@ class PlotSVGParser {
   }
 
   /**
+   * Find rectangle elements inside a given axes.
+   *
+   * @param {Selection} svg - Selection of the SVG element.
+   * @param {string} axes_class - ID of the axes group (e.g. "axes_1").
+   * @returns {Selection} Selection of rectangle elements.
+   */
+  findRectangles(svg, axes_class) {
+    let rectangles = svg.selectAll(`g#${axes_class} g[id^="QuadMesh"] path`);
+    rectangles.attr("class", "rectangle plot-element");
+    console.log(`Found ${rectangles.size()} "rectangle" element`);
+    return rectangles;
+  }
+
+  /**
+   * Find pie elements (`patch` paths) inside a given axes.
+   *
+   * @param {Selection} svg - Selection of the SVG element.
+   * @param {string} axes_class - ID of the axes group.
+   * @returns {Selection} Selection of pie elements.
+   */
+  findPies(svg, axes_class) {
+    const parser = this;
+    const pies = svg
+      .selectAll(`g#${axes_class} g[id^="patch_"] path`)
+      .filter(function () {
+        const element = this;
+        const clipPath = element.getAttribute("clip-path");
+        const normalizedFill = parser.getFillValue(element);
+        const pathData = element.getAttribute("d") ?? "";
+
+        const parent = element.parentElement;
+        const grandparent = parent?.parentElement;
+        const isInLegend =
+          parent?.tagName?.toLowerCase() === "g" &&
+          grandparent?.tagName?.toLowerCase() === "g" &&
+          /^legend_\d+$/.test(grandparent.id);
+
+        return (
+          !isInLegend &&
+          !clipPath &&
+          normalizedFill !== "" &&
+          normalizedFill !== "none" &&
+          /[CQAST]/.test(pathData)
+        );
+      });
+
+    pies.attr("class", "pie plot-element");
+
+    console.log(`Found ${pies.size()} "pie" element`);
+    return pies;
+  }
+
+  /**
    * Find line elements (`line2d` paths) inside a given axes,
    * excluding axis grid lines.
    *
@@ -1486,6 +1539,12 @@ class PlotSVGParser {
             const lines = shouldProcess("line")
               ? plotParser.findLines(plotParser.svg, axes_class)
               : new Selection([]);
+            const rectangles = shouldProcess("rect")
+              ? plotParser.findRectangles(plotParser.svg, axes_class)
+              : new Selection([]);
+            const pies = shouldProcess("pie")
+              ? plotParser.findPies(plotParser.svg, axes_class)
+              : new Selection([]);
             const bars = shouldProcess("bar")
               ? plotParser.findBars(plotParser.svg, axes_class)
               : new Selection([]);
@@ -1501,9 +1560,14 @@ class PlotSVGParser {
               : new Selection([]);
 
             const totalElements =
-              lines.size() + bars.size() + points.size() + areas.size();
+              lines.size() +
+              bars.size() +
+              points.size() +
+              areas.size() +
+              rectangles.size() +
+              pies.size();
             console.log(
-              `PlotJS: Total elements: ${totalElements} (${lines.size()} lines, ${bars.size()} bars, ${points.size()} points, ${areas.size()} areas)`,
+              `PlotJS: Total elements: ${totalElements} (${lines.size()} lines, ${bars.size()} bars, ${points.size()} points, ${areas.size()} areas, ${pies.size()} pies, ${rectangles.size()} rectangles)`,
             );
 
             if (points.size() > 0) {
@@ -1531,6 +1595,34 @@ class PlotSVGParser {
               );
               console.log(
                 `PlotJS: Hover effects attached to ${lines.size()} lines`,
+              );
+            }
+
+            if (rectangles.size() > 0) {
+              plotParser.setHoverEffect(
+                rectangles,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS: Hover effects attached to ${rectangles.size()} rectangles`,
+              );
+            }
+
+            if (pies.size() > 0) {
+              plotParser.setHoverEffect(
+                pies,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS: Hover effects attached to ${pies.size()} pies`,
               );
             }
 
