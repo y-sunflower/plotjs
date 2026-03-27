@@ -4,6 +4,7 @@ import random
 import uuid
 import webbrowser
 import tempfile
+import warnings
 from typing import Optional
 
 import numpy as np
@@ -160,6 +161,9 @@ class PlotJS:
             )
             ```
         """
+        if labels is None and groups is None:
+            warnings.warn("Either `labels` or `groups` must not be `None`.")
+
         self._tooltip_x_shift = tooltip_x_shift
         self._tooltip_y_shift = tooltip_y_shift
 
@@ -454,7 +458,7 @@ class PlotJS:
     def _set_plot_data_json(self) -> None:
         if not hasattr(self, "_tooltip_labels"):
             if self._axes:
-                self.add_tooltip()
+                self.add_tooltip(labels=[])
             else:
                 self._tooltip_labels = []
                 self._tooltip_groups = []
