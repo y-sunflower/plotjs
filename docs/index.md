@@ -241,7 +241,7 @@ fig, ax = plt.subplots()
 counts, bins, _ = ax.hist(x, color="#2a9d8f")
 
 labels = [
-    f"Lower bound: {lo:.2f}<br>Upper bound:{hi:.2f}<br>n: {int(n)}"
+    f"Lower bound: {lo:.2f}<br>Upper bound: {hi:.2f}<br>n: {int(n)}"
     for lo, hi, n in zip(bins[:-1], bins[1:], counts)
 ]
 
@@ -249,6 +249,42 @@ PlotJS(fig=fig).add_tooltip(labels=labels).save("iframes/quickstart12.html")
 ```
 
 <iframe width="800" height="600" src="iframes/quickstart12.html" style="border:none;">
+
+</iframe>
+
+### Boxplot (seaborn)
+
+``` python
+from plotjs import PlotJS
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+planets = sns.load_dataset("planets")
+
+fig, ax = plt.subplots(figsize=(7, 6))
+ax.set_xscale("log")
+sns.boxplot(
+    planets,
+    x="distance",
+    y="method",
+    hue="method",
+    whis=[0, 100],
+    width=0.6,
+    palette="vlag",
+)
+sns.stripplot(planets, x="distance", y="method", size=4, color=".3", alpha=0.4)
+ax.xaxis.grid(True)
+ax.set(ylabel="")
+sns.despine()
+
+(
+    PlotJS(_debug=True, bbox_inches="tight")
+    .add_tooltip(labels=planets["method"].unique(), on="bar", hover_nearest=True)
+    .save("iframes/quickstart13.html")
+)
+```
+
+<iframe width="800" height="600" src="iframes/quickstart13.html" style="border:none;">
 
 </iframe>
 
@@ -455,8 +491,6 @@ pip install plotjs
 ``` bash
 pip install git+https://github.com/y-sunflower/plotjs.git
 ```
-
-## Dependencies
 
 - Python 3.10+
 - [matplotlib](https://matplotlib.org/),
