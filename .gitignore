@@ -36,3 +36,4 @@ node_modules
 bun.lockb
 .claude/
 site/
+uv.lock
