@@ -389,7 +389,7 @@ def test_add_tooltip_without_axes_raises_clear_error():
     with pytest.raises(
         ValueError, match=r"Cannot add tooltip because the figure has no Axes\."
     ):
-        PlotJS(fig=fig).add_tooltip()
+        PlotJS(fig=fig).add_tooltip(labels=[])
 
     plt.close(fig)
 
@@ -537,3 +537,22 @@ def test_pie_chart():
             "on": None,
         }
     }
+
+
+def test_warning_message_for_labels_and_groups():
+    df = data.load_iris()
+
+    fig, ax = plt.subplots()
+    ax.scatter(
+        df["sepal_length"],
+        df["sepal_width"],
+        c=df["species"].astype("category").cat.codes,
+        s=300,
+        alpha=0.5,
+        ec="black",
+    )
+
+    with pytest.warns(
+        UserWarning, match="Either `labels` or `groups` must not be `None`."
+    ):
+        PlotJS(fig=fig).add_tooltip()
