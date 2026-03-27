@@ -237,8 +237,6 @@ export default class PlotSVGParser {
    * @returns {Selection} Selection of pie elements.
    */
   findPies(svg, axes_class) {
-    // Matplotlib also uses patch_* groups for axes backgrounds and spines.
-    // Pie wedges are the patch paths with a non-empty fill and curve commands.
     const parser = this;
     const pies = svg
       .selectAll(`g#${axes_class} g[id^="patch_"] path`)
@@ -248,7 +246,15 @@ export default class PlotSVGParser {
         const normalizedFill = parser.getFillValue(element);
         const pathData = element.getAttribute("d") ?? "";
 
+        const parent = element.parentElement;
+        const grandparent = parent?.parentElement;
+        const isInLegend =
+          parent?.tagName?.toLowerCase() === "g" &&
+          grandparent?.tagName?.toLowerCase() === "g" &&
+          /^legend_\d+$/.test(grandparent.id);
+
         return (
+          !isInLegend &&
           !clipPath &&
           normalizedFill !== "" &&
           normalizedFill !== "none" &&
