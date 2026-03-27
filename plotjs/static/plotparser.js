@@ -230,6 +230,22 @@ export default class PlotSVGParser {
   }
 
   /**
+   * Find rectangle elements inside a given axes.
+   *
+   * @param {Selection} svg - Selection of the SVG element.
+   * @param {string} axes_class - ID of the axes group (e.g. "axes_1").
+   * @returns {Selection} Selection of rectangle elements.
+   */
+  findRectangles(svg, axes_class) {
+    let rectangles = svg.selectAll(`g#${axes_class} g[id^="QuadMesh"] path`);
+
+    rectangles.attr("class", "rectangle plot-element");
+
+    console.log(`Found ${rectangles.size()} "rectangle" element`);
+    return rectangles;
+  }
+
+  /**
    * Find pie elements (`patch` paths) inside a given axes.
    *
    * @param {Selection} svg - Selection of the SVG element.
