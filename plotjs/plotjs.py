@@ -29,7 +29,7 @@ env: Environment = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
 class PlotJS:
     """
-    Class to convert static matplotlib plots to interactive charts.
+    Main class to convert static matplotlib plots to interactive charts.
     """
 
     def __init__(
@@ -427,7 +427,7 @@ class PlotJS:
 
     def show(self) -> "PlotJS":
         """
-        Open the HTML file in the default browser.
+        Open the HTML file in the default browser, or inside your editor.
         If the file hasn't been saved yet, it will be saved to a temporary file.
 
         Returns:

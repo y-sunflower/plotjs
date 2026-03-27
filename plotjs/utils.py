@@ -1,7 +1,22 @@
+import numpy as np
 import narwhals.stable.v2 as nw
 from narwhals.stable.v2.dependencies import is_numpy_array, is_into_series
 
 import re
+
+
+def _is_missing(value) -> bool:
+    if value is None:
+        return True
+    try:
+        return bool(np.isnan(value))
+    except TypeError:
+        pass
+    try:
+        return value != value
+    except Exception:
+        return False
+    return False
 
 
 def _vector_to_list(vector, name="labels and groups") -> list:
@@ -23,13 +38,18 @@ def _vector_to_list(vector, name="labels and groups") -> list:
         A list
     """
     if isinstance(vector, (list, tuple)) or is_numpy_array(vector):
-        return list(vector)
+        vector_sanitized: list = list(vector)
     elif is_into_series(vector):
-        return nw.from_native(vector, allow_series=True).to_list()
+        vector_sanitized: list = nw.from_native(vector, allow_series=True).to_list()
     else:
         raise ValueError(
             f"{name} must be a Series or a valid iterable (list, tuple, ndarray...)."
         )
+
+    # Drop NaNs to avoid JSON parsing error
+    # https://github.com/y-sunflower/plotjs/issues/67
+    vector_sanitized = [x for x in vector_sanitized if not _is_missing(x)]
+    return vector_sanitized
 
 
 def _get_and_sanitize_js(file_path, after_pattern):

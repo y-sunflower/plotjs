@@ -96,3 +96,9 @@ Learn more in the [Q&A](https://y-sunflower.github.io/plotjs/#qa).
 - [Embedding in Quarto, marimo, or websites](https://y-sunflower.github.io/plotjs/guides/embed-graphs/)
 - [Troubleshooting](https://y-sunflower.github.io/plotjs/guides/troubleshooting/)
 - [Developer architecture overview](https://y-sunflower.github.io/plotjs/developers/overview)
+
+<br>
+
+## Contribution
+
+Looking to contribute? Check out the [contributing guide](https://y-sunflower.github.io/plotjs/developers/contributing/). You can get an overview of how the project works [here](https://y-sunflower.github.io/plotjs/developers/overview/), and in the [AGENTS.md file](https://github.com/y-sunflower/plotjs/blob/main/AGENTS.md).

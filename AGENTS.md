@@ -66,6 +66,7 @@ Always use `uv` and/or `just` for running commands:
 - `findBars(svg, axes_class)` - Select bar chart elements
 - `findPoints(svg, axes_class, tooltip_groups)` - Select scatter points
 - `findLines(svg, axes_class)` - Select line chart elements
+- `findPies(svg, axes_class)` - Select pie chart elements
 - `findAreas(svg, axes_class)` - Select filled area elements
 - `nearestElementFromMouse(mouseX, mouseY, elements)` - Hover nearest detection
 - `setHoverEffect(...)` - Attach mouseover handlers, show tooltips
