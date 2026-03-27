@@ -1,7 +1,7 @@
 [project]
 name = "plotjs"
 version = "0.0.9"
-description = "Turn static matplotlib charts into interactive web visualizations"
+description = "Turn static matplotlib charts into interactive web visualizations, and export them to HTML files"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -57,6 +57,7 @@ dev = [
   "pyfonts>=1.0.0",
   "pypalettes>=0.1.4",
   "pytest>=8.3.5",
+  "pywaffle>=1.1.1",
   "ruff>=0.11.13",
   "seaborn>=0.13.2",
   "ty>=0.0.1a16",

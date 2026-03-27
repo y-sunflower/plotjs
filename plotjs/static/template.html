@@ -77,6 +77,9 @@
             const lines = shouldProcess("line")
               ? plotParser.findLines(plotParser.svg, axes_class)
               : new Selection([]);
+            const rectangles = shouldProcess("rect")
+              ? plotParser.findRectangles(plotParser.svg, axes_class)
+              : new Selection([]);
             const pies = shouldProcess("pie")
               ? plotParser.findPies(plotParser.svg, axes_class)
               : new Selection([]);
@@ -99,9 +102,10 @@
               bars.size() +
               points.size() +
               areas.size() +
+              rectangles.size() +
               pies.size();
             console.log(
-              `PlotJS: Total elements: ${totalElements} (${lines.size()} lines, ${bars.size()} bars, ${points.size()} points, ${areas.size()} areas, ${pies.size()} pies)`,
+              `PlotJS: Total elements: ${totalElements} (${lines.size()} lines, ${bars.size()} bars, ${points.size()} points, ${areas.size()} areas, ${pies.size()} pies, ${rectangles.size()} rectangles)`,
             );
 
             if (points.size() > 0) {
@@ -129,6 +133,20 @@
               );
               console.log(
                 `PlotJS: Hover effects attached to ${lines.size()} lines`,
+              );
+            }
+
+            if (rectangles.size() > 0) {
+              plotParser.setHoverEffect(
+                rectangles,
+                axes_class,
+                tooltip_labels,
+                tooltip_groups,
+                show_tooltip,
+                hover_nearest,
+              );
+              console.log(
+                `PlotJS: Hover effects attached to ${rectangles.size()} rectangles`,
               );
             }
 
