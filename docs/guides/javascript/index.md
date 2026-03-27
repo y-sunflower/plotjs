@@ -1,3 +1,7 @@
+---
+title: JavaScript
+---
+
 Under the hood, JavaScript is what is used to make the charts interactive. But `plotjs` allows anyone to add some more JavaScript for finer control of what is happening and basically do whatever you want!
 
 ## Basic example

@@ -1,3 +1,7 @@
+---
+title: Marimo, Quarto, Jupyter, websites...
+---
+
 Most of the time you'll want to embed your interactive chart into an app or a website. For this purpose, `plotjs` offers a few utility tools to make this easy, depending on the tool you're using.
 
 ## Quarto
