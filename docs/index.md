@@ -15,6 +15,25 @@ interactive charts with minimum user inputs. You can:
 
     Consider that `plotjs` is still unstable.
 
+## Installation
+
+- From PyPI (recommended):
+
+``` bash
+pip install plotjs
+```
+
+- Latest dev version:
+
+``` bash
+pip install git+https://github.com/y-sunflower/plotjs.git
+```
+
+- Python 3.10+
+- [matplotlib](https://matplotlib.org/),
+  [jinja2](https://jinja.palletsprojects.com/en/stable/) and
+  [narwhals](https://narwhals-dev.github.io/narwhals/)
+
 ## Get started
 
 Matplotlib is **great**[^1]: you can draw anything with it.
@@ -252,7 +271,7 @@ PlotJS(fig=fig).add_tooltip(labels=labels).save("iframes/quickstart12.html")
 
 </iframe>
 
-### Boxplot (seaborn)
+### Boxplot
 
 ``` python
 from plotjs import PlotJS
@@ -477,25 +496,6 @@ ax3.scatter(**args)
 <iframe width="800" height="400" src="iframes/quickstart11.html" style="border:none;">
 
 </iframe>
-
-## Installation
-
-- From PyPI (recommended):
-
-``` bash
-pip install plotjs
-```
-
-- Latest dev version:
-
-``` bash
-pip install git+https://github.com/y-sunflower/plotjs.git
-```
-
-- Python 3.10+
-- [matplotlib](https://matplotlib.org/),
-  [jinja2](https://jinja.palletsprojects.com/en/stable/) and
-  [narwhals](https://narwhals-dev.github.io/narwhals/)
 
 ## Important limitation
 
