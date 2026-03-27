@@ -27,6 +27,9 @@ Provides basic DOM manipulation methods for working with SVG elements.</p>
 Handles both <code>&lt;use&gt;</code> and <code>&lt;path&gt;</code> fallback cases,
 and assigns <code>data-group</code> attributes based on tooltip groups.</p>
 </dd>
+<dt><a href="#findRectangles">findRectangles(svg, axes_class)</a> ⇒ <code><a href="#Selection">Selection</a></code></dt>
+<dd><p>Find rectangle elements inside a given axes.</p>
+</dd>
 <dt><a href="#findPies">findPies(svg, axes_class)</a> ⇒ <code><a href="#Selection">Selection</a></code></dt>
 <dd><p>Find pie elements (<code>patch</code> paths) inside a given axes.</p>
 </dd>
@@ -122,6 +125,19 @@ and assigns `data-group` attributes based on tooltip groups.
 | svg | [<code>Selection</code>](#Selection) | Selection of the SVG element. |
 | axes_class | <code>string</code> | ID of the axes group (e.g. "axes_1"). |
 | tooltip_groups | <code>Array.&lt;string&gt;</code> | Group identifiers for tooltips, parallel to points. |
+
+<a name="findRectangles"></a>
+
+## findRectangles(svg, axes_class) ⇒ [<code>Selection</code>](#Selection)
+Find rectangle elements inside a given axes.
+
+**Kind**: global function
+**Returns**: [<code>Selection</code>](#Selection) - Selection of rectangle elements.
+
+| Param | Type | Description |
+| --- | --- | --- |
+| svg | [<code>Selection</code>](#Selection) | Selection of the SVG element. |
+| axes_class | <code>string</code> | ID of the axes group (e.g. "axes_1"). |
 
 <a name="findPies"></a>
 
