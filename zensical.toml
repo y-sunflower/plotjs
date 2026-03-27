@@ -12,6 +12,7 @@ nav = [
   { "Home" = "index.md" },
   { "Gallery" = "gallery/index.md" },
   { "Guides" = [
+    "guides/index.md",
     "guides/css/index.md",
     "guides/javascript/index.md",
     "guides/embed-graphs/index.md",

@@ -1,3 +1,7 @@
+---
+title: CSS
+---
+
 With `plotjs`, you can add your own CSS for advanced plot customization. Here's how it works.
 
 ## What is CSS?

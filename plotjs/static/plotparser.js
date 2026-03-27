@@ -238,9 +238,7 @@ export default class PlotSVGParser {
    */
   findRectangles(svg, axes_class) {
     let rectangles = svg.selectAll(`g#${axes_class} g[id^="QuadMesh"] path`);
-
     rectangles.attr("class", "rectangle plot-element");
-
     console.log(`Found ${rectangles.size()} "rectangle" element`);
     return rectangles;
   }

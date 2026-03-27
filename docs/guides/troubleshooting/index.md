@@ -1,3 +1,7 @@
+---
+title: Troubleshooting
+---
+
 Since `plotjs` does many things via JavaScript (e.g., in your browser when you open your HTML file), you may easily encounter "silent" errors.
 
 In practice, you will run your Python and everything will seem fine, but that does not mean what you'll see in the output is what you expected. There may be multiple reasons for this. Here I'll explain common things that can happen, and how to debug them.

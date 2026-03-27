@@ -6,6 +6,8 @@ from pypalettes import load_cmap
 from highlight_text import fig_text, ax_text
 from pyfonts import load_google_font
 from drawarrow import ax_arrow
+import matplotlib.colors as mcolors
+import seaborn as sns
 
 url = "https://raw.githubusercontent.com/holtzy/The-Python-Graph-Gallery/master/static/data/disaster-events.csv"
 df = pd.read_csv(url)
@@ -274,3 +276,68 @@ axs[1].legend()
 )
 
 ##########################################
+
+path = "https://raw.githubusercontent.com/holtzy/The-Python-Graph-Gallery/master/static/data/heatmap_data_norm.csv"
+heatmap_data_norm = pd.read_csv(path, index_col=0)
+
+cmap = mcolors.LinearSegmentedColormap.from_list("", ["#2a9d8f", "#e9c46a", "#e76f51"])
+
+fig, ax = plt.subplots(figsize=(10, 10))
+sns.heatmap(heatmap_data_norm, ax=ax, cmap=cmap, cbar=False)
+ax.set_axis_off()
+for j, region in enumerate(heatmap_data_norm.index):
+    ax.text(
+        0.4,  # x axis position
+        j + 0.5,  # y axis position
+        f"{region}",  # text
+        ha="left",
+        va="center",
+        fontsize=17,
+        fontweight="light",
+    )
+
+ax.text(
+    0,
+    12.4,
+    "Consommation d'énergie par habitant",
+    ha="left",
+    va="center",
+    fontsize=12,
+    fontweight="light",
+)
+
+ax.text(
+    0,
+    -0.2,
+    "2011",
+    ha="left",
+    va="center",
+    fontsize=12,
+    fontweight="light",
+)
+ax.text(
+    10,
+    -0.2,
+    "2021",
+    ha="left",
+    va="center",
+    fontsize=12,
+    fontweight="light",
+)
+
+labels = [
+    f"{val:.1f} MWh/hab - {region} en {i + 2011}"
+    for region, row in heatmap_data_norm.iterrows()
+    for i, val in enumerate(row)
+]
+(
+    PlotJS(fig=fig)
+    .add_tooltip(labels=labels)
+    .add_css(
+        from_dict={
+            ".tooltip": {"font-size": "1.2em"},
+            ".plot-element.not-hovered": {"opacity": 0.8},
+        }
+    )
+    .save("docs/iframes/energy-consumption-france.html")
+)
