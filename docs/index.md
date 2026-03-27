@@ -278,7 +278,7 @@ ax.set(ylabel="")
 sns.despine()
 
 (
-    PlotJS(_debug=True, bbox_inches="tight")
+    PlotJS(bbox_inches="tight")
     .add_tooltip(labels=planets["method"].unique(), on="bar", hover_nearest=True)
     .save("iframes/quickstart13.html")
 )
