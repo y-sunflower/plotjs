@@ -1,10 +1,11 @@
-from plotjs import PlotJS, data
 import numpy as np
 import matplotlib.pyplot as plt
 import os
 import tempfile
 from unittest.mock import patch
 import pytest
+
+from plotjs import PlotJS, data
 
 
 def test_add_css_method_chaining():
@@ -423,7 +424,7 @@ def test_fill_between_with_legend():
     ax.spines[["top", "right"]].set_visible(False)
     ax.legend()
 
-    plotjs = PlotJS(fig, _debug=True).add_tooltip(
+    plotjs = PlotJS(fig).add_tooltip(
         labels=["Series A", "Series B"],
         groups=["Series A", "Series B"],
         on="area",
@@ -504,7 +505,7 @@ def test_pie_chart():
 
     tooltip = [f"{lab} (n = {size})" for lab, size in zip(labels, sizes)]
 
-    plotjs = PlotJS(fig, _debug=True).add_tooltip(labels=tooltip)
+    plotjs = PlotJS(fig).add_tooltip(labels=tooltip)
 
     assert len(plotjs._axes) == 1
     assert plotjs._tooltip_labels == [

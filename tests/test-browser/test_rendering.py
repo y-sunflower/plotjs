@@ -1,4 +1,5 @@
 import pytest
+import seaborn as sns
 import matplotlib.pyplot as plt
 from plotjs import PlotJS, data
 
@@ -94,6 +95,41 @@ def test_multiple_axes_render(page, tmp_output_dir, load_html):
     # Check that both axes groups exist
     axes_groups = page.locator('svg g[id^="axes_"]')
     assert axes_groups.count() == 2
+
+
+def test_seaborn_with_nans_renders(page, tmp_output_dir, load_html):
+    mpg = sns.load_dataset("mpg").sort_values("origin")
+    sns.relplot(
+        x="horsepower",
+        y="mpg",
+        hue="origin",
+        size="weight",
+        sizes=(40, 400),
+        alpha=0.5,
+        palette="muted",
+        height=6,
+        data=mpg,
+    )
+
+    html_path = tmp_output_dir / "bar.html"
+    (
+        PlotJS()
+        .add_tooltip(labels=mpg["horsepower"], groups=mpg["origin"])
+        .save(str(html_path))
+    )
+
+    plt.close()
+
+    load_html(page, html_path)
+
+    svg = page.locator("svg")
+    assert svg.count() == 1
+
+    # Check for no error messages with NaNs
+    console_messages = []
+    page.on("console", lambda msg: console_messages.append(msg))
+    errors = [msg for msg in console_messages if msg.type == "error"]
+    assert len(errors) == 0, f"JavaScript errors found: {[msg.text for msg in errors]}"
 
 
 def test_custom_css_applies(page, tmp_output_dir, load_html):
