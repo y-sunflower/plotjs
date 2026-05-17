@@ -17,22 +17,9 @@ interactive charts with minimum user inputs. You can:
 
 ## Installation
 
-- From PyPI (recommended):
-
 ``` bash
 pip install plotjs
 ```
-
-- Latest dev version:
-
-``` bash
-pip install git+https://github.com/y-sunflower/plotjs.git
-```
-
-- Python 3.10+
-- [matplotlib](https://matplotlib.org/),
-  [jinja2](https://jinja.palletsprojects.com/en/stable/) and
-  [narwhals](https://narwhals-dev.github.io/narwhals/)
 
 ## Get started
 
@@ -298,7 +285,9 @@ sns.despine()
 
 (
     PlotJS(bbox_inches="tight")
-    .add_tooltip(labels=planets["method"].unique(), on="bar", hover_nearest=True)
+    .add_tooltip(
+        labels=planets["method"].unique().tolist(), on="bar", hover_nearest=True
+    )
     .save("iframes/quickstart13.html")
 )
 ```
